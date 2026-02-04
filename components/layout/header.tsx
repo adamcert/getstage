@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Menu, X, User, ShoppingBag, Heart } from "lucide-react";
 import { Button, Avatar } from "@/components/ui";
+import { CartDrawer } from "@/components/cart/cart-drawer";
+import { useCartStore, selectCartItemCount } from "@/stores/cart-store";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -18,7 +20,23 @@ const navLinks = [
 export function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const [user, setUser] = useState<any>(null); // TODO: Get from auth
+
+  // Cart store
+  const itemCount = useCartStore(selectCartItemCount);
+  const prevItemCountRef = useRef(itemCount);
+
+  // Animate cart button when item count increases
+  useEffect(() => {
+    if (itemCount > prevItemCountRef.current) {
+      setIsAnimating(true);
+      const timer = setTimeout(() => setIsAnimating(false), 600);
+      return () => clearTimeout(timer);
+    }
+    prevItemCountRef.current = itemCount;
+  }, [itemCount]);
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
@@ -65,11 +83,32 @@ export function Header() {
             </Button>
 
             {/* Cart */}
-            <Button variant="ghost" size="sm" className="relative">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn(
+                "relative",
+                isAnimating && "animate-bounce"
+              )}
+              onClick={() => setIsCartOpen(true)}
+              aria-label="Ouvrir le panier"
+            >
               <ShoppingBag className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
-                2
-              </span>
+              <AnimatePresence>
+                {itemCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    className={cn(
+                      "absolute -top-1 -right-1 w-5 h-5 bg-primary-500 text-white text-xs font-bold rounded-full flex items-center justify-center",
+                      isAnimating && "animate-pulse"
+                    )}
+                  >
+                    {itemCount > 99 ? "99+" : itemCount}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </Button>
 
             {/* User menu */}
@@ -131,6 +170,9 @@ export function Header() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Cart Drawer */}
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 }
