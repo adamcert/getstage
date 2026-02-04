@@ -1,4 +1,4 @@
-import type { Event, Venue, TicketType, EventCategory } from "@/types/database";
+import type { Event, Venue, TicketType, EventCategory, Artist, EventArtist } from "@/types/database";
 
 // =============================================================================
 // MOCK VENUES
@@ -173,6 +173,229 @@ const venues: Record<string, Venue> = {
     created_at: "2024-01-01T00:00:00Z",
     updated_at: "2024-01-01T00:00:00Z",
   },
+};
+
+// =============================================================================
+// MOCK ARTISTS
+// =============================================================================
+
+export const mockArtists: Record<string, Artist> = {
+  "amelie-lens": {
+    id: "artist-1",
+    name: "Amelie Lens",
+    slug: "amelie-lens",
+    bio: "DJ et productrice techno belge, figure majeure de la scene electronique mondiale.",
+    image_url: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400",
+    genres: ["techno", "acid techno"],
+    spotify_id: "7kOrrFIHDh2k8WSOBN0Spe",
+    apple_music_id: null,
+    social_links: { instagram: "amelikiralens", twitter: "AmelieLens" },
+    created_at: "2024-01-01T00:00:00Z",
+  },
+  "charlotte-de-witte": {
+    id: "artist-2",
+    name: "Charlotte de Witte",
+    slug: "charlotte-de-witte",
+    bio: "DJ et productrice techno belge, fondatrice du label KNTXT.",
+    image_url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400",
+    genres: ["techno", "hard techno"],
+    spotify_id: "1WHaGjLmxuXl3NZTLo7PxL",
+    apple_music_id: null,
+    social_links: { instagram: "charlottedewittemusic" },
+    created_at: "2024-01-01T00:00:00Z",
+  },
+  "adam-beyer": {
+    id: "artist-3",
+    name: "Adam Beyer",
+    slug: "adam-beyer",
+    bio: "Pionnier de la techno suedoise, fondateur de Drumcode Records.",
+    image_url: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=400",
+    genres: ["techno"],
+    spotify_id: "0UxGGEugDyTXKl9DFpG8UL",
+    apple_music_id: null,
+    social_links: { instagram: "realadambeyer" },
+    created_at: "2024-01-01T00:00:00Z",
+  },
+  "phoenix": {
+    id: "artist-4",
+    name: "Phoenix",
+    slug: "phoenix",
+    bio: "Groupe de rock alternatif francais forme a Versailles en 1999.",
+    image_url: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400",
+    genres: ["indie", "pop", "rock"],
+    spotify_id: "1xU878Z1QtBldR7ru9owdU",
+    apple_music_id: null,
+    social_links: { instagram: "wearephoenix" },
+    created_at: "2024-01-01T00:00:00Z",
+  },
+  "stromae": {
+    id: "artist-5",
+    name: "Stromae",
+    slug: "stromae",
+    bio: "Auteur-compositeur-interprete belge, figure de la musique electronique et hip-hop.",
+    image_url: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400",
+    genres: ["pop", "electronique", "hip-hop"],
+    spotify_id: "4NHQUGzhtTLFvgF5SZesLK",
+    apple_music_id: null,
+    social_links: { instagram: "stromae" },
+    created_at: "2024-01-01T00:00:00Z",
+  },
+  "angele": {
+    id: "artist-6",
+    name: "Angele",
+    slug: "angele",
+    bio: "Chanteuse et musicienne belge, revelaction pop de sa generation.",
+    image_url: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400",
+    genres: ["pop", "electro-pop"],
+    spotify_id: "3QVolfxWIXNsiUG2GXqNXY",
+    apple_music_id: null,
+    social_links: { instagram: "angele_vl" },
+    created_at: "2024-01-01T00:00:00Z",
+  },
+  "ibrahim-maalouf": {
+    id: "artist-7",
+    name: "Ibrahim Maalouf",
+    slug: "ibrahim-maalouf",
+    bio: "Trompettiste virtuose franco-libanais, pionnier du jazz fusion oriental.",
+    image_url: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=400",
+    genres: ["jazz", "world", "fusion"],
+    spotify_id: "6pK1uO1QDNxjdqVc4fvLhT",
+    apple_music_id: null,
+    social_links: { instagram: "ibrahim_maalouf" },
+    created_at: "2024-01-01T00:00:00Z",
+  },
+  "ibeyi": {
+    id: "artist-8",
+    name: "Ibeyi",
+    slug: "ibeyi",
+    bio: "Duo franco-cubain compose des jumelles Lisa-Kainde et Naomi Diaz.",
+    image_url: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400",
+    genres: ["soul", "afro-cubain", "electronique"],
+    spotify_id: "0b3SaQsGl3ql6QQ3w2xmWJ",
+    apple_music_id: null,
+    social_links: { instagram: "ibeyi" },
+    created_at: "2024-01-01T00:00:00Z",
+  },
+};
+
+// =============================================================================
+// MOCK EVENT ARTISTS (Lineups)
+// =============================================================================
+
+export const mockEventArtists: Record<string, (EventArtist & { artist: Artist })[]> = {
+  "event-1": [
+    {
+      id: "ea-1-1",
+      event_id: "event-1",
+      artist_id: "artist-1",
+      set_time: null,
+      set_end_time: null,
+      stage: "Main",
+      is_headliner: true,
+      sort_order: 0,
+      artist: mockArtists["amelie-lens"],
+    },
+    {
+      id: "ea-1-2",
+      event_id: "event-1",
+      artist_id: "artist-2",
+      set_time: null,
+      set_end_time: null,
+      stage: "Main",
+      is_headliner: false,
+      sort_order: 1,
+      artist: mockArtists["charlotte-de-witte"],
+    },
+  ],
+  "event-2": [
+    {
+      id: "ea-2-1",
+      event_id: "event-2",
+      artist_id: "artist-4",
+      set_time: null,
+      set_end_time: null,
+      stage: null,
+      is_headliner: true,
+      sort_order: 0,
+      artist: mockArtists["phoenix"],
+    },
+  ],
+  "event-6": [
+    {
+      id: "ea-6-1",
+      event_id: "event-6",
+      artist_id: "artist-5",
+      set_time: null,
+      set_end_time: null,
+      stage: null,
+      is_headliner: true,
+      sort_order: 0,
+      artist: mockArtists["stromae"],
+    },
+  ],
+  "event-7": [
+    {
+      id: "ea-7-1",
+      event_id: "event-7",
+      artist_id: "artist-6",
+      set_time: null,
+      set_end_time: null,
+      stage: null,
+      is_headliner: true,
+      sort_order: 0,
+      artist: mockArtists["angele"],
+    },
+  ],
+  "event-8": [
+    {
+      id: "ea-8-1",
+      event_id: "event-8",
+      artist_id: "artist-3",
+      set_time: null,
+      set_end_time: null,
+      stage: "Main",
+      is_headliner: true,
+      sort_order: 0,
+      artist: mockArtists["adam-beyer"],
+    },
+    {
+      id: "ea-8-2",
+      event_id: "event-8",
+      artist_id: "artist-2",
+      set_time: null,
+      set_end_time: null,
+      stage: "Main",
+      is_headliner: false,
+      sort_order: 1,
+      artist: mockArtists["charlotte-de-witte"],
+    },
+  ],
+  "event-11": [
+    {
+      id: "ea-11-1",
+      event_id: "event-11",
+      artist_id: "artist-8",
+      set_time: null,
+      set_end_time: null,
+      stage: null,
+      is_headliner: true,
+      sort_order: 0,
+      artist: mockArtists["ibeyi"],
+    },
+  ],
+  "event-14": [
+    {
+      id: "ea-14-1",
+      event_id: "event-14",
+      artist_id: "artist-7",
+      set_time: null,
+      set_end_time: null,
+      stage: null,
+      is_headliner: true,
+      sort_order: 0,
+      artist: mockArtists["ibrahim-maalouf"],
+    },
+  ],
 };
 
 // =============================================================================
@@ -732,4 +955,27 @@ export function getThisWeekEvents(): Event[] {
     const eventDate = new Date(event.start_date);
     return eventDate >= today && eventDate <= nextWeek;
   });
+}
+
+/**
+ * Get event by slug with artists
+ */
+export function getEventBySlug(slug: string): Event | undefined {
+  const event = mockEvents.find((e) => e.slug === slug);
+  if (event) {
+    // Attach artists if available
+    const eventArtists = mockEventArtists[event.id];
+    if (eventArtists) {
+      return { ...event, event_artists: eventArtists };
+    }
+  }
+  return event;
+}
+
+/**
+ * Get minimum price for an event
+ */
+export function getMinPrice(event: Event): number {
+  if (!event.ticket_types || event.ticket_types.length === 0) return 0;
+  return Math.min(...event.ticket_types.map((t) => t.price));
 }
