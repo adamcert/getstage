@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Hero } from "@/components/home/hero";
 import { EventSection } from "@/components/home/event-section";
 import {
@@ -5,6 +6,15 @@ import {
   getFeaturedEvents,
   getNewEvents,
 } from "@/lib/data/mock-events";
+
+export const metadata: Metadata = {
+  title: "Accueil - Decouvrez les meilleurs evenements",
+  description: "Explorez les meilleurs evenements pres de chez vous : concerts, theatre, expositions, soirees et plus encore. Reservez vos billets en ligne en toute securite.",
+  openGraph: {
+    title: "Accueil - Decouvrez les meilleurs evenements | Events",
+    description: "Explorez les meilleurs evenements pres de chez vous : concerts, theatre, expositions, soirees et plus encore.",
+  },
+};
 
 export default function Home() {
   // Get events for each section
