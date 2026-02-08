@@ -1,25 +1,24 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useMemo, useEffect } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
   Gift,
   Music,
   PartyPopper,
   Theater,
-  Cake,
   Sparkles,
   Heart,
   Mail,
   User,
   Calendar,
   MessageSquare,
-  CreditCard,
-  CheckCircle,
+  Check,
   ArrowRight,
-  Send,
+  Star,
+  Zap,
+  Crown,
 } from "lucide-react";
-import { Button, Input } from "@/components/ui";
 import { cn, formatPrice } from "@/lib/utils";
 
 // =============================================================================
@@ -31,8 +30,8 @@ interface GiftCardDesign {
   name: string;
   icon: React.ElementType;
   gradient: string;
-  iconColor: string;
-  pattern: string;
+  accent: string;
+  pattern: "geometric" | "waves" | "dots" | "lines" | "stars" | "hearts";
 }
 
 interface FormData {
@@ -44,458 +43,537 @@ interface FormData {
   scheduledDate: string;
 }
 
-interface FormErrors {
-  recipientEmail?: string;
-  recipientName?: string;
-  senderName?: string;
-  message?: string;
-  scheduledDate?: string;
-}
-
 // =============================================================================
 // CONSTANTS
 // =============================================================================
 
-const PRESET_AMOUNTS = [25, 50, 75, 100, 150];
-const MIN_CUSTOM_AMOUNT = 10;
-const MAX_CUSTOM_AMOUNT = 500;
-const MAX_MESSAGE_LENGTH = 200;
+const PRESET_AMOUNTS = [25, 50, 100, 200, 500];
+const MIN_AMOUNT = 10;
+const MAX_AMOUNT = 1000;
+const MAX_MESSAGE_LENGTH = 150;
 
-const GIFT_CARD_DESIGNS: GiftCardDesign[] = [
+const DESIGNS: GiftCardDesign[] = [
+  {
+    id: "midnight",
+    name: "Midnight Gold",
+    icon: Crown,
+    gradient: "from-slate-900 via-slate-800 to-slate-900",
+    accent: "#D4AF37",
+    pattern: "geometric",
+  },
   {
     id: "concert",
-    name: "Concert",
+    name: "Electric Night",
     icon: Music,
-    gradient: "from-purple-500 via-pink-500 to-red-500",
-    iconColor: "text-white",
-    pattern: "radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 40%)",
-  },
-  {
-    id: "party",
-    name: "Soiree",
-    icon: PartyPopper,
-    gradient: "from-amber-400 via-orange-500 to-pink-500",
-    iconColor: "text-white",
-    pattern: "radial-gradient(circle at 10% 90%, rgba(255,255,255,0.12) 0%, transparent 40%), radial-gradient(circle at 90% 10%, rgba(255,255,255,0.1) 0%, transparent 50%)",
-  },
-  {
-    id: "theatre",
-    name: "Theatre",
-    icon: Theater,
-    gradient: "from-red-600 via-rose-600 to-pink-600",
-    iconColor: "text-white",
-    pattern: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(0,0,0,0.1) 0%, transparent 40%)",
-  },
-  {
-    id: "birthday",
-    name: "Anniversaire",
-    icon: Cake,
-    gradient: "from-cyan-400 via-blue-500 to-purple-600",
-    iconColor: "text-white",
-    pattern: "radial-gradient(circle at 30% 70%, rgba(255,255,255,0.15) 0%, transparent 45%), radial-gradient(circle at 70% 30%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+    gradient: "from-violet-900 via-purple-800 to-fuchsia-900",
+    accent: "#E879F9",
+    pattern: "waves",
   },
   {
     id: "celebration",
-    name: "Celebration",
+    name: "Champagne",
     icon: Sparkles,
-    gradient: "from-emerald-400 via-teal-500 to-cyan-600",
-    iconColor: "text-white",
-    pattern: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.12) 0%, transparent 60%), linear-gradient(45deg, rgba(0,0,0,0.05) 0%, transparent 50%)",
+    gradient: "from-amber-100 via-yellow-50 to-amber-100",
+    accent: "#B45309",
+    pattern: "dots",
+  },
+  {
+    id: "party",
+    name: "Neon Dreams",
+    icon: PartyPopper,
+    gradient: "from-cyan-500 via-blue-600 to-violet-700",
+    accent: "#22D3EE",
+    pattern: "lines",
+  },
+  {
+    id: "theatre",
+    name: "Velvet Rouge",
+    icon: Theater,
+    gradient: "from-rose-900 via-red-800 to-rose-900",
+    accent: "#FCA5A5",
+    pattern: "stars",
   },
   {
     id: "love",
-    name: "Amour",
+    name: "Rose Petal",
     icon: Heart,
-    gradient: "from-pink-400 via-rose-500 to-red-500",
-    iconColor: "text-white",
-    pattern: "radial-gradient(circle at 25% 25%, rgba(255,255,255,0.15) 0%, transparent 40%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 45%)",
+    gradient: "from-pink-200 via-rose-100 to-pink-200",
+    accent: "#BE185D",
+    pattern: "hearts",
   },
 ];
 
 // =============================================================================
-// VALIDATION
+// PATTERN COMPONENTS
 // =============================================================================
 
-function validateEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+function CardPattern({ pattern, accent }: { pattern: string; accent: string }) {
+  const patternElements = {
+    geometric: (
+      <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 400 250">
+        <defs>
+          <pattern id="geo" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+            <path d="M25 0L50 25L25 50L0 25Z" fill="none" stroke={accent} strokeWidth="0.5" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#geo)" />
+      </svg>
+    ),
+    waves: (
+      <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 400 250">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <path
+            key={i}
+            d={`M-50 ${50 + i * 50} Q50 ${25 + i * 50} 150 ${50 + i * 50} T350 ${50 + i * 50} T550 ${50 + i * 50}`}
+            fill="none"
+            stroke={accent}
+            strokeWidth="1"
+            opacity={0.3 + i * 0.1}
+          />
+        ))}
+      </svg>
+    ),
+    dots: (
+      <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 400 250">
+        <defs>
+          <pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="10" cy="10" r="1.5" fill={accent} />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#dots)" />
+      </svg>
+    ),
+    lines: (
+      <svg className="absolute inset-0 w-full h-full opacity-15" viewBox="0 0 400 250">
+        {[...Array(20)].map((_, i) => (
+          <line
+            key={i}
+            x1={i * 25 - 50}
+            y1="0"
+            x2={i * 25 + 200}
+            y2="250"
+            stroke={accent}
+            strokeWidth="1"
+          />
+        ))}
+      </svg>
+    ),
+    stars: (
+      <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 400 250">
+        {[...Array(12)].map((_, i) => (
+          <text
+            key={i}
+            x={30 + (i % 4) * 100 + (Math.floor(i / 4) % 2) * 50}
+            y={40 + Math.floor(i / 4) * 70}
+            fill={accent}
+            fontSize="16"
+            opacity={0.3 + Math.random() * 0.4}
+          >
+            ✦
+          </text>
+        ))}
+      </svg>
+    ),
+    hearts: (
+      <svg className="absolute inset-0 w-full h-full opacity-15" viewBox="0 0 400 250">
+        {[...Array(8)].map((_, i) => (
+          <text
+            key={i}
+            x={40 + (i % 4) * 90 + (Math.floor(i / 4) % 2) * 45}
+            y={60 + Math.floor(i / 4) * 100}
+            fill={accent}
+            fontSize="24"
+            opacity={0.2 + Math.random() * 0.3}
+          >
+            ♥
+          </text>
+        ))}
+      </svg>
+    ),
+  };
+
+  return patternElements[pattern as keyof typeof patternElements] || null;
 }
 
-function validateForm(data: FormData): FormErrors {
-  const errors: FormErrors = {};
-
-  if (!data.recipientEmail.trim()) {
-    errors.recipientEmail = "L'email du destinataire est requis";
-  } else if (!validateEmail(data.recipientEmail)) {
-    errors.recipientEmail = "L'email n'est pas valide";
-  }
-
-  if (!data.recipientName.trim()) {
-    errors.recipientName = "Le nom du destinataire est requis";
-  } else if (data.recipientName.trim().length < 2) {
-    errors.recipientName = "Le nom doit contenir au moins 2 caracteres";
-  }
-
-  if (!data.senderName.trim()) {
-    errors.senderName = "Votre nom est requis";
-  } else if (data.senderName.trim().length < 2) {
-    errors.senderName = "Votre nom doit contenir au moins 2 caracteres";
-  }
-
-  if (data.message.length > MAX_MESSAGE_LENGTH) {
-    errors.message = `Le message ne peut pas depasser ${MAX_MESSAGE_LENGTH} caracteres`;
-  }
-
-  if (data.sendDate === "scheduled") {
-    if (!data.scheduledDate) {
-      errors.scheduledDate = "Veuillez choisir une date d'envoi";
-    } else {
-      const selectedDate = new Date(data.scheduledDate);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      if (selectedDate < today) {
-        errors.scheduledDate = "La date doit etre dans le futur";
-      }
-    }
-  }
-
-  return errors;
-}
-
 // =============================================================================
-// ANIMATION VARIANTS
+// 3D GIFT CARD COMPONENT
 // =============================================================================
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-
-const cardPreviewVariants = {
-  initial: { scale: 0.95, opacity: 0 },
-  animate: { scale: 1, opacity: 1 },
-  exit: { scale: 0.95, opacity: 0 },
-};
-
-// =============================================================================
-// GIFT CARD PREVIEW COMPONENT
-// =============================================================================
-
-interface GiftCardPreviewProps {
-  design: GiftCardDesign;
-  amount: number;
-  recipientName: string;
-  senderName: string;
-  message: string;
-}
-
-function GiftCardPreview({
+function GiftCard3D({
   design,
   amount,
   recipientName,
   senderName,
-  message,
-}: GiftCardPreviewProps) {
+}: {
+  design: GiftCardDesign;
+  amount: number;
+  recipientName: string;
+  senderName: string;
+}) {
   const Icon = design.icon;
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [8, -8]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-8, 8]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  const isLightDesign = design.id === "celebration" || design.id === "love";
 
   return (
-    <motion.div
-      key={design.id}
-      variants={cardPreviewVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={{ duration: 0.3 }}
-      className="relative"
-    >
-      {/* Card */}
-      <div
-        className={cn(
-          "relative overflow-hidden rounded-3xl shadow-2xl",
-          "aspect-[1.6/1] w-full max-w-md mx-auto",
-          "bg-gradient-to-br",
-          design.gradient
-        )}
-        style={{ backgroundImage: design.pattern }}
+    <div className="perspective-1000" style={{ perspective: "1000px" }}>
+      <motion.div
+        className="relative w-full max-w-[420px] mx-auto"
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-        {/* Decorative elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-white/10 blur-2xl" />
-          <div className="absolute -left-8 -bottom-8 w-40 h-40 rounded-full bg-white/10 blur-3xl" />
-        </div>
+        {/* Card Shadow */}
+        <div className="absolute inset-4 bg-black/20 blur-2xl rounded-3xl transform translate-y-4" />
 
-        {/* Content */}
-        <div className="relative h-full p-6 flex flex-col justify-between">
-          {/* Header */}
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                <Gift className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-white/80 text-xs font-medium uppercase tracking-wider">
-                  Carte Cadeau
-                </p>
-                <p className="text-white font-bold text-sm">Events</p>
-              </div>
-            </div>
-            <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              <Icon className={cn("w-6 h-6", design.iconColor)} />
-            </div>
-          </div>
-
-          {/* Amount */}
-          <div className="text-center">
-            <p className="text-white/60 text-sm mb-1">Valeur</p>
-            <p className="text-white text-4xl font-bold tracking-tight">
-              {formatPrice(amount)}
-            </p>
-          </div>
-
-          {/* Footer */}
-          <div className="space-y-2">
-            {recipientName && (
-              <p className="text-white/90 text-sm">
-                <span className="text-white/60">Pour:</span> {recipientName}
-              </p>
-            )}
-            {senderName && (
-              <p className="text-white/90 text-sm">
-                <span className="text-white/60">De:</span> {senderName}
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Message preview */}
-      {message && (
+        {/* Main Card */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-4 p-4 bg-white rounded-xl shadow-sm border border-gray-100"
+          className={cn(
+            "relative overflow-hidden rounded-2xl",
+            "aspect-[1.586/1] w-full",
+            "bg-gradient-to-br shadow-2xl",
+            design.gradient
+          )}
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
-              <MessageSquare className="w-4 h-4 text-gray-500" />
+          {/* Pattern Overlay */}
+          <CardPattern pattern={design.pattern} accent={design.accent} />
+
+          {/* Shine Effect */}
+          <motion.div
+            className="absolute inset-0 opacity-30"
+            style={{
+              background: `linear-gradient(105deg, transparent 40%, ${design.accent}40 45%, ${design.accent}20 50%, transparent 55%)`,
+              backgroundSize: "200% 200%",
+            }}
+            animate={{
+              backgroundPosition: ["200% 0%", "-200% 0%"],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              repeatDelay: 2,
+              ease: "easeInOut",
+            }}
+          />
+
+          {/* Content */}
+          <div className="relative h-full p-6 flex flex-col justify-between">
+            {/* Header */}
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: `linear-gradient(135deg, ${design.accent}30, ${design.accent}10)`,
+                    border: `1px solid ${design.accent}40`,
+                  }}
+                >
+                  <Gift
+                    className="w-6 h-6"
+                    style={{ color: isLightDesign ? design.accent : design.accent }}
+                  />
+                </div>
+                <div>
+                  <p
+                    className="text-[10px] font-semibold uppercase tracking-[0.2em]"
+                    style={{ color: isLightDesign ? design.accent : `${design.accent}CC` }}
+                  >
+                    Carte Cadeau
+                  </p>
+                  <p
+                    className={cn(
+                      "text-lg font-bold tracking-tight",
+                      isLightDesign ? "text-slate-800" : "text-white"
+                    )}
+                    style={{ fontFamily: "Georgia, serif" }}
+                  >
+                    Events
+                  </p>
+                </div>
+              </div>
+
+              <motion.div
+                className="w-14 h-14 rounded-full flex items-center justify-center"
+                style={{
+                  background: `radial-gradient(circle, ${design.accent}25, transparent)`,
+                }}
+                animate={{ rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <Icon
+                  className="w-7 h-7"
+                  style={{ color: isLightDesign ? design.accent : design.accent }}
+                />
+              </motion.div>
             </div>
-            <div>
-              <p className="text-xs text-gray-500 mb-1">Message</p>
-              <p className="text-sm text-gray-700 whitespace-pre-wrap">
-                {message}
-              </p>
+
+            {/* Amount - Center */}
+            <div className="text-center py-4">
+              <motion.div
+                key={amount}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              >
+                <p
+                  className={cn(
+                    "text-5xl md:text-6xl font-bold tracking-tighter",
+                    isLightDesign ? "text-slate-800" : "text-white"
+                  )}
+                  style={{
+                    fontFamily: "Georgia, serif",
+                    textShadow: isLightDesign ? "none" : "0 2px 20px rgba(0,0,0,0.3)",
+                  }}
+                >
+                  {amount}
+                  <span className="text-2xl md:text-3xl ml-1">€</span>
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-end justify-between">
+              <div className="space-y-1">
+                {recipientName && (
+                  <p
+                    className={cn(
+                      "text-sm",
+                      isLightDesign ? "text-slate-600" : "text-white/80"
+                    )}
+                  >
+                    Pour{" "}
+                    <span className={cn("font-semibold", isLightDesign ? "text-slate-800" : "text-white")}>
+                      {recipientName}
+                    </span>
+                  </p>
+                )}
+                {senderName && (
+                  <p
+                    className={cn(
+                      "text-xs",
+                      isLightDesign ? "text-slate-500" : "text-white/60"
+                    )}
+                  >
+                    De la part de {senderName}
+                  </p>
+                )}
+              </div>
+
+              {/* Chip visual */}
+              <div
+                className="w-10 h-8 rounded"
+                style={{
+                  background: `linear-gradient(135deg, ${design.accent}60, ${design.accent}30)`,
+                }}
+              />
             </div>
           </div>
+
+          {/* Edge highlight */}
+          <div
+            className="absolute inset-0 rounded-2xl pointer-events-none"
+            style={{
+              border: `1px solid ${design.accent}30`,
+              boxShadow: `inset 0 1px 0 ${design.accent}20`,
+            }}
+          />
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
+// =============================================================================
+// AMOUNT BUTTON
+// =============================================================================
+
+function AmountButton({
+  amount,
+  selected,
+  onClick,
+}: {
+  amount: number;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "relative py-5 px-4 rounded-xl font-bold text-xl transition-all",
+        "border-2 overflow-hidden group",
+        selected
+          ? "border-amber-500 bg-gradient-to-br from-amber-50 to-amber-100 text-amber-900"
+          : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+      )}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
+    >
+      {selected && (
+        <motion.div
+          layoutId="amountGlow"
+          className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-orange-400/20"
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        />
+      )}
+      <span className="relative">{amount}€</span>
+      {selected && (
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="absolute -top-1 -right-1 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center"
+        >
+          <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
         </motion.div>
       )}
-    </motion.div>
+    </motion.button>
   );
 }
 
 // =============================================================================
-// AMOUNT SELECTOR COMPONENT
+// DESIGN CARD
 // =============================================================================
 
-interface AmountSelectorProps {
-  selectedAmount: number;
-  customAmount: string;
-  isCustom: boolean;
-  onSelectPreset: (amount: number) => void;
-  onCustomChange: (value: string) => void;
-  onCustomFocus: () => void;
-}
+function DesignCard({
+  design,
+  selected,
+  onClick,
+}: {
+  design: GiftCardDesign;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  const Icon = design.icon;
+  const isLight = design.id === "celebration" || design.id === "love";
 
-function AmountSelector({
-  selectedAmount,
-  customAmount,
-  isCustom,
-  onSelectPreset,
-  onCustomChange,
-  onCustomFocus,
-}: AmountSelectorProps) {
   return (
-    <div className="space-y-4">
-      {/* Preset amounts */}
-      <div className="grid grid-cols-5 gap-3">
-        {PRESET_AMOUNTS.map((amount) => (
-          <motion.button
-            key={amount}
-            type="button"
-            onClick={() => onSelectPreset(amount)}
-            className={cn(
-              "relative py-4 px-2 rounded-xl font-bold text-lg transition-all duration-200",
-              "border-2",
-              selectedAmount === amount && !isCustom
-                ? "border-primary-500 bg-primary-50 text-primary-600 shadow-lg shadow-primary-500/20"
-                : "border-gray-200 bg-white text-gray-700 hover:border-primary-300 hover:bg-gray-50"
-            )}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {amount}
-            <span className="text-sm font-normal">{"\u00A0"}EUR</span>
-            {selectedAmount === amount && !isCustom && (
-              <motion.div
-                layoutId="amountSelector"
-                className="absolute -top-1 -right-1 w-5 h-5 bg-primary-500 rounded-full flex items-center justify-center"
-                initial={false}
-              >
-                <CheckCircle className="w-3 h-3 text-white" />
-              </motion.div>
-            )}
-          </motion.button>
-        ))}
-      </div>
+    <motion.button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "relative overflow-hidden rounded-xl aspect-[1.3/1] transition-all",
+        "border-2",
+        selected
+          ? "border-amber-500 ring-4 ring-amber-500/20"
+          : "border-slate-200 hover:border-slate-300"
+      )}
+      whileHover={{ scale: 1.03, y: -2 }}
+      whileTap={{ scale: 0.97 }}
+    >
+      {/* Background */}
+      <div className={cn("absolute inset-0 bg-gradient-to-br", design.gradient)} />
+      <CardPattern pattern={design.pattern} accent={design.accent} />
 
-      {/* Custom amount */}
-      <div
-        className={cn(
-          "relative rounded-xl border-2 transition-all duration-200",
-          isCustom
-            ? "border-primary-500 bg-primary-50 shadow-lg shadow-primary-500/20"
-            : "border-gray-200 bg-white"
-        )}
-      >
-        <div className="flex items-center p-3 gap-3">
-          <span
-            className={cn(
-              "text-sm font-medium whitespace-nowrap",
-              isCustom ? "text-primary-600" : "text-gray-500"
-            )}
-          >
-            Montant personnalise
-          </span>
-          <div className="flex-1 relative">
-            <input
-              type="number"
-              min={MIN_CUSTOM_AMOUNT}
-              max={MAX_CUSTOM_AMOUNT}
-              value={customAmount}
-              onChange={(e) => onCustomChange(e.target.value)}
-              onFocus={onCustomFocus}
-              placeholder={`${MIN_CUSTOM_AMOUNT} - ${MAX_CUSTOM_AMOUNT}`}
-              className={cn(
-                "w-full px-4 py-2 rounded-lg border border-gray-200 outline-none",
-                "focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20",
-                "transition-all duration-200 text-right font-bold text-lg",
-                isCustom ? "bg-white" : "bg-gray-50"
-              )}
-            />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium">
-              EUR
-            </span>
-          </div>
+      {/* Content */}
+      <div className="relative h-full flex flex-col items-center justify-center gap-2 p-3">
+        <div
+          className="w-10 h-10 rounded-full flex items-center justify-center"
+          style={{ background: `${design.accent}25` }}
+        >
+          <Icon className="w-5 h-5" style={{ color: design.accent }} />
         </div>
-        {isCustom && (
-          <motion.div
-            layoutId="amountSelector"
-            className="absolute -top-1 -right-1 w-5 h-5 bg-primary-500 rounded-full flex items-center justify-center"
-            initial={false}
-          >
-            <CheckCircle className="w-3 h-3 text-white" />
-          </motion.div>
-        )}
+        <span
+          className={cn(
+            "font-semibold text-xs",
+            isLight ? "text-slate-700" : "text-white"
+          )}
+        >
+          {design.name}
+        </span>
       </div>
 
-      {/* Amount range info */}
-      <p className="text-xs text-gray-500 text-center">
-        Montant personnalise entre {MIN_CUSTOM_AMOUNT} EUR et {MAX_CUSTOM_AMOUNT} EUR
-      </p>
-    </div>
+      {/* Selection */}
+      {selected && (
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="absolute top-2 right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center shadow-lg"
+        >
+          <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
+        </motion.div>
+      )}
+    </motion.button>
   );
 }
 
 // =============================================================================
-// DESIGN SELECTOR COMPONENT
+// STEP INDICATOR
 // =============================================================================
 
-interface DesignSelectorProps {
-  selectedDesign: GiftCardDesign;
-  onSelect: (design: GiftCardDesign) => void;
-}
+function StepIndicator({
+  step,
+  currentStep,
+  label,
+  icon: Icon,
+}: {
+  step: number;
+  currentStep: number;
+  label: string;
+  icon: React.ElementType;
+}) {
+  const isActive = currentStep >= step;
+  const isCurrent = currentStep === step;
 
-function DesignSelector({ selectedDesign, onSelect }: DesignSelectorProps) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-      {GIFT_CARD_DESIGNS.map((design) => {
-        const Icon = design.icon;
-        const isSelected = selectedDesign.id === design.id;
-
-        return (
-          <motion.button
-            key={design.id}
-            type="button"
-            onClick={() => onSelect(design)}
-            className={cn(
-              "relative overflow-hidden rounded-xl aspect-[1.4/1] transition-all duration-200",
-              "border-2",
-              isSelected
-                ? "border-primary-500 ring-2 ring-primary-500/30 shadow-lg"
-                : "border-gray-200 hover:border-primary-300"
-            )}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {/* Background gradient */}
-            <div
-              className={cn(
-                "absolute inset-0 bg-gradient-to-br",
-                design.gradient
-              )}
-              style={{ backgroundImage: design.pattern }}
-            />
-
-            {/* Content */}
-            <div className="relative h-full flex flex-col items-center justify-center gap-2 p-3">
-              <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                <Icon className={cn("w-5 h-5", design.iconColor)} />
-              </div>
-              <span className="text-white font-semibold text-sm">
-                {design.name}
-              </span>
-            </div>
-
-            {/* Selection indicator */}
-            {isSelected && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute top-2 right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg"
-              >
-                <CheckCircle className="w-4 h-4 text-primary-500" />
-              </motion.div>
-            )}
-          </motion.button>
-        );
-      })}
+    <div className="flex items-center gap-3">
+      <motion.div
+        className={cn(
+          "w-10 h-10 rounded-full flex items-center justify-center transition-all",
+          isActive
+            ? "bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-500/30"
+            : "bg-slate-100 text-slate-400"
+        )}
+        animate={isCurrent ? { scale: [1, 1.1, 1] } : {}}
+        transition={{ duration: 0.5, repeat: isCurrent ? Infinity : 0, repeatDelay: 2 }}
+      >
+        <Icon className="w-5 h-5" />
+      </motion.div>
+      <div>
+        <p className={cn("text-sm font-medium", isActive ? "text-slate-900" : "text-slate-400")}>
+          Étape {step}
+        </p>
+        <p className={cn("text-xs", isActive ? "text-slate-600" : "text-slate-400")}>{label}</p>
+      </div>
     </div>
   );
 }
 
 // =============================================================================
-// MAIN COMPONENT
+// MAIN PAGE
 // =============================================================================
 
 export default function GiftCardsPage() {
-  // Amount state
-  const [selectedAmount, setSelectedAmount] = useState(50);
+  const [step, setStep] = useState(1);
+  const [amount, setAmount] = useState(100);
   const [customAmount, setCustomAmount] = useState("");
-  const [isCustomAmount, setIsCustomAmount] = useState(false);
-
-  // Design state
-  const [selectedDesign, setSelectedDesign] = useState(GIFT_CARD_DESIGNS[0]);
-
-  // Form state
+  const [isCustom, setIsCustom] = useState(false);
+  const [design, setDesign] = useState(DESIGNS[0]);
   const [formData, setFormData] = useState<FormData>({
     recipientEmail: "",
     recipientName: "",
@@ -504,587 +582,510 @@ export default function GiftCardsPage() {
     sendDate: "now",
     scheduledDate: "",
   });
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Calculate final amount
   const finalAmount = useMemo(() => {
-    if (isCustomAmount && customAmount) {
+    if (isCustom && customAmount) {
       const parsed = parseFloat(customAmount);
-      if (!isNaN(parsed) && parsed >= MIN_CUSTOM_AMOUNT && parsed <= MAX_CUSTOM_AMOUNT) {
+      if (!isNaN(parsed) && parsed >= MIN_AMOUNT && parsed <= MAX_AMOUNT) {
         return parsed;
       }
     }
-    return selectedAmount;
-  }, [isCustomAmount, customAmount, selectedAmount]);
+    return amount;
+  }, [isCustom, customAmount, amount]);
 
-  // Check if form is valid
   const isFormValid = useMemo(() => {
-    const formErrors = validateForm(formData);
-    const hasValidAmount = finalAmount >= MIN_CUSTOM_AMOUNT && finalAmount <= MAX_CUSTOM_AMOUNT;
-    return Object.keys(formErrors).length === 0 && hasValidAmount;
+    return (
+      formData.recipientEmail.includes("@") &&
+      formData.recipientName.length >= 2 &&
+      formData.senderName.length >= 2 &&
+      finalAmount >= MIN_AMOUNT
+    );
   }, [formData, finalAmount]);
 
-  // Handlers
-  const handlePresetSelect = (amount: number) => {
-    setSelectedAmount(amount);
-    setIsCustomAmount(false);
+  const handlePreset = (value: number) => {
+    setAmount(value);
+    setIsCustom(false);
     setCustomAmount("");
   };
 
-  const handleCustomChange = (value: string) => {
-    setCustomAmount(value);
-    if (value) {
-      setIsCustomAmount(true);
-    }
-  };
-
-  const handleCustomFocus = () => {
-    setIsCustomAmount(true);
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    if (errors[name as keyof FormErrors]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: undefined,
-      }));
-    }
-  };
-
-  const handleBlur = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name } = e.target;
-    setTouched((prev) => ({
-      ...prev,
-      [name]: true,
-    }));
-
-    const fieldErrors = validateForm(formData);
-    if (fieldErrors[name as keyof FormErrors]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: fieldErrors[name as keyof FormErrors],
-      }));
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const formErrors = validateForm(formData);
-    setErrors(formErrors);
-    setTouched({
-      recipientEmail: true,
-      recipientName: true,
-      senderName: true,
-      message: true,
-      scheduledDate: true,
-    });
-
-    if (Object.keys(formErrors).length > 0) {
-      return;
-    }
-
+  const handleSubmit = async () => {
+    if (!isFormValid) return;
     setIsProcessing(true);
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      const sendInfo =
-        formData.sendDate === "now"
-          ? "immediatement"
-          : `le ${new Date(formData.scheduledDate).toLocaleDateString("fr-FR")}`;
-
-      alert(
-        `Carte cadeau achetee avec succes !\n\n` +
-          `Montant: ${formatPrice(finalAmount)}\n` +
-          `Pour: ${formData.recipientName}\n` +
-          `Envoi: ${sendInfo}\n\n` +
-          `Un email de confirmation a ete envoye.`
-      );
-
-      // Reset form
-      setFormData({
-        recipientEmail: "",
-        recipientName: "",
-        senderName: "",
-        message: "",
-        sendDate: "now",
-        scheduledDate: "",
-      });
-      setTouched({});
-    } catch {
-      alert("Une erreur est survenue. Veuillez reessayer.");
-    } finally {
-      setIsProcessing(false);
-    }
+    await new Promise((r) => setTimeout(r, 2000));
+    alert(`Carte cadeau de ${formatPrice(finalAmount)} créée avec succès !`);
+    setIsProcessing(false);
   };
 
-  // Get minimum date for scheduler (today)
-  const today = new Date().toISOString().split("T")[0];
+  // Auto-advance step based on completion
+  useEffect(() => {
+    if (finalAmount > 0 && step === 1) return;
+    if (design && step === 2) return;
+  }, [finalAmount, design, step]);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="max-w-7xl mx-auto"
-      >
-        {/* Header */}
-        <motion.div variants={itemVariants} className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-secondary-500 shadow-lg shadow-primary-500/30 mb-6">
-            <Gift className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Cartes Cadeaux
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Offrez des experiences inoubliables. Nos cartes cadeaux sont valables
-            sur tous les evenements de la plateforme.
-          </p>
-        </motion.div>
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-slate-900 text-white">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 2px 2px, #D4AF37 1px, transparent 1px)`,
+              backgroundSize: "40px 40px",
+            }}
+          />
+        </div>
 
-        {/* Main Content - 2 Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Left Column - Configuration */}
-          <motion.div variants={itemVariants} className="space-y-8">
-            <form onSubmit={handleSubmit} className="space-y-8">
-              {/* Amount Section */}
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg shadow-primary-500/25">
-                    <CreditCard className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="font-bold text-gray-900">Choisir le montant</h2>
-                    <p className="text-sm text-gray-500">
-                      Selectionnez un montant ou personnalisez-le
-                    </p>
-                  </div>
-                </div>
+        {/* Gradient Orbs */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" />
 
-                <AmountSelector
-                  selectedAmount={selectedAmount}
-                  customAmount={customAmount}
-                  isCustom={isCustomAmount}
-                  onSelectPreset={handlePresetSelect}
-                  onCustomChange={handleCustomChange}
-                  onCustomFocus={handleCustomFocus}
-                />
-              </div>
+        <div className="relative max-w-7xl mx-auto px-4 py-20 md:py-32">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
+          >
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 mb-8"
+            >
+              <Star className="w-4 h-4 text-amber-400" />
+              <span className="text-sm text-amber-200 font-medium">
+                Le cadeau parfait pour les amateurs de sorties
+              </span>
+            </motion.div>
 
-              {/* Design Section */}
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-secondary-500 to-secondary-600 flex items-center justify-center shadow-lg shadow-secondary-500/25">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="font-bold text-gray-900">Choisir le design</h2>
-                    <p className="text-sm text-gray-500">
-                      Selectionnez un design pour la carte
-                    </p>
-                  </div>
-                </div>
+            <h1
+              className="text-5xl md:text-7xl font-bold mb-6"
+              style={{ fontFamily: "Georgia, serif" }}
+            >
+              <span className="text-white">Offrez des</span>
+              <br />
+              <span className="bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-300 bg-clip-text text-transparent">
+                moments inoubliables
+              </span>
+            </h1>
 
-                <DesignSelector
-                  selectedDesign={selectedDesign}
-                  onSelect={setSelectedDesign}
-                />
-              </div>
+            <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto mb-12">
+              Nos cartes cadeaux ouvrent les portes de milliers d&apos;événements.
+              <br className="hidden md:block" />
+              Concerts, théâtre, festivals — le choix leur appartient.
+            </p>
 
-              {/* Recipient Section */}
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center shadow-lg shadow-accent-500/25">
-                    <Send className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="font-bold text-gray-900">
-                      Informations du destinataire
-                    </h2>
-                    <p className="text-sm text-gray-500">
-                      A qui souhaitez-vous offrir cette carte ?
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-5">
-                  {/* Recipient Email */}
-                  <Input
-                    label="Email du destinataire *"
-                    type="email"
-                    name="recipientEmail"
-                    value={formData.recipientEmail}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.recipientEmail ? errors.recipientEmail : undefined}
-                    placeholder="destinataire@email.com"
-                    leftIcon={<Mail className="w-5 h-5" />}
-                  />
-
-                  {/* Recipient Name */}
-                  <Input
-                    label="Nom du destinataire *"
-                    type="text"
-                    name="recipientName"
-                    value={formData.recipientName}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.recipientName ? errors.recipientName : undefined}
-                    placeholder="Marie Dupont"
-                    leftIcon={<User className="w-5 h-5" />}
-                  />
-
-                  {/* Sender Name */}
-                  <Input
-                    label="Votre nom (expediteur) *"
-                    type="text"
-                    name="senderName"
-                    value={formData.senderName}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.senderName ? errors.senderName : undefined}
-                    placeholder="Jean Martin"
-                    leftIcon={<User className="w-5 h-5" />}
-                  />
-
-                  {/* Message */}
-                  <div className="w-full">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Message personnalise (optionnel)
-                    </label>
-                    <div className="relative">
-                      <div className="absolute left-4 top-4 text-gray-400">
-                        <MessageSquare className="w-5 h-5" />
-                      </div>
-                      <textarea
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        placeholder="Joyeux anniversaire ! Profite bien de cette carte pour assister a tes evenements preferes..."
-                        maxLength={MAX_MESSAGE_LENGTH}
-                        rows={3}
-                        className={cn(
-                          "w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white",
-                          "focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none",
-                          "transition-all duration-200 placeholder:text-gray-400 resize-none",
-                          errors.message &&
-                            touched.message &&
-                            "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                        )}
-                      />
-                    </div>
-                    <div className="flex justify-between mt-2">
-                      {errors.message && touched.message ? (
-                        <p className="text-sm text-red-500">{errors.message}</p>
-                      ) : (
-                        <span />
-                      )}
-                      <p
-                        className={cn(
-                          "text-xs",
-                          formData.message.length > MAX_MESSAGE_LENGTH * 0.9
-                            ? "text-amber-500"
-                            : "text-gray-400"
-                        )}
-                      >
-                        {formData.message.length}/{MAX_MESSAGE_LENGTH}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Send Date Section */}
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/25">
-                    <Calendar className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="font-bold text-gray-900">Date d&apos;envoi</h2>
-                    <p className="text-sm text-gray-500">
-                      Quand souhaitez-vous envoyer la carte ?
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  {/* Send Now */}
-                  <label
-                    className={cn(
-                      "flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all",
-                      formData.sendDate === "now"
-                        ? "border-primary-500 bg-primary-50"
-                        : "border-gray-200 hover:border-primary-300"
-                    )}
-                  >
-                    <input
-                      type="radio"
-                      name="sendDate"
-                      value="now"
-                      checked={formData.sendDate === "now"}
-                      onChange={handleChange}
-                      className="w-5 h-5 text-primary-500 border-gray-300 focus:ring-primary-500"
-                    />
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-900">
-                        Envoyer maintenant
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Le destinataire recevra la carte immediatement
-                      </p>
-                    </div>
-                    <ArrowRight
-                      className={cn(
-                        "w-5 h-5",
-                        formData.sendDate === "now"
-                          ? "text-primary-500"
-                          : "text-gray-400"
-                      )}
-                    />
-                  </label>
-
-                  {/* Schedule */}
-                  <label
-                    className={cn(
-                      "flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all",
-                      formData.sendDate === "scheduled"
-                        ? "border-primary-500 bg-primary-50"
-                        : "border-gray-200 hover:border-primary-300"
-                    )}
-                  >
-                    <input
-                      type="radio"
-                      name="sendDate"
-                      value="scheduled"
-                      checked={formData.sendDate === "scheduled"}
-                      onChange={handleChange}
-                      className="w-5 h-5 mt-1 text-primary-500 border-gray-300 focus:ring-primary-500"
-                    />
-                    <div className="flex-1 space-y-3">
-                      <div>
-                        <p className="font-semibold text-gray-900">
-                          Programmer l&apos;envoi
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Choisissez une date pour l&apos;envoi automatique
-                        </p>
-                      </div>
-
-                      {formData.sendDate === "scheduled" && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                        >
-                          <input
-                            type="date"
-                            name="scheduledDate"
-                            value={formData.scheduledDate}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            min={today}
-                            className={cn(
-                              "w-full px-4 py-3 rounded-xl border border-gray-200 bg-white",
-                              "focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none",
-                              "transition-all duration-200",
-                              errors.scheduledDate &&
-                                touched.scheduledDate &&
-                                "border-red-500"
-                            )}
-                          />
-                          {errors.scheduledDate && touched.scheduledDate && (
-                            <p className="mt-2 text-sm text-red-500">
-                              {errors.scheduledDate}
-                            </p>
-                          )}
-                        </motion.div>
-                      )}
-                    </div>
-                  </label>
-                </div>
-              </div>
-
-              {/* Submit Button - Mobile */}
-              <div className="lg:hidden bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-gray-600">Total</span>
-                  <span className="text-2xl font-bold text-primary-600">
-                    {formatPrice(finalAmount)}
-                  </span>
-                </div>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="lg"
-                  className="w-full"
-                  disabled={!isFormValid || isProcessing}
-                  isLoading={isProcessing}
-                  leftIcon={!isProcessing ? <Gift className="w-5 h-5" /> : undefined}
+            {/* Stats */}
+            <div className="flex items-center justify-center gap-12 md:gap-20">
+              {[
+                { value: "10K+", label: "Événements" },
+                { value: "12", label: "Mois de validité" },
+                { value: "100%", label: "Sécurisé" },
+              ].map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + i * 0.1 }}
+                  className="text-center"
                 >
-                  {isProcessing
-                    ? "Traitement en cours..."
-                    : `Acheter ${formatPrice(finalAmount)}`}
-                </Button>
-              </div>
-            </form>
-          </motion.div>
-
-          {/* Right Column - Preview (Sticky) */}
-          <motion.div variants={itemVariants} className="lg:sticky lg:top-8 space-y-6 self-start">
-            {/* Preview Card */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-                  <Gift className="w-5 h-5 text-gray-600" />
-                </div>
-                <div>
-                  <h2 className="font-bold text-gray-900">Apercu de la carte</h2>
-                  <p className="text-sm text-gray-500">
-                    Voici ce que recevra le destinataire
-                  </p>
-                </div>
-              </div>
-
-              <AnimatePresence mode="wait">
-                <GiftCardPreview
-                  design={selectedDesign}
-                  amount={finalAmount}
-                  recipientName={formData.recipientName}
-                  senderName={formData.senderName}
-                  message={formData.message}
-                />
-              </AnimatePresence>
-            </div>
-
-            {/* Summary & Purchase - Desktop */}
-            <div className="hidden lg:block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-              {/* Summary */}
-              <div className="p-6 space-y-4">
-                <h3 className="font-bold text-gray-900">Resume</h3>
-
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Montant de la carte</span>
-                    <span className="font-medium text-gray-900">
-                      {formatPrice(finalAmount)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Design</span>
-                    <span className="font-medium text-gray-900">
-                      {selectedDesign.name}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Envoi</span>
-                    <span className="font-medium text-gray-900">
-                      {formData.sendDate === "now"
-                        ? "Immediat"
-                        : formData.scheduledDate
-                        ? new Date(formData.scheduledDate).toLocaleDateString(
-                            "fr-FR"
-                          )
-                        : "A programmer"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Total & Button */}
-              <div className="bg-gray-50 px-6 py-4 border-t border-gray-100">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-bold text-gray-900">Total</span>
-                  <span className="text-2xl font-bold text-primary-600">
-                    {formatPrice(finalAmount)}
-                  </span>
-                </div>
-
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="lg"
-                  className="w-full"
-                  disabled={!isFormValid || isProcessing}
-                  isLoading={isProcessing}
-                  leftIcon={!isProcessing ? <Gift className="w-5 h-5" /> : undefined}
-                  onClick={handleSubmit}
-                >
-                  {isProcessing
-                    ? "Traitement en cours..."
-                    : `Acheter ${formatPrice(finalAmount)}`}
-                </Button>
-
-                {/* Validation status */}
-                {!isFormValid && (
-                  <div className="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-200">
-                    <p className="text-sm text-amber-700">
-                      Veuillez remplir tous les champs requis
-                    </p>
-                  </div>
-                )}
-
-                {isFormValid && (
-                  <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span className="text-sm text-green-700 font-medium">
-                        Pret a acheter
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Trust badges */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-sm">
-                  <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                  </div>
-                  <span className="text-gray-700">
-                    Valable sur tous les evenements
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <Mail className="w-4 h-4 text-blue-600" />
-                  </div>
-                  <span className="text-gray-700">
-                    Envoi instantane par email
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
-                    <Calendar className="w-4 h-4 text-purple-600" />
-                  </div>
-                  <span className="text-gray-700">
-                    Validite de 12 mois
-                  </span>
-                </div>
-              </div>
+                  <p className="text-3xl md:text-4xl font-bold text-amber-400">{stat.value}</p>
+                  <p className="text-sm text-slate-400">{stat.label}</p>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
-      </motion.div>
+
+        {/* Wave Divider */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 60" fill="none" className="w-full h-auto">
+            <path
+              d="M0 60V30C240 10 480 0 720 10C960 20 1200 50 1440 30V60H0Z"
+              className="fill-slate-50"
+            />
+          </svg>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <section className="max-w-7xl mx-auto px-4 py-12 md:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
+          {/* Left: Configuration */}
+          <div className="lg:col-span-7 space-y-8">
+            {/* Step Progress */}
+            <div className="hidden md:flex items-center justify-between mb-12">
+              <StepIndicator step={1} currentStep={step} label="Montant" icon={Zap} />
+              <div className="flex-1 h-0.5 bg-slate-200 mx-4" />
+              <StepIndicator step={2} currentStep={step} label="Design" icon={Sparkles} />
+              <div className="flex-1 h-0.5 bg-slate-200 mx-4" />
+              <StepIndicator step={3} currentStep={step} label="Destinataire" icon={Gift} />
+            </div>
+
+            {/* Step 1: Amount */}
+            <motion.div
+              className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 p-8 border border-slate-100"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/25">
+                  <Zap className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900">Choisissez le montant</h2>
+                  <p className="text-slate-500">Sélectionnez ou personnalisez</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-6">
+                {PRESET_AMOUNTS.map((value) => (
+                  <AmountButton
+                    key={value}
+                    amount={value}
+                    selected={amount === value && !isCustom}
+                    onClick={() => handlePreset(value)}
+                  />
+                ))}
+              </div>
+
+              {/* Custom Amount */}
+              <div
+                className={cn(
+                  "relative rounded-xl border-2 transition-all p-4",
+                  isCustom ? "border-amber-500 bg-amber-50" : "border-slate-200 bg-slate-50"
+                )}
+              >
+                <label className="flex items-center gap-4">
+                  <span className="text-sm font-medium text-slate-600">Montant libre</span>
+                  <div className="flex-1 relative">
+                    <input
+                      type="number"
+                      min={MIN_AMOUNT}
+                      max={MAX_AMOUNT}
+                      value={customAmount}
+                      onChange={(e) => {
+                        setCustomAmount(e.target.value);
+                        setIsCustom(true);
+                      }}
+                      onFocus={() => setIsCustom(true)}
+                      placeholder={`${MIN_AMOUNT} - ${MAX_AMOUNT}`}
+                      className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-right text-xl font-bold"
+                    />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">
+                      €
+                    </span>
+                  </div>
+                </label>
+                {isCustom && customAmount && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center"
+                  >
+                    <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
+                  </motion.div>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setStep(2)}
+                className="mt-6 w-full py-4 rounded-xl bg-slate-900 text-white font-semibold flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors"
+              >
+                Continuer <ArrowRight className="w-5 h-5" />
+              </button>
+            </motion.div>
+
+            {/* Step 2: Design */}
+            <motion.div
+              className={cn(
+                "bg-white rounded-3xl shadow-xl shadow-slate-200/50 p-8 border border-slate-100 transition-opacity",
+                step >= 2 ? "opacity-100" : "opacity-50 pointer-events-none"
+              )}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-400 to-violet-500 flex items-center justify-center shadow-lg shadow-purple-500/25">
+                  <Sparkles className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900">Choisissez le design</h2>
+                  <p className="text-slate-500">6 styles exclusifs</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {DESIGNS.map((d) => (
+                  <DesignCard
+                    key={d.id}
+                    design={d}
+                    selected={design.id === d.id}
+                    onClick={() => {
+                      setDesign(d);
+                      setStep(3);
+                    }}
+                  />
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Step 3: Recipient */}
+            <motion.div
+              className={cn(
+                "bg-white rounded-3xl shadow-xl shadow-slate-200/50 p-8 border border-slate-100 transition-opacity",
+                step >= 3 ? "opacity-100" : "opacity-50 pointer-events-none"
+              )}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/25">
+                  <Gift className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900">Informations du destinataire</h2>
+                  <p className="text-slate-500">À qui offrez-vous cette carte ?</p>
+                </div>
+              </div>
+
+              <div className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Email du destinataire *
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                      <input
+                        type="email"
+                        value={formData.recipientEmail}
+                        onChange={(e) => setFormData({ ...formData, recipientEmail: e.target.value })}
+                        placeholder="email@exemple.com"
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Nom du destinataire *
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                      <input
+                        type="text"
+                        value={formData.recipientName}
+                        onChange={(e) => setFormData({ ...formData, recipientName: e.target.value })}
+                        placeholder="Marie"
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Votre nom *
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input
+                      type="text"
+                      value={formData.senderName}
+                      onChange={(e) => setFormData({ ...formData, senderName: e.target.value })}
+                      placeholder="Jean"
+                      className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Message personnel{" "}
+                    <span className="text-slate-400 font-normal">(optionnel)</span>
+                  </label>
+                  <div className="relative">
+                    <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-slate-400" />
+                    <textarea
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      maxLength={MAX_MESSAGE_LENGTH}
+                      rows={3}
+                      placeholder="Joyeux anniversaire ! Profite bien..."
+                      className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 resize-none"
+                    />
+                    <span className="absolute right-4 bottom-3 text-xs text-slate-400">
+                      {formData.message.length}/{MAX_MESSAGE_LENGTH}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Send Date */}
+                <div className="flex gap-4">
+                  <label
+                    className={cn(
+                      "flex-1 flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all",
+                      formData.sendDate === "now"
+                        ? "border-amber-500 bg-amber-50"
+                        : "border-slate-200 hover:border-slate-300"
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      checked={formData.sendDate === "now"}
+                      onChange={() => setFormData({ ...formData, sendDate: "now" })}
+                      className="w-4 h-4 text-amber-500"
+                    />
+                    <div>
+                      <p className="font-medium text-slate-900">Maintenant</p>
+                      <p className="text-xs text-slate-500">Envoi immédiat</p>
+                    </div>
+                  </label>
+
+                  <label
+                    className={cn(
+                      "flex-1 flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all",
+                      formData.sendDate === "scheduled"
+                        ? "border-amber-500 bg-amber-50"
+                        : "border-slate-200 hover:border-slate-300"
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      checked={formData.sendDate === "scheduled"}
+                      onChange={() => setFormData({ ...formData, sendDate: "scheduled" })}
+                      className="w-4 h-4 text-amber-500"
+                    />
+                    <div>
+                      <p className="font-medium text-slate-900">Programmer</p>
+                      <p className="text-xs text-slate-500">Choisir une date</p>
+                    </div>
+                  </label>
+                </div>
+
+                {formData.sendDate === "scheduled" && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                  >
+                    <div className="relative">
+                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                      <input
+                        type="date"
+                        value={formData.scheduledDate}
+                        onChange={(e) => setFormData({ ...formData, scheduledDate: e.target.value })}
+                        min={new Date().toISOString().split("T")[0]}
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right: Preview & Summary */}
+          <div className="lg:col-span-5">
+            <div className="lg:sticky lg:top-8 space-y-6">
+              {/* Card Preview */}
+              <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 p-8 border border-slate-100">
+                <p className="text-sm font-medium text-slate-500 mb-6 text-center">
+                  Aperçu de votre carte
+                </p>
+                <AnimatePresence mode="wait">
+                  <GiftCard3D
+                    key={design.id}
+                    design={design}
+                    amount={finalAmount}
+                    recipientName={formData.recipientName || "Destinataire"}
+                    senderName={formData.senderName}
+                  />
+                </AnimatePresence>
+
+                {formData.message && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-100"
+                  >
+                    <p className="text-xs text-slate-500 mb-1">Message</p>
+                    <p className="text-sm text-slate-700 italic">&ldquo;{formData.message}&rdquo;</p>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* Purchase Summary */}
+              <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 text-white">
+                <h3 className="font-bold text-lg mb-6">Récapitulatif</h3>
+
+                <div className="space-y-4 mb-8">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Montant</span>
+                    <span className="font-semibold">{formatPrice(finalAmount)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Design</span>
+                    <span className="font-semibold">{design.name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Envoi</span>
+                    <span className="font-semibold">
+                      {formData.sendDate === "now" ? "Immédiat" : formData.scheduledDate || "À définir"}
+                    </span>
+                  </div>
+                  <div className="h-px bg-slate-700" />
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">Total</span>
+                    <span className="text-3xl font-bold text-amber-400">
+                      {formatPrice(finalAmount)}
+                    </span>
+                  </div>
+                </div>
+
+                <motion.button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={!isFormValid || isProcessing}
+                  className={cn(
+                    "w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all",
+                    isFormValid
+                      ? "bg-gradient-to-r from-amber-400 to-orange-500 text-slate-900 hover:shadow-lg hover:shadow-amber-500/30"
+                      : "bg-slate-700 text-slate-400 cursor-not-allowed"
+                  )}
+                  whileHover={isFormValid ? { scale: 1.02 } : {}}
+                  whileTap={isFormValid ? { scale: 0.98 } : {}}
+                >
+                  {isProcessing ? (
+                    <motion.div
+                      className="w-6 h-6 border-2 border-slate-900/30 border-t-slate-900 rounded-full"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    />
+                  ) : (
+                    <>
+                      <Gift className="w-5 h-5" />
+                      Acheter la carte
+                    </>
+                  )}
+                </motion.button>
+
+                {/* Trust */}
+                <div className="mt-6 flex items-center justify-center gap-2 text-slate-400 text-xs">
+                  <Check className="w-4 h-4 text-emerald-400" />
+                  Paiement sécurisé • Envoi instantané
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

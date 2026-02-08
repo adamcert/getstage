@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -10,8 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signIn, signInWithOAuth } from "@/lib/auth/actions";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +31,7 @@ export default function LoginPage() {
       setError(result.error);
       setIsLoading(false);
     } else {
-      router.push("/");
+      router.push(redirectTo);
       router.refresh();
     }
   };
@@ -191,5 +193,38 @@ export default function LoginPage() {
         </CardFooter>
       </Card>
     </motion.div>
+  );
+}
+
+function LoginSkeleton() {
+  return (
+    <Card variant="elevated" className="overflow-hidden">
+      <CardHeader>
+        <div className="text-center">
+          <div className="h-8 w-40 bg-gray-200 rounded mx-auto animate-pulse" />
+          <div className="h-4 w-56 bg-gray-100 rounded mx-auto mt-2 animate-pulse" />
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="space-y-3">
+          <div className="h-11 bg-gray-100 rounded-xl animate-pulse" />
+          <div className="h-11 bg-gray-100 rounded-xl animate-pulse" />
+        </div>
+        <div className="h-4 bg-gray-100 rounded animate-pulse" />
+        <div className="space-y-4">
+          <div className="h-16 bg-gray-100 rounded-xl animate-pulse" />
+          <div className="h-16 bg-gray-100 rounded-xl animate-pulse" />
+          <div className="h-11 bg-gray-200 rounded-xl animate-pulse" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginSkeleton />}>
+      <LoginForm />
+    </Suspense>
   );
 }
