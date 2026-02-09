@@ -119,7 +119,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         {/* Subtle animated color accent */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-transparent to-blue-900/20"
+          className="absolute inset-0 bg-gradient-to-br from-primary-900/40 via-transparent to-secondary-900/30"
           animate={{
             opacity: [0.4, 0.7, 0.4],
           }}
@@ -145,7 +145,7 @@ export function Hero() {
             variants={itemVariants}
           >
             Découvrez les meilleurs{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-300 to-secondary-300">
               événements
             </span>
           </motion.h1>

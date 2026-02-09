@@ -9,8 +9,8 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   title: {
-    template: "%s | Events",
-    default: "Events - Decouvrez les meilleurs evenements",
+    template: "%s | GetStage",
+    default: "GetStage - Decouvrez les meilleurs evenements",
   },
   description: "Billetterie en ligne pour concerts, clubs, theatre, expositions et plus encore. Reservez vos places en toute securite.",
   keywords: [
@@ -25,26 +25,26 @@ export const metadata: Metadata = {
     "sorties",
     "culture",
   ],
-  authors: [{ name: "Events" }],
-  creator: "Events",
+  authors: [{ name: "GetStage by SNAPSS" }],
+  creator: "GetStage by SNAPSS",
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    siteName: "Events",
-    title: "Events - Decouvrez les meilleurs evenements",
+    siteName: "GetStage",
+    title: "GetStage - Decouvrez les meilleurs evenements",
     description: "Billetterie en ligne pour concerts, clubs, theatre, expositions et plus encore. Reservez vos places en toute securite.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Events - Plateforme de billetterie",
+        alt: "GetStage - Plateforme de billetterie by SNAPSS",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Events - Decouvrez les meilleurs evenements",
+    title: "GetStage - Decouvrez les meilleurs evenements",
     description: "Billetterie en ligne pour concerts, clubs, theatre, expositions et plus encore.",
     images: ["/og-image.jpg"],
   },

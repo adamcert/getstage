@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Accueil - Decouvrez les meilleurs evenements",
   description: "Explorez les meilleurs evenements pres de chez vous : concerts, theatre, expositions, soirees et plus encore. Reservez vos billets en ligne en toute securite.",
   openGraph: {
-    title: "Accueil - Decouvrez les meilleurs evenements | Events",
+    title: "Accueil - Decouvrez les meilleurs evenements | GetStage",
     description: "Explorez les meilleurs evenements pres de chez vous : concerts, theatre, expositions, soirees et plus encore.",
   },
 };

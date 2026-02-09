@@ -63,13 +63,14 @@ export default function DashboardLayout({
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
                 <CalendarDays className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
-                Events
-              </span>
+              <div className="flex flex-col leading-none">
+                <span className="text-lg font-bold text-gray-900 tracking-tight">GetStage</span>
+                <span className="text-[9px] font-semibold text-gray-400 tracking-widest uppercase">by SNAPSS</span>
+              </div>
             </Link>
             <button
               className="lg:hidden p-2 rounded-lg hover:bg-gray-100"

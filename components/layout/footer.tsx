@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Twitter, Facebook, Youtube } from "lucide-react";
+import { Instagram, Twitter, Facebook, Youtube, CalendarClock } from "lucide-react";
 
 const footerLinks = {
   discover: [
@@ -41,11 +41,14 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
-                <span className="text-white font-bold text-xl">E</span>
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                <CalendarClock className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-xl">Events</span>
+              <div className="flex flex-col leading-none">
+                <span className="font-bold text-lg tracking-tight">GetStage</span>
+                <span className="text-[10px] font-semibold text-gray-500 tracking-widest uppercase">by SNAPSS</span>
+              </div>
             </div>
             <p className="text-gray-400 text-sm mb-4">
               Decouvrez les meilleurs evenements pres de chez vous.
@@ -124,7 +127,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 text-sm">
-          <p>&copy; {new Date().getFullYear()} Events. Tous droits reserves.</p>
+          <p>&copy; {new Date().getFullYear()} GetStage by SNAPSS. Tous droits reserves.</p>
         </div>
       </div>
     </footer>

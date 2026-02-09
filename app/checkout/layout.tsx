@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     follow: false,
   },
   openGraph: {
-    title: "Paiement | Events",
+    title: "Paiement | GetStage",
     description: "Finalisez votre commande en toute securite.",
   },
 };

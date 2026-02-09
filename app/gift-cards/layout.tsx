@@ -4,7 +4,7 @@ export const metadata: Metadata = {
   title: "Cartes Cadeaux",
   description: "Offrez des experiences inoubliables avec nos cartes cadeaux. Valables sur tous les evenements de la plateforme, un cadeau parfait pour toutes les occasions.",
   openGraph: {
-    title: "Cartes Cadeaux | Events",
+    title: "Cartes Cadeaux | GetStage",
     description: "Offrez des experiences inoubliables avec nos cartes cadeaux. Valables sur tous les evenements de la plateforme.",
   },
 };
