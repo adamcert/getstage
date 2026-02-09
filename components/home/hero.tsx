@@ -106,56 +106,25 @@ export function Hero() {
 
   return (
     <section className="relative min-h-[600px] lg:min-h-[700px] flex items-center justify-center overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-600">
-        {/* Animated gradient overlay */}
+      {/* Immersive Background Image */}
+      <div className="absolute inset-0">
+        <img
+          src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=1920&q=80&auto=format&fit=crop"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Dark overlay for readability */}
+        <div className="absolute inset-0 bg-black/50" />
+        {/* Gradient overlay from bottom for depth */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        {/* Subtle animated color accent */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-tr from-secondary-500/30 via-transparent to-primary-400/20"
+          className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-transparent to-blue-900/20"
           animate={{
-            opacity: [0.5, 0.8, 0.5],
-            scale: [1, 1.1, 1],
+            opacity: [0.4, 0.7, 0.4],
           }}
           transition={{
             duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Floating shapes */}
-        <motion.div
-          className="absolute top-20 left-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-10 w-80 h-80 bg-secondary-400/20 rounded-full blur-3xl"
-          animate={{
-            x: [0, -40, 0],
-            y: [0, -50, 0],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-1/3 w-48 h-48 bg-accent-400/15 rounded-full blur-2xl"
-          animate={{
-            x: [0, 30, 0],
-            y: [0, -30, 0],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 15,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -176,7 +145,7 @@ export function Hero() {
             variants={itemVariants}
           >
             Découvrez les meilleurs{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-300 to-accent-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300">
               événements
             </span>
           </motion.h1>
