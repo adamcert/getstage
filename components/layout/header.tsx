@@ -62,7 +62,7 @@ export function Header() {
                 className={cn(
                   "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
                   pathname === link.href
-                    ? "text-primary-500 bg-primary-50"
+                    ? "text-secondary-600 bg-secondary-50"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                 )}
               >
@@ -104,7 +104,7 @@ export function Header() {
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
                     className={cn(
-                      "absolute -top-1 -right-1 w-5 h-5 bg-primary-500 text-white text-xs font-bold rounded-full flex items-center justify-center",
+                      "absolute -top-1 -right-1 w-5 h-5 bg-secondary-500 text-white text-xs font-bold rounded-full flex items-center justify-center",
                       isAnimating && "animate-pulse"
                     )}
                   >
@@ -162,7 +162,7 @@ export function Header() {
                   className={cn(
                     "block px-4 py-3 rounded-xl text-base font-medium transition-colors",
                     pathname === link.href
-                      ? "text-primary-500 bg-primary-50"
+                      ? "text-secondary-600 bg-secondary-50"
                       : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                   )}
                 >

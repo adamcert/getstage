@@ -93,14 +93,14 @@ export default function DashboardLayout({
                   className={cn(
                     "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
                     active
-                      ? "bg-primary-50 text-primary-600"
+                      ? "bg-secondary-50 text-secondary-600"
                       : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   )}
                 >
                   <Icon
                     className={cn(
                       "w-5 h-5",
-                      active ? "text-primary-500" : "text-gray-400"
+                      active ? "text-secondary-500" : "text-gray-400"
                     )}
                   />
                   {item.name}

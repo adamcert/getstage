@@ -52,18 +52,18 @@
 
 @layer components {
   .btn-primary {
-    background-color: var(--color-primary-500);
+    background: linear-gradient(to right, var(--color-primary-500), var(--color-secondary-500));
     color: white;
     font-weight: 600;
     padding: 0.75rem 1.5rem;
     border-radius: 0.75rem;
     transition: all 0.2s;
-    box-shadow: 0 10px 15px -3px rgb(255 107 107 / 0.25);
+    box-shadow: 0 10px 15px -3px rgb(139 92 246 / 0.25);
   }
 
   .btn-primary:hover {
-    background-color: var(--color-primary-600);
-    box-shadow: 0 20px 25px -5px rgb(255 107 107 / 0.3);
+    background: linear-gradient(to right, var(--color-primary-600), var(--color-secondary-600));
+    box-shadow: 0 20px 25px -5px rgb(139 92 246 / 0.3);
   }
 
   .btn-primary:active {
@@ -98,8 +98,8 @@
   }
 
   .btn-outline:hover {
-    border-color: var(--color-primary-500);
-    color: var(--color-primary-500);
+    border-color: var(--color-secondary-500);
+    color: var(--color-secondary-600);
   }
 
   .btn-outline:active {
@@ -153,8 +153,8 @@
   }
 
   .input:focus {
-    border-color: var(--color-primary-500);
-    box-shadow: 0 0 0 3px rgb(255 107 107 / 0.2);
+    border-color: var(--color-secondary-500);
+    box-shadow: 0 0 0 3px rgb(139 92 246 / 0.2);
   }
 }
 
