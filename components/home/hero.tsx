@@ -119,7 +119,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         {/* Subtle animated color accent */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-primary-900/40 via-transparent to-secondary-900/30"
+          className="absolute inset-0 bg-gradient-to-br from-primary-600/30 via-transparent to-secondary-600/20"
           animate={{
             opacity: [0.4, 0.7, 0.4],
           }}

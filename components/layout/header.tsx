@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Menu, X, User, ShoppingBag, Heart, CalendarClock } from "lucide-react";
+import { Search, Menu, X, User, ShoppingBag, Heart, PartyPopper } from "lucide-react";
 import { Button, Avatar } from "@/components/ui";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { useCartStore, selectCartItemCount } from "@/stores/cart-store";
@@ -44,8 +44,8 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
-              <CalendarClock className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
+              <PartyPopper className="w-5 h-5 text-white" />
             </div>
             <div className="hidden sm:flex flex-col leading-none">
               <span className="font-bold text-lg text-gray-900 tracking-tight">GetStage</span>

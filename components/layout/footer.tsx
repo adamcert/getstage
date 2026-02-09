@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Twitter, Facebook, Youtube, CalendarClock } from "lucide-react";
+import { Instagram, Twitter, Facebook, Youtube, PartyPopper } from "lucide-react";
 
 const footerLinks = {
   discover: [
@@ -42,8 +42,8 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
-                <CalendarClock className="w-5 h-5 text-white" />
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
+                <PartyPopper className="w-5 h-5 text-white" />
               </div>
               <div className="flex flex-col leading-none">
                 <span className="font-bold text-lg tracking-tight">GetStage</span>
