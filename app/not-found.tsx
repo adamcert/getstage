@@ -101,10 +101,10 @@ export default function NotFound() {
           transition={{ delay: 0.3, duration: 0.6 }}
         >
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-            Page non trouvee
+            Page non trouvée
           </h2>
           <p className="text-gray-500 mb-8 text-lg leading-relaxed max-w-md mx-auto">
-            Desolee, la page que vous recherchez semble avoir disparu ou n'existe plus.
+            Désolée, la page que vous recherchez semble avoir disparu ou n'existe plus.
           </p>
         </motion.div>
 
@@ -146,7 +146,7 @@ export default function NotFound() {
                 className="flex items-center gap-2 px-5 py-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100"
               >
                 <Calendar className="w-5 h-5 text-accent-500" />
-                <span className="font-medium text-gray-700">Evenements</span>
+                <span className="font-medium text-gray-700">Événements</span>
               </motion.div>
             </Link>
           </div>
@@ -164,7 +164,7 @@ export default function NotFound() {
             leftIcon={<ArrowLeft className="w-4 h-4" />}
             className="text-gray-500 hover:text-gray-700"
           >
-            Retour a la page precedente
+            Retour à la page précédente
           </Button>
         </motion.div>
       </div>

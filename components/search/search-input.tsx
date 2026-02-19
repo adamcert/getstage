@@ -32,8 +32,8 @@ interface Suggestion {
 const POPULAR_SEARCHES: Suggestion[] = [
   { id: "pop-1", text: "Concert Paris", type: "popular" },
   { id: "pop-2", text: "DJ ce soir", type: "popular" },
-  { id: "pop-3", text: "Theatre comedie", type: "popular" },
-  { id: "pop-4", text: "Festival ete", type: "popular" },
+  { id: "pop-3", text: "Théâtre comédie", type: "popular" },
+  { id: "pop-4", text: "Festival été", type: "popular" },
   { id: "pop-5", text: "Exposition gratuite", type: "popular" },
 ];
 
@@ -135,7 +135,7 @@ export function SearchInput({
   value,
   onChange,
   onSubmit,
-  placeholder = "Rechercher un evenement, un artiste, un lieu...",
+  placeholder = "Rechercher un événement, un artiste, un lieu...",
   className,
   autoFocus = false,
   showSuggestions = true,
@@ -269,10 +269,10 @@ export function SearchInput({
       {/* Input Container */}
       <div
         className={cn(
-          "relative flex items-center w-full rounded-2xl border bg-white transition-all duration-200",
+          "relative flex items-center w-full rounded-2xl border bg-zinc-900 transition-all duration-200",
           isFocused
-            ? "border-primary-500 ring-4 ring-primary-500/10 shadow-lg"
-            : "border-gray-200 hover:border-gray-300 shadow-sm"
+            ? "border-secondary-500 ring-4 ring-secondary-500/10 shadow-[0_0_20px_rgba(139,92,246,0.15)]"
+            : "border-zinc-700 hover:border-zinc-600"
         )}
       >
         {/* Search Icon */}
@@ -280,7 +280,7 @@ export function SearchInput({
           <Search
             className={cn(
               "w-5 h-5 transition-colors duration-200",
-              isFocused ? "text-primary-500" : "text-gray-400"
+              isFocused ? "text-secondary-400" : "text-zinc-500"
             )}
           />
         </div>
@@ -297,7 +297,7 @@ export function SearchInput({
           autoFocus={autoFocus}
           className={cn(
             "w-full py-4 pl-12 pr-12 bg-transparent outline-none",
-            "text-gray-900 placeholder:text-gray-400",
+            "text-zinc-100 placeholder:text-zinc-500",
             "text-base"
           )}
           autoComplete="off"
@@ -314,7 +314,7 @@ export function SearchInput({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               onClick={handleClear}
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-1.5 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-1.5 rounded-full text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
               aria-label="Effacer la recherche"
             >
               <X className="w-4 h-4" />
@@ -327,7 +327,7 @@ export function SearchInput({
       <AnimatePresence>
         {showDropdown && (
           <motion.div
-            className="absolute top-full left-0 right-0 mt-2 py-2 bg-white rounded-2xl border border-gray-100 shadow-xl z-50 overflow-hidden"
+            className="absolute top-full left-0 right-0 mt-2 py-2 bg-zinc-900 rounded-2xl border border-zinc-800 shadow-xl shadow-black/30 z-50 overflow-hidden"
             variants={suggestionsVariants}
             initial="hidden"
             animate="visible"
@@ -337,12 +337,12 @@ export function SearchInput({
             {history.length > 0 && !value && (
               <div className="px-4 py-2">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                    Recherches recentes
+                  <span className="text-xs font-semibold text-zinc-600 uppercase tracking-wide">
+                    Recherches récentes
                   </span>
                   <button
                     onClick={handleClearHistory}
-                    className="text-xs text-gray-400 hover:text-primary-500 transition-colors"
+                    className="text-xs text-zinc-500 hover:text-primary-400 transition-colors"
                   >
                     Effacer tout
                   </button>
@@ -353,7 +353,7 @@ export function SearchInput({
             {/* Popular Section Header (only when no value) */}
             {!value && history.length === 0 && (
               <div className="px-4 py-2">
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                <span className="text-xs font-semibold text-zinc-600 uppercase tracking-wide">
                   Recherches populaires
                 </span>
               </div>
@@ -372,8 +372,8 @@ export function SearchInput({
                   className={cn(
                     "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors",
                     index === selectedIndex
-                      ? "bg-primary-50 text-primary-700"
-                      : "hover:bg-gray-50"
+                      ? "bg-secondary-500/10 text-secondary-300"
+                      : "hover:bg-zinc-800"
                   )}
                 >
                   {/* Icon */}
@@ -381,8 +381,8 @@ export function SearchInput({
                     className={cn(
                       "flex-shrink-0 p-2 rounded-lg",
                       suggestion.type === "history"
-                        ? "bg-gray-100 text-gray-500"
-                        : "bg-primary-50 text-primary-500"
+                        ? "bg-zinc-800 text-zinc-500"
+                        : "bg-secondary-500/10 text-secondary-400"
                     )}
                   >
                     {suggestion.type === "history" ? (
@@ -393,15 +393,15 @@ export function SearchInput({
                   </div>
 
                   {/* Text */}
-                  <span className="flex-1 font-medium text-gray-700">
+                  <span className="flex-1 font-medium text-zinc-300">
                     {highlightMatch(suggestion.text, value)}
                   </span>
 
                   {/* Arrow */}
                   <ArrowRight
                     className={cn(
-                      "w-4 h-4 text-gray-300 transition-colors",
-                      index === selectedIndex && "text-primary-500"
+                      "w-4 h-4 text-zinc-600 transition-colors",
+                      index === selectedIndex && "text-secondary-400"
                     )}
                   />
                 </motion.button>
@@ -426,7 +426,7 @@ function highlightMatch(text: string, query: string): React.ReactNode {
 
   return parts.map((part, index) =>
     regex.test(part) ? (
-      <span key={index} className="text-primary-600 font-semibold">
+      <span key={index} className="text-secondary-400 font-semibold">
         {part}
       </span>
     ) : (
@@ -453,8 +453,8 @@ export function CompactSearchInput({ onExpand, className }: CompactSearchInputPr
     <button
       onClick={onExpand}
       className={cn(
-        "flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 bg-white",
-        "text-sm text-gray-500 hover:border-gray-300 hover:bg-gray-50",
+        "flex items-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-900",
+        "text-sm text-zinc-500 hover:border-zinc-600",
         "transition-all duration-200",
         className
       )}

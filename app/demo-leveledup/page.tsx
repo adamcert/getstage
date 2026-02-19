@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DemoHome } from "@/components/home/demo-home";
+import { DemoHome } from "./demo-home";
 import {
   getTonightEvents,
   getFeaturedEvents,
@@ -8,17 +8,12 @@ import {
 } from "@/lib/data/mock-events";
 
 export const metadata: Metadata = {
-  title: "Accueil - Vivez la scène comme jamais",
+  title: "LEVELED UP - La Scène Autrement",
   description:
-    "Vivez la scène comme jamais. Concerts, clubs, culture et plus encore. Réservez vos billets en ligne en toute sécurité.",
-  openGraph: {
-    title: "GetStage - Vivez la scène comme jamais",
-    description:
-      "Concerts, clubs, culture et plus encore. Réservez vos billets en ligne en toute sécurité.",
-  },
+    "Vivez la scène comme jamais. Concerts, clubs, culture et plus encore.",
 };
 
-export default function Home() {
+export default function DemoPage() {
   const tonightEvents = getTonightEvents();
   const featuredEvents = getFeaturedEvents();
   const newEvents = getNewEvents();

@@ -65,15 +65,15 @@ function validateForm(data: FormData): FormErrors {
   if (!data.fullName.trim()) {
     errors.fullName = "Le nom complet est requis";
   } else if (data.fullName.trim().length < 2) {
-    errors.fullName = "Le nom doit contenir au moins 2 caracteres";
+    errors.fullName = "Le nom doit contenir au moins 2 caractères";
   }
 
   if (data.phone && !/^[+\d\s()-]{6,}$/.test(data.phone)) {
-    errors.phone = "Le numero de telephone n'est pas valide";
+    errors.phone = "Le numéro de téléphone n'est pas valide";
   }
 
   if (!data.acceptTerms) {
-    errors.acceptTerms = "Vous devez accepter les conditions generales";
+    errors.acceptTerms = "Vous devez accepter les conditions générales";
   }
 
   return errors;
@@ -126,7 +126,7 @@ function OrderSummary({
             <ShoppingBag className="w-5 h-5 text-primary-600" />
           </div>
           <div>
-            <h2 className="font-bold text-gray-900">Resume de commande</h2>
+            <h2 className="font-bold text-gray-900">Résumé de commande</h2>
             <p className="text-sm text-gray-500">
               {totalTickets} {totalTickets > 1 ? "billets" : "billet"}
             </p>
@@ -195,7 +195,7 @@ function OrderSummary({
       <div className="px-6 py-4 border-t border-gray-100">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <Shield className="w-4 h-4 text-green-500" />
-          <span>Paiement securise - Vos donnees sont protegees</span>
+          <span>Paiement sécurisé - Vos données sont protégées</span>
         </div>
       </div>
     </div>
@@ -313,14 +313,14 @@ export default function CheckoutPage() {
 
       // Show success message
       alert(
-        `Paiement reussi ! \n\nMerci ${formData.fullName} pour votre commande de ${formatPrice(total)}.\n\nUn email de confirmation a ete envoye a ${formData.email}.`
+        `Paiement réussi ! \n\nMerci ${formData.fullName} pour votre commande de ${formatPrice(total)}.\n\nUn email de confirmation a été envoyé à ${formData.email}.`
       );
 
       // Clear cart and redirect
       clearCart();
       router.push("/");
     } catch {
-      alert("Une erreur est survenue lors du paiement. Veuillez reessayer.");
+      alert("Une erreur est survenue lors du paiement. Veuillez réessayer.");
     } finally {
       setIsProcessing(false);
     }
@@ -368,7 +368,7 @@ export default function CheckoutPage() {
         <motion.div variants={itemVariants} className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Finaliser ma commande</h1>
           <p className="text-gray-500 mt-2">
-            Completez vos informations pour recevoir vos billets
+            Complétez vos informations pour recevoir vos billets
           </p>
         </motion.div>
 
@@ -388,7 +388,7 @@ export default function CheckoutPage() {
                       Informations personnelles
                     </h2>
                     <p className="text-sm text-gray-500">
-                      Ces informations seront utilisees pour vos billets
+                      Ces informations seront utilisées pour vos billets
                     </p>
                   </div>
                 </div>
@@ -422,7 +422,7 @@ export default function CheckoutPage() {
 
                   {/* Phone */}
                   <Input
-                    label="Telephone (optionnel)"
+                    label="Téléphone (optionnel)"
                     type="tel"
                     name="phone"
                     value={formData.phone}
@@ -459,7 +459,7 @@ export default function CheckoutPage() {
                         className="text-primary-500 hover:underline"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        conditions generales de vente
+                        conditions générales de vente
                       </a>{" "}
                       et la{" "}
                       <a
@@ -467,7 +467,7 @@ export default function CheckoutPage() {
                         className="text-primary-500 hover:underline"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        politique de confidentialite
+                        politique de confidentialité
                       </a>{" "}
                       *
                     </span>
@@ -504,7 +504,7 @@ export default function CheckoutPage() {
                       <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                       <div className="text-sm text-amber-700">
                         <p className="font-medium">
-                          Veuillez completer le formulaire
+                          Veuillez compléter le formulaire
                         </p>
                         <ul className="mt-1 list-disc list-inside">
                           {!formData.email && <li>Email requis</li>}
@@ -528,7 +528,7 @@ export default function CheckoutPage() {
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-5 h-5 text-green-500" />
                       <span className="text-sm text-green-700 font-medium">
-                        Formulaire complet - Pret a payer
+                        Formulaire complet - Prêt à payer
                       </span>
                     </div>
                   </div>

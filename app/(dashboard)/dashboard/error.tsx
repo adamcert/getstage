@@ -70,7 +70,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
             >
               <p className="text-gray-600 text-center mb-6">
                 Une erreur inattendue s'est produite lors du chargement du dashboard.
-                Veuillez reessayer ou contacter le support si le probleme persiste.
+                Veuillez réessayer ou contacter le support si le problème persiste.
               </p>
 
               {/* Error Details (Development) */}
@@ -78,7 +78,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
                 <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl">
                   <div className="flex items-center gap-2 text-red-700 font-medium text-sm mb-2">
                     <Bug className="w-4 h-4" />
-                    <span>Details techniques</span>
+                    <span>Détails techniques</span>
                   </div>
                   <p className="text-sm text-red-600 font-mono break-all">
                     {error.message}
@@ -99,7 +99,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
                   leftIcon={<RefreshCw className="w-4 h-4" />}
                   className="w-full"
                 >
-                  Reessayer
+                  Réessayer
                 </Button>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -118,7 +118,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
                       leftIcon={<Settings className="w-4 h-4" />}
                       className="w-full"
                     >
-                      Parametres
+                      Paramètres
                     </Button>
                   </Link>
                 </div>
@@ -161,7 +161,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
                 whileTap={{ scale: 0.95 }}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg text-sm text-gray-600 hover:text-primary-500 border border-gray-200 hover:border-primary-200 transition-colors"
               >
-                Creer un evenement
+                Créer un événement
               </motion.span>
             </Link>
             <Link href="/dashboard/analytics">

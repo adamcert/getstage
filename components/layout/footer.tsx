@@ -6,7 +6,7 @@ const footerLinks = {
     { href: "/search", label: "Explorer" },
     { href: "/search?category=concert", label: "Concerts" },
     { href: "/search?category=dj", label: "Clubs & DJ" },
-    { href: "/search?category=theatre", label: "Theatre" },
+    { href: "/search?category=theatre", label: "Théâtre" },
     { href: "/search?category=expo", label: "Expositions" },
   ],
   services: [
@@ -22,7 +22,7 @@ const footerLinks = {
   ],
   legal: [
     { href: "/terms", label: "CGU" },
-    { href: "/privacy", label: "Confidentialite" },
+    { href: "/privacy", label: "Confidentialité" },
     { href: "/cookies", label: "Cookies" },
   ],
 };
@@ -36,7 +36,10 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-zinc-950 text-white">
+      {/* Gradient line at top */}
+      <div className="h-px bg-gradient-to-r from-transparent via-primary-500/50 to-transparent" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Brand */}
@@ -46,12 +49,12 @@ export function Footer() {
                 <PartyPopper className="w-5 h-5 text-white" />
               </div>
               <div className="flex flex-col leading-none">
-                <span className="font-bold text-lg tracking-tight">GetStage</span>
-                <span className="text-[10px] font-semibold text-gray-500 tracking-widest uppercase">by SNAPSS</span>
+                <span className="font-display font-bold text-lg tracking-tight">GetStage</span>
+                <span className="text-[10px] font-semibold text-zinc-600 tracking-widest uppercase">by SNAPSS</span>
               </div>
             </div>
-            <p className="text-gray-400 text-sm mb-4">
-              Decouvrez les meilleurs evenements pres de chez vous.
+            <p className="text-zinc-500 text-sm mb-4">
+              Découvrez les meilleurs événements près de chez vous.
             </p>
             <div className="flex gap-3">
               {socialLinks.map((social) => (
@@ -60,7 +63,7 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition-colors"
+                  className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center transition-colors"
                   aria-label={social.label}
                 >
                   <social.icon className="w-5 h-5" />
@@ -71,11 +74,11 @@ export function Footer() {
 
           {/* Discover */}
           <div>
-            <h4 className="font-semibold mb-4">Decouvrir</h4>
+            <h4 className="font-display font-semibold mb-4">Découvrir</h4>
             <ul className="space-y-2">
               {footerLinks.discover.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-gray-400 hover:text-white text-sm transition-colors">
+                  <Link href={link.href} className="text-zinc-500 hover:text-zinc-100 text-sm transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -85,11 +88,11 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="font-semibold mb-4">Services</h4>
+            <h4 className="font-display font-semibold mb-4">Services</h4>
             <ul className="space-y-2">
               {footerLinks.services.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-gray-400 hover:text-white text-sm transition-colors">
+                  <Link href={link.href} className="text-zinc-500 hover:text-zinc-100 text-sm transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -99,11 +102,11 @@ export function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className="font-semibold mb-4">Support</h4>
+            <h4 className="font-display font-semibold mb-4">Support</h4>
             <ul className="space-y-2">
               {footerLinks.support.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-gray-400 hover:text-white text-sm transition-colors">
+                  <Link href={link.href} className="text-zinc-500 hover:text-zinc-100 text-sm transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -113,11 +116,11 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="font-semibold mb-4">Legal</h4>
+            <h4 className="font-display font-semibold mb-4">Legal</h4>
             <ul className="space-y-2">
               {footerLinks.legal.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-gray-400 hover:text-white text-sm transition-colors">
+                  <Link href={link.href} className="text-zinc-500 hover:text-zinc-100 text-sm transition-colors">
                     {link.label}
                   </Link>
                 </li>
@@ -126,8 +129,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 text-sm">
-          <p>&copy; {new Date().getFullYear()} GetStage by SNAPSS. Tous droits reserves.</p>
+        <div className="border-t border-zinc-800 mt-12 pt-8 text-center text-zinc-500 text-sm">
+          <p>&copy; {new Date().getFullYear()} GetStage <span className="text-zinc-600">by SNAPSS</span>. Tous droits réservés.</p>
         </div>
       </div>
     </footer>

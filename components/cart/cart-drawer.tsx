@@ -54,18 +54,18 @@ function EmptyCart({ onClose }: { onClose: () => void }) {
       animate={{ opacity: 1, scale: 1 }}
       className="flex flex-col items-center justify-center h-full text-center px-6"
     >
-      <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-        <ShoppingBag className="w-10 h-10 text-gray-400" />
+      <div className="w-20 h-20 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
+        <ShoppingBag className="w-10 h-10 text-zinc-400" />
       </div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+      <h3 className="text-lg font-semibold text-zinc-100 mb-2">
         Votre panier est vide
       </h3>
-      <p className="text-gray-500 mb-6 max-w-xs">
-        Explorez nos evenements et ajoutez des billets a votre panier pour
+      <p className="text-zinc-500 mb-6 max-w-xs">
+        Explorez nos événements et ajoutez des billets à votre panier pour
         continuer.
       </p>
       <Button variant="primary" onClick={onClose}>
-        Decouvrir les evenements
+        Découvrir les événements
       </Button>
     </motion.div>
   );
@@ -149,7 +149,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             animate="visible"
             exit="hidden"
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
             onClick={onClose}
             aria-hidden="true"
           />
@@ -161,25 +161,25 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             animate="visible"
             exit="hidden"
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-50 flex flex-col"
+            className="fixed right-0 top-0 h-full w-full max-w-md bg-zinc-900 shadow-2xl z-50 flex flex-col"
             role="dialog"
             aria-modal="true"
             aria-labelledby="cart-drawer-title"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center">
-                  <ShoppingBag className="w-5 h-5 text-primary-600" />
+                <div className="w-10 h-10 rounded-xl bg-primary-500/15 flex items-center justify-center">
+                  <ShoppingBag className="w-5 h-5 text-primary-400" />
                 </div>
                 <div>
                   <h2
                     id="cart-drawer-title"
-                    className="text-lg font-bold text-gray-900"
+                    className="text-lg font-bold text-zinc-100"
                   >
                     Mon panier
                   </h2>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-zinc-500">
                     {itemCount} {itemCount > 1 ? "articles" : "article"}
                   </p>
                 </div>
@@ -188,7 +188,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 variant="ghost"
                 size="sm"
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-zinc-500 hover:text-zinc-300"
                 aria-label="Fermer le panier"
               >
                 <X className="w-5 h-5" />
@@ -227,7 +227,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       <button
                         type="button"
                         onClick={clearCart}
-                        className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-500 transition-colors mx-auto"
+                        className="flex items-center gap-2 text-sm text-zinc-500 hover:text-primary-400 transition-colors mx-auto"
                       >
                         <Trash2 className="w-4 h-4" />
                         Vider le panier
@@ -244,7 +244,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="border-t border-gray-100 p-6 space-y-4 bg-gray-50"
+                className="border-t border-zinc-800 p-6 space-y-4 bg-zinc-800/50"
               >
                 {/* Summary by event */}
                 <div className="space-y-2">
@@ -253,10 +253,10 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       key={eventId}
                       className="flex items-center justify-between text-sm"
                     >
-                      <span className="text-gray-600 truncate max-w-[200px]">
+                      <span className="text-zinc-400 truncate max-w-[200px]">
                         {group.eventTitle}
                       </span>
-                      <span className="font-medium text-gray-900">
+                      <span className="font-medium text-zinc-100">
                         {formatPrice(group.subtotal)}
                       </span>
                     </div>
@@ -264,14 +264,14 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 </div>
 
                 {/* Divider */}
-                <div className="border-t border-gray-200" />
+                <div className="border-t border-zinc-700" />
 
                 {/* Total */}
                 <div className="flex items-center justify-between">
-                  <span className="text-base font-semibold text-gray-900">
+                  <span className="text-base font-semibold text-zinc-300">
                     Total
                   </span>
-                  <span className="text-xl font-bold text-primary-600">
+                  <span className="text-xl font-bold text-primary-400">
                     {formatPrice(total)}
                   </span>
                 </div>
@@ -291,7 +291,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="w-full text-center text-sm text-gray-500 hover:text-primary-500 transition-colors"
+                  className="w-full text-center text-sm text-zinc-500 hover:text-primary-400 transition-colors"
                 >
                   Continuer mes achats
                 </button>

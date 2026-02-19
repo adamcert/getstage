@@ -42,14 +42,14 @@ const categories: Category[] = [
   },
   {
     id: "theatre",
-    label: "Theatre",
+    label: "Théâtre",
     icon: Drama,
     gradient: "from-accent-500/10 to-accent-500/5",
     hoverGradient: "from-accent-500 to-accent-600",
   },
   {
     id: "comedie",
-    label: "Comedie",
+    label: "Comédie",
     icon: Laugh,
     gradient: "from-pink-500/10 to-pink-500/5",
     hoverGradient: "from-pink-500 to-pink-600",
@@ -77,7 +77,7 @@ const categories: Category[] = [
   },
   {
     id: "cinema",
-    label: "Cinema",
+    label: "Cinéma",
     icon: Film,
     gradient: "from-indigo-500/10 to-indigo-500/5",
     hoverGradient: "from-indigo-500 to-indigo-600",
@@ -154,10 +154,10 @@ export function CategoryCarousel() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              Explorer par categorie
+              Explorer par catégorie
             </h2>
             <p className="mt-2 text-gray-600">
-              Trouvez les evenements qui vous passionnent
+              Trouvez les événements qui vous passionnent
             </p>
           </div>
 
@@ -172,7 +172,7 @@ export function CategoryCarousel() {
                   ? "hover:border-primary-500 hover:text-primary-500 hover:shadow-md cursor-pointer"
                   : "opacity-40 cursor-not-allowed"
               )}
-              aria-label="Defiler vers la gauche"
+              aria-label="Défiler vers la gauche"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -185,7 +185,7 @@ export function CategoryCarousel() {
                   ? "hover:border-primary-500 hover:text-primary-500 hover:shadow-md cursor-pointer"
                   : "opacity-40 cursor-not-allowed"
               )}
-              aria-label="Defiler vers la droite"
+              aria-label="Défiler vers la droite"
             >
               <ChevronRight className="w-5 h-5" />
             </button>

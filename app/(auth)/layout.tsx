@@ -6,11 +6,11 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#09090B] flex items-center justify-center p-4">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-200 rounded-full blur-3xl opacity-30" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary-200 rounded-full blur-3xl opacity-30" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-500/10 rounded-full blur-3xl opacity-30" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary-500/10 rounded-full blur-3xl opacity-30" />
       </div>
 
       <div className="w-full max-w-md relative z-10">
@@ -22,9 +22,9 @@ export default function AuthLayout({
                 <path d="M5.8 11.3 2 22l10.7-3.79" /><path d="M4 3h.01" /><path d="M22 8h.01" /><path d="M15 2h.01" /><path d="M22 20h.01" /><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10" /><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.63-.69 1.22-1.3 1.22H17" /><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.59 4.91 9 5.49 9 6.1V7" />
               </svg>
             </div>
-            <span className="text-2xl font-bold text-gray-900">GetStage</span>
+            <span className="text-2xl font-bold text-zinc-100">GetStage</span>
           </div>
-          <span className="text-xs font-semibold text-gray-400 tracking-widest uppercase">by SNAPSS</span>
+          <span className="text-xs font-semibold text-zinc-600 tracking-widest uppercase">by SNAPSS</span>
         </Link>
 
         {children}

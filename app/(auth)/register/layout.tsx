@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Inscription",
-  description: "Creez votre compte Events gratuitement et decouvrez les meilleurs evenements pres de chez vous.",
+  description: "Créez votre compte Events gratuitement et découvrez les meilleurs événements près de chez vous.",
   robots: {
     index: false,
     follow: true,
   },
   openGraph: {
     title: "Inscription | Events",
-    description: "Creez votre compte Events gratuitement et decouvrez les meilleurs evenements.",
+    description: "Créez votre compte Events gratuitement et découvrez les meilleurs événements.",
   },
 };
 

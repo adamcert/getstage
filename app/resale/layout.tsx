@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Revente de billets securisee",
-  description: "Achetez ou revendez vos billets en toute securite sur notre plateforme de revente officielle. Transactions garanties et billets verifies.",
+  title: "Revente de billets sécurisée",
+  description: "Achetez ou revendez vos billets en toute sécurité sur notre plateforme de revente officielle. Transactions garanties et billets vérifiés.",
   openGraph: {
-    title: "Revente de billets securisee | GetStage",
-    description: "Achetez ou revendez vos billets en toute securite sur notre plateforme de revente officielle.",
+    title: "Revente de billets sécurisée | GetStage",
+    description: "Achetez ou revendez vos billets en toute sécurité sur notre plateforme de revente officielle.",
   },
 };
 

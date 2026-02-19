@@ -56,7 +56,7 @@ export default function AnalyticsPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
         <p className="mt-1 text-gray-500">
-          Suivez les performances de vos evenements en temps reel.
+          Suivez les performances de vos événements en temps réel.
         </p>
       </div>
 
@@ -102,7 +102,7 @@ export default function AnalyticsPage() {
             <div className="text-center text-gray-400">
               <BarChart3 className="w-12 h-12 mx-auto mb-2" />
               <p>Graphique des ventes</p>
-              <p className="text-sm">(Integration a venir)</p>
+              <p className="text-sm">(Intégration à venir)</p>
             </div>
           </div>
         </Card>
@@ -115,7 +115,7 @@ export default function AnalyticsPage() {
             <div className="text-center text-gray-400">
               <TrendingUp className="w-12 h-12 mx-auto mb-2" />
               <p>Graphique du trafic</p>
-              <p className="text-sm">(Integration a venir)</p>
+              <p className="text-sm">(Intégration à venir)</p>
             </div>
           </div>
         </Card>
@@ -125,7 +125,7 @@ export default function AnalyticsPage() {
       <Card className="overflow-hidden">
         <div className="p-6 border-b border-gray-100">
           <h3 className="text-lg font-semibold text-gray-900">
-            Activite recente
+            Activité récente
           </h3>
         </div>
         <div className="divide-y divide-gray-100">

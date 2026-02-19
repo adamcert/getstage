@@ -25,7 +25,7 @@ export function Avatar({ className, src, alt = "", fallback, size = "md", ...pro
   return (
     <div
       className={cn(
-        "relative rounded-full overflow-hidden bg-gradient-to-br from-primary-400 to-secondary-500 flex items-center justify-center text-white font-semibold",
+        "relative rounded-full overflow-hidden ring-2 ring-zinc-800 bg-gradient-to-br from-primary-400 to-secondary-500 flex items-center justify-center text-white font-semibold",
         sizes[size],
         className
       )}

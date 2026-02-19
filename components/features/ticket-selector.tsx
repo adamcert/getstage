@@ -58,31 +58,31 @@ function TicketRow({ ticket, quantity, onQuantityChange }: TicketRowProps) {
       className={cn(
         "flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border transition-all duration-200",
         isSoldOut
-          ? "bg-gray-50 border-gray-200 opacity-60"
+          ? "bg-zinc-800/30 border-zinc-800 opacity-60"
           : quantity > 0
-          ? "bg-primary-50 border-primary-200"
-          : "bg-white border-gray-200 hover:border-gray-300"
+          ? "bg-secondary-500/10 border-secondary-500/30"
+          : "bg-zinc-800/50 border-zinc-700 hover:border-zinc-600"
       )}
     >
       {/* Ticket Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <h4 className="font-semibold text-gray-900">{ticket.name}</h4>
+          <h4 className="font-semibold text-zinc-100">{ticket.name}</h4>
           {isSoldOut && <Badge variant="soldout">Complet</Badge>}
           {isLowStock && !isSoldOut && (
             <Badge variant="hot">Plus que {available}!</Badge>
           )}
         </div>
         {ticket.description && (
-          <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+          <p className="text-sm text-zinc-500 mt-1 line-clamp-2">
             {ticket.description}
           </p>
         )}
-        <p className="text-lg font-bold text-gray-900 mt-2">
+        <p className="text-lg font-bold text-zinc-100 mt-2">
           {ticket.price === 0 ? "Gratuit" : formatPrice(ticket.price)}
         </p>
         {!isSoldOut && (
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-zinc-600 mt-1">
             {available} place{available > 1 ? "s" : ""} restante
             {available > 1 ? "s" : ""}
           </p>
@@ -100,10 +100,10 @@ function TicketRow({ ticket, quantity, onQuantityChange }: TicketRowProps) {
               className={cn(
                 "w-10 h-10 rounded-full flex items-center justify-center transition-all",
                 quantity === 0
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300 active:bg-gray-400"
+                  ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
+                  : "bg-zinc-700 text-zinc-300 hover:bg-zinc-600 active:bg-zinc-500"
               )}
-              aria-label="Diminuer la quantite"
+              aria-label="Diminuer la quantité"
             >
               <Minus className="w-4 h-4" />
             </motion.button>
@@ -114,7 +114,7 @@ function TicketRow({ ticket, quantity, onQuantityChange }: TicketRowProps) {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="w-10 text-center font-bold text-lg text-gray-900"
+                className="w-10 text-center font-bold text-lg text-zinc-100"
               >
                 {quantity}
               </motion.span>
@@ -127,16 +127,16 @@ function TicketRow({ ticket, quantity, onQuantityChange }: TicketRowProps) {
               className={cn(
                 "w-10 h-10 rounded-full flex items-center justify-center transition-all",
                 quantity >= Math.min(available, ticket.max_per_order)
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
                   : "bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700"
               )}
-              aria-label="Augmenter la quantite"
+              aria-label="Augmenter la quantité"
             >
               <Plus className="w-4 h-4" />
             </motion.button>
           </div>
         ) : (
-          <span className="text-sm text-gray-500 italic">Indisponible</span>
+          <span className="text-sm text-zinc-400 italic">Indisponible</span>
         )}
 
         {/* Line Total */}
@@ -148,8 +148,8 @@ function TicketRow({ ticket, quantity, onQuantityChange }: TicketRowProps) {
               exit={{ opacity: 0, x: -10, width: 0 }}
               className="text-right min-w-[80px]"
             >
-              <p className="text-sm text-gray-500">Sous-total</p>
-              <p className="font-bold text-primary-600">
+              <p className="text-sm text-zinc-500">Sous-total</p>
+              <p className="font-bold text-secondary-400">
                 {formatPrice(ticket.price * quantity)}
               </p>
             </motion.div>
@@ -242,12 +242,12 @@ export function TicketSelector({
     return (
       <Card variant="elevated">
         <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-          <AlertCircle className="w-12 h-12 text-gray-300 mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900">
+          <AlertCircle className="w-12 h-12 text-zinc-600 mb-4" />
+          <h3 className="text-lg font-semibold text-zinc-100">
             Aucun billet disponible
           </h3>
-          <p className="text-gray-500 mt-1">
-            Les billets ne sont pas encore en vente pour cet evenement.
+          <p className="text-zinc-500 mt-1">
+            Les billets ne sont pas encore en vente pour cet événement.
           </p>
         </CardContent>
       </Card>
@@ -258,14 +258,14 @@ export function TicketSelector({
     <Card variant="elevated">
       <CardContent className="space-y-4">
         {/* Header */}
-        <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
-          <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-            <Ticket className="w-5 h-5 text-primary-600" />
+        <div className="flex items-center gap-3 pb-4 border-b border-zinc-800">
+          <div className="w-10 h-10 rounded-full bg-primary-500/15 flex items-center justify-center">
+            <Ticket className="w-5 h-5 text-primary-400" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-gray-900">Billets</h3>
-            <p className="text-sm text-gray-500">
-              Selectionnez vos billets ci-dessous
+            <h3 className="text-lg font-bold text-zinc-100">Billets</h3>
+            <p className="text-sm text-zinc-500">
+              Sélectionnez vos billets ci-dessous
             </p>
           </div>
         </div>
@@ -287,36 +287,36 @@ export function TicketSelector({
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 p-4 bg-gray-100 rounded-xl"
+            className="flex items-center gap-3 p-4 bg-zinc-800 rounded-xl"
           >
-            <AlertCircle className="w-5 h-5 text-gray-500 flex-shrink-0" />
-            <p className="text-sm text-gray-600">
-              Tous les billets sont epuises pour cet evenement. Inscrivez-vous a
-              la liste d&apos;attente pour etre notifie en cas de disponibilite.
+            <AlertCircle className="w-5 h-5 text-zinc-500 flex-shrink-0" />
+            <p className="text-sm text-zinc-400">
+              Tous les billets sont épuisés pour cet événement. Inscrivez-vous à
+              la liste d&apos;attente pour être notifié en cas de disponibilité.
             </p>
           </motion.div>
         )}
       </CardContent>
 
       {/* Footer with Total and Add to Cart */}
-      <CardFooter className="border-t border-gray-100 bg-gray-50 rounded-b-2xl">
+      <CardFooter className="border-t border-zinc-800 bg-zinc-800/50 rounded-b-2xl">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
           {/* Total */}
           <div className="text-center sm:text-left">
-            <p className="text-sm text-gray-500">Total</p>
+            <p className="text-sm text-zinc-500">Total</p>
             <AnimatePresence mode="wait">
               <motion.p
                 key={total}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="text-2xl font-bold text-gray-900"
+                className="text-2xl font-bold text-zinc-100"
               >
                 {formatPrice(total)}
               </motion.p>
             </AnimatePresence>
             {totalQuantity > 0 && (
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-zinc-500">
                 {totalQuantity} billet{totalQuantity > 1 ? "s" : ""}
               </p>
             )}

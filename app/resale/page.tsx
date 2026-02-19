@@ -96,11 +96,11 @@ const emptyStateVariants: Variants = {
 const categoryLabels: Record<EventCategory, string> = {
   concert: "Concert",
   dj: "DJ / Electro",
-  theatre: "Theatre",
+  theatre: "Théâtre",
   comedy: "Humour",
   expo: "Exposition",
-  film: "Cinema",
-  party: "Soiree",
+  film: "Cinéma",
+  party: "Soirée",
   festival: "Festival",
   other: "Autre",
 };
@@ -152,7 +152,7 @@ function ResaleTicketCard({ ticket }: ResaleTicketCardProps) {
 
           {/* Ticket Type Badge */}
           <div className="absolute top-3 right-3">
-            <Badge variant="default" className="bg-white/95 backdrop-blur-sm text-gray-700">
+            <Badge variant="default" className="bg-zinc-900/90 backdrop-blur-sm text-zinc-300">
               {ticket.ticketType.name}
             </Badge>
           </div>
@@ -168,19 +168,19 @@ function ResaleTicketCard({ ticket }: ResaleTicketCardProps) {
         {/* Content */}
         <div className="p-4 flex-1 flex flex-col">
           {/* Event Title */}
-          <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2">
+          <h3 className="font-bold text-zinc-100 text-lg mb-2 line-clamp-2">
             {ticket.event.title}
           </h3>
 
           {/* Event Details */}
-          <div className="space-y-1.5 text-sm text-gray-500 mb-4">
+          <div className="space-y-1.5 text-sm text-zinc-500 mb-4">
             <p className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-primary-500 flex-shrink-0" />
+              <Calendar className="w-4 h-4 text-primary-400 flex-shrink-0" />
               <span className="truncate">{formatDate(ticket.event.start_date)}</span>
             </p>
             {ticket.event.venue && (
               <p className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-primary-500 flex-shrink-0" />
+                <MapPin className="w-4 h-4 text-primary-400 flex-shrink-0" />
                 <span className="truncate">
                   {ticket.event.venue.name}
                   {ticket.event.venue.city && `, ${ticket.event.venue.city}`}
@@ -193,13 +193,13 @@ function ResaleTicketCard({ ticket }: ResaleTicketCardProps) {
           <div className="mt-auto">
             <div className="flex items-end justify-between mb-3">
               <div>
-                <p className="text-xs text-gray-400 mb-0.5">Prix de revente</p>
+                <p className="text-xs text-zinc-500 mb-0.5">Prix de revente</p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-gray-900">
+                  <span className="text-2xl font-bold text-zinc-100">
                     {formatPrice(ticket.resalePrice)}
                   </span>
                   {hasDiscount && (
-                    <span className="text-sm text-gray-400 line-through">
+                    <span className="text-sm text-zinc-600 line-through">
                       {formatPrice(ticket.originalPrice)}
                     </span>
                   )}
@@ -208,7 +208,7 @@ function ResaleTicketCard({ ticket }: ResaleTicketCardProps) {
 
               {/* Seller Info */}
               <div className="flex items-center gap-2">
-                <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm">
+                <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-zinc-700 shadow-sm">
                   <Image
                     src={ticket.seller.avatar_url || "/placeholder-avatar.jpg"}
                     alt={ticket.seller.full_name || "Vendeur"}
@@ -217,7 +217,7 @@ function ResaleTicketCard({ ticket }: ResaleTicketCardProps) {
                     sizes="32px"
                   />
                 </div>
-                <span className="text-xs text-gray-500">{ticket.seller.full_name}</span>
+                <span className="text-xs text-zinc-500">{ticket.seller.full_name}</span>
               </div>
             </div>
 
@@ -250,13 +250,13 @@ interface FilterSelectProps {
 function FilterSelect({ label, value, onChange, options, icon }: FilterSelectProps) {
   return (
     <div className="relative">
-      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">
         {icon}
       </div>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="appearance-none w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all cursor-pointer"
+        className="appearance-none w-full pl-10 pr-10 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-zinc-300 font-medium focus:outline-none focus:ring-2 focus:ring-secondary-500/20 focus:border-secondary-500 transition-all cursor-pointer"
       >
         <option value="">{label}</option>
         {options.map((option) => (
@@ -265,7 +265,7 @@ function FilterSelect({ label, value, onChange, options, icon }: FilterSelectPro
           </option>
         ))}
       </select>
-      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
     </div>
   );
 }
@@ -277,34 +277,34 @@ function FilterSelect({ label, value, onChange, options, icon }: FilterSelectPro
 const howItWorksSteps = [
   {
     icon: <ShieldCheck className="w-8 h-8" />,
-    title: "Transactions securisees",
+    title: "Transactions sécurisées",
     description:
-      "Chaque billet est verifie et le paiement est securise par Stripe. Vous etes protege contre la fraude.",
+      "Chaque billet est vérifié et le paiement est sécurisé par Stripe. Vous êtes protégé contre la fraude.",
   },
   {
     icon: <Tag className="w-8 h-8" />,
-    title: "Prix equitables",
+    title: "Prix équitables",
     description:
-      "Les billets sont revendus au prix d'achat original ou moins. Jamais de speculation.",
+      "Les billets sont revendus au prix d'achat original ou moins. Jamais de spéculation.",
   },
   {
     icon: <RefreshCcw className="w-8 h-8" />,
-    title: "Transfert instantane",
+    title: "Transfert instantané",
     description:
-      "Une fois l'achat confirme, le billet est automatiquement transfere sur votre compte.",
+      "Une fois l'achat confirmé, le billet est automatiquement transféré sur votre compte.",
   },
   {
     icon: <CreditCard className="w-8 h-8" />,
     title: "Remboursement garanti",
     description:
-      "Si l'evenement est annule, vous etes rembourse integralement sous 48h.",
+      "Si l'événement est annulé, vous êtes remboursé intégralement sous 48h.",
   },
 ];
 
 function HowItWorksSection() {
   return (
     <motion.section
-      className="py-16 bg-gradient-to-br from-gray-50 to-gray-100"
+      className="py-16 bg-zinc-900"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
@@ -313,16 +313,16 @@ function HowItWorksSection() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <motion.h2
-            className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
+            className="text-3xl md:text-4xl font-bold font-display text-zinc-100 mb-4"
             variants={fadeInUp}
           >
-            Comment ca marche ?
+            Comment ça marche ?
           </motion.h2>
           <motion.p
-            className="text-gray-600 max-w-2xl mx-auto"
+            className="text-zinc-500 max-w-2xl mx-auto"
             variants={fadeInUp}
           >
-            Notre systeme de revente securise vous permet d'acheter des billets en toute confiance
+            Notre système de revente sécurisé vous permet d'acheter des billets en toute confiance
           </motion.p>
         </div>
 
@@ -342,13 +342,13 @@ function HowItWorksSection() {
                 >
                   {step.icon}
                 </motion.div>
-                <h3 className="font-bold text-gray-900 text-lg mb-2">{step.title}</h3>
-                <p className="text-gray-600 text-sm">{step.description}</p>
+                <h3 className="font-bold text-zinc-100 text-lg mb-2">{step.title}</h3>
+                <p className="text-zinc-500 text-sm">{step.description}</p>
               </Card>
 
               {/* Connector Line (hidden on mobile and last item) */}
               {index < howItWorksSteps.length - 1 && (
-                <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-0.5 bg-gradient-to-r from-primary-200 to-secondary-200" />
+                <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-0.5 bg-gradient-to-r from-primary-500/30 to-secondary-500/30" />
               )}
             </motion.div>
           ))}
@@ -379,11 +379,11 @@ export default function ResalePage() {
 
   // Price options
   const priceOptions = [
-    { value: "25", label: "Jusqu'a 25 EUR" },
-    { value: "50", label: "Jusqu'a 50 EUR" },
-    { value: "75", label: "Jusqu'a 75 EUR" },
-    { value: "100", label: "Jusqu'a 100 EUR" },
-    { value: "150", label: "Jusqu'a 150 EUR" },
+    { value: "25", label: "Jusqu'à 25 EUR" },
+    { value: "50", label: "Jusqu'à 50 EUR" },
+    { value: "75", label: "Jusqu'à 75 EUR" },
+    { value: "100", label: "Jusqu'à 100 EUR" },
+    { value: "150", label: "Jusqu'à 150 EUR" },
   ];
 
   // Filter tickets
@@ -430,17 +430,24 @@ export default function ResalePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#09090B]">
       {/* ================================================================== */}
       {/* HEADER SECTION */}
       {/* ================================================================== */}
       <motion.header
-        className="bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-600 text-white py-16 md:py-24"
+        className="relative bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-900 text-white py-16 md:py-24 overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="container mx-auto px-4">
+        {/* Grain texture via subtle radial gradients */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary-500/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-secondary-500/5 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-zinc-800/30 rounded-full blur-3xl" />
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-3xl mx-auto text-center"
             initial={{ opacity: 0, y: 20 }}
@@ -448,21 +455,21 @@ export default function ResalePage() {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <motion.div
-              className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium mb-6"
+              className="inline-flex items-center gap-2 bg-primary-500/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium mb-6"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3, delay: 0.2 }}
             >
-              <ShieldCheck className="w-4 h-4" />
-              100% securise et garanti
+              <ShieldCheck className="w-4 h-4 text-primary-300" />
+              <span className="text-primary-300">100% sécurisé et garanti</span>
             </motion.div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-zinc-100 mb-6">
               Revente de billets
             </h1>
-            <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-              Trouvez des billets pour des evenements complets. Achetez en toute securite
-              aupres d'autres fans, a prix equitable.
+            <p className="text-lg md:text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
+              Trouvez des billets pour des événements complets. Achetez en toute sécurité
+              auprès d'autres fans, à prix équitable.
             </p>
 
             {/* Stats */}
@@ -473,18 +480,18 @@ export default function ResalePage() {
               transition={{ duration: 0.5, delay: 0.3 }}
             >
               <div className="text-center">
-                <p className="text-3xl md:text-4xl font-bold">{mockResaleTickets.length}</p>
-                <p className="text-white/70 text-sm">Billets disponibles</p>
+                <p className="text-3xl md:text-4xl font-bold text-zinc-100">{mockResaleTickets.length}</p>
+                <p className="text-zinc-500 text-sm">Billets disponibles</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl md:text-4xl font-bold">
+                <p className="text-3xl md:text-4xl font-bold text-zinc-100">
                   {new Set(mockResaleTickets.map((t) => t.event.id)).size}
                 </p>
-                <p className="text-white/70 text-sm">Evenements</p>
+                <p className="text-zinc-500 text-sm">Événements</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl md:text-4xl font-bold">0%</p>
-                <p className="text-white/70 text-sm">Commission</p>
+                <p className="text-3xl md:text-4xl font-bold text-zinc-100">0%</p>
+                <p className="text-zinc-500 text-sm">Commission</p>
               </div>
             </motion.div>
           </motion.div>
@@ -495,7 +502,7 @@ export default function ResalePage() {
       {/* FILTERS SECTION */}
       {/* ================================================================== */}
       <motion.section
-        className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm"
+        className="sticky top-0 z-40 bg-zinc-950/95 backdrop-blur-sm border-b border-zinc-800"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}
@@ -504,18 +511,18 @@ export default function ResalePage() {
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search Input */}
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Rechercher un evenement, un lieu, un type de billet..."
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                placeholder="Rechercher un événement, un lieu, un type de billet..."
+                className="w-full pl-12 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-secondary-500/20 focus:border-secondary-500 transition-all"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -525,7 +532,7 @@ export default function ResalePage() {
             {/* Filter Selects */}
             <div className="flex flex-col sm:flex-row gap-3">
               <FilterSelect
-                label="Categorie"
+                label="Catégorie"
                 value={selectedCategory}
                 onChange={setSelectedCategory}
                 options={availableCategories}
@@ -546,7 +553,7 @@ export default function ResalePage() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   onClick={clearFilters}
-                  className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl text-gray-700 font-medium transition-colors"
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-zinc-300 font-medium transition-colors"
                 >
                   <X className="w-4 h-4" />
                   Effacer ({activeFiltersCount})
@@ -562,13 +569,13 @@ export default function ResalePage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <p className="text-gray-500">
-              <span className="font-semibold text-gray-900">{filteredTickets.length}</span>
+            <p className="text-zinc-500">
+              <span className="font-semibold text-zinc-100">{filteredTickets.length}</span>
               {" "}billet{filteredTickets.length !== 1 ? "s" : ""} disponible{filteredTickets.length !== 1 ? "s" : ""}
             </p>
             {searchQuery && (
-              <p className="text-gray-400">
-                Resultats pour "{searchQuery}"
+              <p className="text-zinc-500">
+                Résultats pour &quot;{searchQuery}&quot;
               </p>
             )}
           </motion.div>
@@ -604,23 +611,23 @@ export default function ResalePage() {
               animate="visible"
             >
               <motion.div
-                className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mb-6"
+                className="w-24 h-24 rounded-full bg-zinc-800 flex items-center justify-center mb-6"
                 animate={{ scale: [1, 1.05, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                <Ticket className="w-12 h-12 text-gray-400" />
+                <Ticket className="w-12 h-12 text-zinc-500" />
               </motion.div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">
-                Aucun billet trouve
+              <h2 className="text-2xl font-bold text-zinc-100 mb-2 text-center">
+                Aucun billet trouvé
               </h2>
-              <p className="text-gray-500 text-center max-w-md mb-6">
+              <p className="text-zinc-500 text-center max-w-md mb-6">
                 {searchQuery
-                  ? `Aucun resultat pour "${searchQuery}". Essayez de modifier vos criteres de recherche.`
-                  : "Aucun billet ne correspond a vos filtres. Essayez d'ajuster vos criteres."}
+                  ? `Aucun résultat pour "${searchQuery}". Essayez de modifier vos critères de recherche.`
+                  : "Aucun billet ne correspond à vos filtres. Essayez d'ajuster vos critères."}
               </p>
               <Button onClick={clearFilters} variant="outline">
                 <SlidersHorizontal className="w-4 h-4" />
-                Reinitialiser les filtres
+                Réinitialiser les filtres
               </Button>
             </motion.div>
           )}
@@ -636,7 +643,7 @@ export default function ResalePage() {
       {/* CTA SECTION */}
       {/* ================================================================== */}
       <motion.section
-        className="py-16 bg-white"
+        className="py-16 bg-zinc-950"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
@@ -646,11 +653,11 @@ export default function ResalePage() {
           <Card className="bg-gradient-to-br from-secondary-500 to-secondary-600 p-8 md:p-12 text-white text-center">
             <motion.div variants={fadeInUp}>
               <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                Vous avez des billets a revendre ?
+                Vous avez des billets à revendre ?
               </h2>
               <p className="text-white/90 max-w-xl mx-auto mb-6">
-                Mettez vos billets en vente en quelques clics. C'est gratuit, securise
-                et vous recuperez votre argent rapidement.
+                Mettez vos billets en vente en quelques clics. C'est gratuit, sécurisé
+                et vous récupérez votre argent rapidement.
               </p>
               <Link href="/account/tickets">
                 <Button

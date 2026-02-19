@@ -63,10 +63,10 @@ const stats = [
 function getStatusBadge(status: EventStatus) {
   const statusConfig: Record<EventStatus, { label: string; variant: "default" | "new" | "hot" | "tonight" | "soldout" | "featured" }> = {
     draft: { label: "Brouillon", variant: "default" },
-    preview: { label: "Apercu", variant: "new" },
-    published: { label: "Publie", variant: "hot" },
-    cancelled: { label: "Annule", variant: "soldout" },
-    past: { label: "Termine", variant: "default" },
+    preview: { label: "Aperçu", variant: "new" },
+    published: { label: "Publié", variant: "hot" },
+    cancelled: { label: "Annulé", variant: "soldout" },
+    past: { label: "Terminé", variant: "default" },
   };
   return statusConfig[status] || statusConfig.draft;
 }
@@ -116,12 +116,12 @@ export default function DashboardPage() {
             Bienvenue sur votre Dashboard
           </h1>
           <p className="mt-1 text-gray-500">
-            Gerez vos evenements et suivez vos performances.
+            Gérez vos événements et suivez vos performances.
           </p>
         </div>
         <Link href="/dashboard/events/new">
           <Button leftIcon={<Plus className="w-5 h-5" />}>
-            Creer un evenement
+            Créer un événement
           </Button>
         </Link>
       </div>
@@ -155,11 +155,11 @@ export default function DashboardPage() {
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <h2 className="text-lg font-semibold text-gray-900">
-            Mes Evenements
+            Mes Événements
           </h2>
           <div className="w-full sm:w-72">
             <Input
-              placeholder="Rechercher un evenement..."
+              placeholder="Rechercher un événement..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               leftIcon={<Search className="w-5 h-5" />}
@@ -175,7 +175,7 @@ export default function DashboardPage() {
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
                     <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                      Evenement
+                      Événement
                     </th>
                     <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
                       Date
@@ -223,7 +223,7 @@ export default function DashboardPage() {
                                 {event.title}
                               </Link>
                               <p className="text-sm text-gray-500 truncate">
-                                {event.venue?.name || "Lieu non defini"}
+                                {event.venue?.name || "Lieu non défini"}
                               </p>
                             </div>
                           </div>
@@ -258,7 +258,7 @@ export default function DashboardPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-2">
-                            <Link href={`/events/${event.slug}`} target="_blank">
+                            <Link href={`/event/${event.slug}`} target="_blank">
                               <Button variant="ghost" size="sm" className="p-2">
                                 <Eye className="w-4 h-4" />
                               </Button>
@@ -290,7 +290,7 @@ export default function DashboardPage() {
                                       className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                                       onClick={() => {
                                         navigator.clipboard.writeText(
-                                          `${window.location.origin}/events/${event.slug}`
+                                          `${window.location.origin}/event/${event.slug}`
                                         );
                                         setActiveMenu(null);
                                       }}
@@ -381,7 +381,7 @@ export default function DashboardPage() {
                               Modifier
                             </Button>
                           </Link>
-                          <Link href={`/events/${event.slug}`} target="_blank">
+                          <Link href={`/event/${event.slug}`} target="_blank">
                             <Button variant="ghost" size="sm" className="p-2">
                               <Eye className="w-4 h-4" />
                             </Button>
@@ -398,16 +398,16 @@ export default function DashboardPage() {
           <Card className="p-6">
             <div className="text-center py-12 text-gray-500">
               <CalendarDays className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-              <p className="text-lg font-medium">Aucun evenement</p>
+              <p className="text-lg font-medium">Aucun événement</p>
               <p className="text-sm mt-1 mb-6">
                 {searchQuery
-                  ? "Aucun evenement ne correspond a votre recherche."
-                  : "Commencez par creer votre premier evenement."}
+                  ? "Aucun événement ne correspond à votre recherche."
+                  : "Commencez par créer votre premier événement."}
               </p>
               {!searchQuery && (
                 <Link href="/dashboard/events/new">
                   <Button leftIcon={<Plus className="w-5 h-5" />}>
-                    Creer un evenement
+                    Créer un événement
                   </Button>
                 </Link>
               )}

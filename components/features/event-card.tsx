@@ -111,12 +111,12 @@ function EventCardCompact({ event }: { event: Event }) {
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 truncate">{event.title}</h3>
-            <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+            <h3 className="font-semibold text-zinc-100 truncate">{event.title}</h3>
+            <p className="text-sm text-zinc-500 flex items-center gap-1 mt-1">
               <Calendar className="w-3.5 h-3.5" />
               {formatDate(event.start_date)}
             </p>
-            <p className="text-sm font-semibold text-primary-500 mt-1">
+            <p className="text-sm font-semibold text-primary-400 mt-1">
               {minPrice === 0 ? "Gratuit" : `Des ${formatPrice(minPrice)}`}
             </p>
           </div>
@@ -193,7 +193,7 @@ function EventCardFeatured({ event }: { event: Event }) {
                 {minPrice === 0 ? "Gratuit" : `Des ${formatPrice(minPrice)}`}
               </span>
               <span className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
-                Reserver
+                Réserver
               </span>
             </div>
           </div>
@@ -231,6 +231,9 @@ function EventCardDefault({ event }: { event: Event }) {
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
 
+            {/* Hover neon overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-primary-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
             {/* Badges - Top Left */}
             <div className="absolute top-3 left-3 flex flex-wrap gap-2">
               {event.is_featured && <Badge variant="featured">Coup de coeur</Badge>}
@@ -242,7 +245,7 @@ function EventCardDefault({ event }: { event: Event }) {
 
             {/* Price Tag - Bottom Right */}
             <div className="absolute bottom-3 right-3">
-              <span className="bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-gray-900 shadow-lg">
+              <span className="bg-zinc-900/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-zinc-100 border border-zinc-700/50 shadow-lg">
                 {formatPriceDisplay(minPrice)}
               </span>
             </div>
@@ -250,7 +253,7 @@ function EventCardDefault({ event }: { event: Event }) {
             {/* Sold Out Overlay */}
             {soldOut && (
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <span className="bg-gray-900 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                <span className="bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-semibold">
                   Complet
                 </span>
               </div>
@@ -259,11 +262,11 @@ function EventCardDefault({ event }: { event: Event }) {
 
           {/* Content */}
           <div className="p-4">
-            <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-1">
+            <h3 className="font-bold text-zinc-100 text-lg mb-2 line-clamp-1">
               {event.title}
             </h3>
 
-            <div className="space-y-1.5 text-sm text-gray-500">
+            <div className="space-y-1.5 text-sm text-zinc-500">
               {/* Date and Time */}
               <p className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-primary-500 flex-shrink-0" />

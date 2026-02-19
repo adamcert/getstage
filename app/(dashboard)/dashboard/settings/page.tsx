@@ -22,7 +22,7 @@ const tabs = [
   { id: "organization", label: "Organisation", icon: Building2 },
   { id: "billing", label: "Facturation", icon: CreditCard },
   { id: "notifications", label: "Notifications", icon: Bell },
-  { id: "security", label: "Securite", icon: Shield },
+  { id: "security", label: "Sécurité", icon: Shield },
 ];
 
 export default function SettingsPage() {
@@ -31,10 +31,10 @@ export default function SettingsPage() {
     fullName: "Jean Dupont",
     email: "jean@eventplatform.com",
     phone: "+33 6 12 34 56 78",
-    bio: "Organisateur d'evenements passione",
+    bio: "Organisateur d'événements passionné",
     orgName: "Events Pro",
     orgWebsite: "https://eventspro.fr",
-    orgAddress: "123 Avenue des Champs-Elysees, Paris",
+    orgAddress: "123 Avenue des Champs-Élysées, Paris",
   });
 
   const handleChange = (field: string, value: string) => {
@@ -44,9 +44,9 @@ export default function SettingsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Parametres</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Paramètres</h1>
         <p className="mt-1 text-gray-500">
-          Gerez votre compte et vos preferences.
+          Gérez votre compte et vos préférences.
         </p>
       </div>
 
@@ -117,7 +117,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <Input
-                  label="Telephone"
+                  label="Téléphone"
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => handleChange("phone", e.target.value)}
@@ -193,14 +193,14 @@ export default function SettingsPage() {
           {activeTab === "notifications" && (
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
-                Preferences de notifications
+                Préférences de notifications
               </h2>
               <div className="space-y-6">
                 {[
                   { id: "sales", label: "Nouvelles ventes", description: "Recevoir un email pour chaque vente" },
-                  { id: "reviews", label: "Avis clients", description: "Etre notifie des nouveaux avis" },
-                  { id: "marketing", label: "Marketing", description: "Conseils et actualites Events" },
-                  { id: "security", label: "Securite", description: "Alertes de connexion et securite" },
+                  { id: "reviews", label: "Avis clients", description: "Être notifié des nouveaux avis" },
+                  { id: "marketing", label: "Marketing", description: "Conseils et actualités Events" },
+                  { id: "security", label: "Sécurité", description: "Alertes de connexion et sécurité" },
                 ].map((item) => (
                   <div
                     key={item.id}
@@ -223,7 +223,7 @@ export default function SettingsPage() {
           {activeTab === "security" && (
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
-                Securite
+                Sécurité
               </h2>
               <div className="space-y-6">
                 <div className="p-4 bg-gray-50 rounded-xl">
@@ -231,7 +231,7 @@ export default function SettingsPage() {
                     <div>
                       <p className="font-medium text-gray-900">Mot de passe</p>
                       <p className="text-sm text-gray-500">
-                        Derniere modification il y a 3 mois
+                        Dernière modification il y a 3 mois
                       </p>
                     </div>
                     <Button variant="outline" size="sm">
@@ -243,10 +243,10 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium text-gray-900">
-                        Authentification a deux facteurs
+                        Authentification à deux facteurs
                       </p>
                       <p className="text-sm text-gray-500">
-                        Ajoutez une couche de securite supplementaire
+                        Ajoutez une couche de sécurité supplémentaire
                       </p>
                     </div>
                     <Button variant="outline" size="sm">
@@ -259,7 +259,7 @@ export default function SettingsPage() {
                     <div>
                       <p className="font-medium text-gray-900">Sessions actives</p>
                       <p className="text-sm text-gray-500">
-                        Gerez vos appareils connectes
+                        Gérez vos appareils connectés
                       </p>
                     </div>
                     <Button variant="outline" size="sm">

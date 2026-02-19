@@ -230,17 +230,17 @@ function countActiveFilters(filters: EventFilters): number {
 
 function SearchPageSkeleton() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="sticky top-0 z-40 bg-white border-b border-gray-100">
+    <div className="min-h-screen bg-[#09090B]">
+      <div className="sticky top-0 z-40 bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-800">
         <div className="container mx-auto px-4 py-6">
-          <div className="h-8 w-64 bg-gray-200 rounded-lg animate-pulse mb-4" />
-          <div className="h-14 bg-gray-100 rounded-2xl animate-pulse" />
+          <div className="h-8 w-64 bg-zinc-800 rounded-lg animate-pulse mb-4" />
+          <div className="h-14 bg-zinc-800 rounded-2xl animate-pulse" />
         </div>
       </div>
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-80 bg-gray-100 rounded-2xl animate-pulse" />
+            <div key={i} className="h-80 bg-zinc-800 rounded-2xl animate-pulse" />
           ))}
         </div>
       </main>
@@ -312,16 +312,16 @@ function SearchPageContent() {
   // Don't render until initialized to avoid hydration mismatch
   if (!isInitialized) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="sticky top-0 z-40 bg-white border-b border-gray-100">
+      <div className="min-h-screen bg-[#09090B]">
+        <div className="sticky top-0 z-40 bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-800">
           <div className="container mx-auto px-4 py-6">
-            <div className="h-14 bg-gray-100 rounded-2xl animate-pulse" />
+            <div className="h-14 bg-zinc-800 rounded-2xl animate-pulse" />
           </div>
         </div>
         <main className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-80 bg-gray-100 rounded-2xl animate-pulse" />
+              <div key={i} className="h-80 bg-zinc-800 rounded-2xl animate-pulse" />
             ))}
           </div>
         </main>
@@ -330,20 +330,20 @@ function SearchPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#09090B]">
       {/* ================================================================== */}
       {/* HEADER SECTION */}
       {/* ================================================================== */}
-      <div className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm">
+      <div className="sticky top-0 z-40 bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-800">
         <div className="container mx-auto px-4 py-4 md:py-6">
           {/* Title */}
           <motion.h1
-            className="text-2xl md:text-3xl font-bold text-gray-900 mb-4"
+            className="text-2xl md:text-3xl font-bold text-zinc-100 font-display mb-4"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            Explorer les evenements
+            Explorer les événements
           </motion.h1>
 
           {/* Search Input */}
@@ -356,7 +356,7 @@ function SearchPageContent() {
               value={searchQuery}
               onChange={setSearchQuery}
               onSubmit={handleSearch}
-              placeholder="Rechercher un evenement, un artiste, un lieu..."
+              placeholder="Rechercher un événement, un artiste, un lieu..."
               className="max-w-2xl"
             />
           </motion.div>
@@ -366,7 +366,7 @@ function SearchPageContent() {
       {/* ================================================================== */}
       {/* FILTERS SECTION */}
       {/* ================================================================== */}
-      <div className="sticky top-[120px] md:top-[140px] z-30 bg-gray-50/95 backdrop-blur-sm border-b border-gray-100">
+      <div className="sticky top-[120px] md:top-[140px] z-30 bg-zinc-950/95 backdrop-blur-sm border-b border-zinc-800">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             {/* Desktop Filter Bar */}
@@ -384,14 +384,14 @@ function SearchPageContent() {
 
             {/* Results Counter */}
             <motion.div
-              className="hidden sm:flex items-center text-sm text-gray-500"
+              className="hidden sm:flex items-center text-sm text-zinc-500"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <span className="font-semibold text-gray-900">{filteredEvents.length}</span>
+              <span className="font-semibold text-zinc-100">{filteredEvents.length}</span>
               <span className="ml-1">
-                evenement{filteredEvents.length !== 1 ? "s" : ""} trouve{filteredEvents.length !== 1 ? "s" : ""}
+                événement{filteredEvents.length !== 1 ? "s" : ""} trouvé{filteredEvents.length !== 1 ? "s" : ""}
               </span>
             </motion.div>
           </div>
@@ -404,12 +404,12 @@ function SearchPageContent() {
       <main className="container mx-auto px-4 py-6 md:py-8">
         {/* Mobile Results Counter */}
         <motion.p
-          className="sm:hidden text-sm text-gray-500 mb-4"
+          className="sm:hidden text-sm text-zinc-500 mb-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <span className="font-semibold text-gray-900">{filteredEvents.length}</span>
-          {" "}evenement{filteredEvents.length !== 1 ? "s" : ""} trouve{filteredEvents.length !== 1 ? "s" : ""}
+          <span className="font-semibold text-zinc-100">{filteredEvents.length}</span>
+          {" "}événement{filteredEvents.length !== 1 ? "s" : ""} trouvé{filteredEvents.length !== 1 ? "s" : ""}
         </motion.p>
 
         <AnimatePresence mode="wait">
@@ -446,16 +446,16 @@ function SearchPageContent() {
               initial="hidden"
               animate="visible"
             >
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gray-100 flex items-center justify-center mb-6">
-                <Search className="w-10 h-10 md:w-12 md:h-12 text-gray-400" />
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-zinc-800 flex items-center justify-center mb-6">
+                <Search className="w-10 h-10 md:w-12 md:h-12 text-zinc-400" />
               </div>
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 text-center">
-                Aucun evenement trouve
+              <h2 className="text-xl md:text-2xl font-bold text-zinc-100 mb-2 text-center">
+                Aucun événement trouvé
               </h2>
-              <p className="text-gray-500 text-center max-w-md mb-6">
+              <p className="text-zinc-500 text-center max-w-md mb-6">
                 {filters.query
-                  ? `Aucun resultat pour "${filters.query}". Essayez de modifier vos criteres de recherche.`
-                  : "Aucun evenement ne correspond a vos filtres. Essayez d'ajuster vos criteres."}
+                  ? `Aucun résultat pour "${filters.query}". Essayez de modifier vos critères de recherche.`
+                  : "Aucun événement ne correspond à vos filtres. Essayez d'ajuster vos critères."}
               </p>
               <button
                 onClick={() => {
@@ -466,7 +466,7 @@ function SearchPageContent() {
                 className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-xl font-semibold hover:bg-primary-600 transition-colors"
               >
                 <SlidersHorizontal className="w-4 h-4" />
-                Reinitialiser les filtres
+                Réinitialiser les filtres
               </button>
             </motion.div>
           )}

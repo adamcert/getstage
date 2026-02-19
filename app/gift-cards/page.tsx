@@ -169,7 +169,7 @@ function CardPattern({ pattern, accent }: { pattern: string; accent: string }) {
             fontSize="16"
             opacity={0.3 + Math.random() * 0.4}
           >
-            ✦
+            &#10022;
           </text>
         ))}
       </svg>
@@ -185,7 +185,7 @@ function CardPattern({ pattern, accent }: { pattern: string; accent: string }) {
             fontSize="24"
             opacity={0.2 + Math.random() * 0.3}
           >
-            ♥
+            &#9829;
           </text>
         ))}
       </svg>
@@ -351,7 +351,7 @@ function GiftCard3D({
                   }}
                 >
                   {amount}
-                  <span className="text-2xl md:text-3xl ml-1">€</span>
+                  <span className="text-2xl md:text-3xl ml-1">&#8364;</span>
                 </p>
               </motion.div>
             </div>
@@ -429,8 +429,8 @@ function AmountButton({
         "relative py-5 px-4 rounded-xl font-bold text-xl transition-all",
         "border-2 overflow-hidden group",
         selected
-          ? "border-amber-500 bg-gradient-to-br from-amber-50 to-amber-100 text-amber-900"
-          : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+          ? "border-secondary-500 bg-secondary-500/10 text-secondary-300"
+          : "border-zinc-700 bg-zinc-800 text-zinc-300 hover:border-zinc-600"
       )}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
@@ -438,16 +438,16 @@ function AmountButton({
       {selected && (
         <motion.div
           layoutId="amountGlow"
-          className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-orange-400/20"
+          className="absolute inset-0 bg-gradient-to-br from-secondary-500/20 to-primary-500/20"
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
         />
       )}
-      <span className="relative">{amount}€</span>
+      <span className="relative">{amount}&#8364;</span>
       {selected && (
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          className="absolute -top-1 -right-1 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center"
+          className="absolute -top-1 -right-1 w-6 h-6 bg-secondary-500 rounded-full flex items-center justify-center"
         >
           <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
         </motion.div>
@@ -480,8 +480,8 @@ function DesignCard({
         "relative overflow-hidden rounded-xl aspect-[1.3/1] transition-all",
         "border-2",
         selected
-          ? "border-amber-500 ring-4 ring-amber-500/20"
-          : "border-slate-200 hover:border-slate-300"
+          ? "border-secondary-500 ring-4 ring-secondary-500/20"
+          : "border-zinc-700 hover:border-zinc-600"
       )}
       whileHover={{ scale: 1.03, y: -2 }}
       whileTap={{ scale: 0.97 }}
@@ -513,7 +513,7 @@ function DesignCard({
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          className="absolute top-2 right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center shadow-lg"
+          className="absolute top-2 right-2 w-6 h-6 bg-secondary-500 rounded-full flex items-center justify-center shadow-lg"
         >
           <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
         </motion.div>
@@ -546,8 +546,8 @@ function StepIndicator({
         className={cn(
           "w-10 h-10 rounded-full flex items-center justify-center transition-all",
           isActive
-            ? "bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-500/30"
-            : "bg-slate-100 text-slate-400"
+            ? "bg-gradient-to-br from-primary-500 to-secondary-500 text-white shadow-lg shadow-primary-500/30"
+            : "bg-zinc-800 text-zinc-600"
         )}
         animate={isCurrent ? { scale: [1, 1.1, 1] } : {}}
         transition={{ duration: 0.5, repeat: isCurrent ? Infinity : 0, repeatDelay: 2 }}
@@ -555,10 +555,10 @@ function StepIndicator({
         <Icon className="w-5 h-5" />
       </motion.div>
       <div>
-        <p className={cn("text-sm font-medium", isActive ? "text-slate-900" : "text-slate-400")}>
-          Étape {step}
+        <p className={cn("text-sm font-medium", isActive ? "text-zinc-100" : "text-zinc-600")}>
+          &#201;tape {step}
         </p>
-        <p className={cn("text-xs", isActive ? "text-slate-600" : "text-slate-400")}>{label}</p>
+        <p className={cn("text-xs", isActive ? "text-zinc-500" : "text-zinc-600")}>{label}</p>
       </div>
     </div>
   );
@@ -624,9 +624,9 @@ export default function GiftCardsPage() {
   }, [finalAmount, design, step]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-[#09090B]">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-slate-900 text-white">
+      <section className="relative overflow-hidden bg-zinc-950 text-white">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div
@@ -639,8 +639,8 @@ export default function GiftCardsPage() {
         </div>
 
         {/* Gradient Orbs */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-500/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary-500/20 rounded-full blur-3xl" />
 
         <div className="relative max-w-7xl mx-auto px-4 py-20 md:py-32">
           <motion.div
@@ -654,29 +654,28 @@ export default function GiftCardsPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 mb-8"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 mb-8"
             >
-              <Star className="w-4 h-4 text-amber-400" />
-              <span className="text-sm text-amber-200 font-medium">
+              <Star className="w-4 h-4 text-primary-400" />
+              <span className="text-sm text-primary-300 font-medium">
                 Le cadeau parfait pour les amateurs de sorties
               </span>
             </motion.div>
 
             <h1
-              className="text-5xl md:text-7xl font-bold mb-6"
-              style={{ fontFamily: "Georgia, serif" }}
+              className="text-5xl md:text-7xl font-bold font-display mb-6"
             >
               <span className="text-white">Offrez des</span>
               <br />
-              <span className="bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-300 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 bg-clip-text text-transparent">
                 moments inoubliables
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto mb-12">
+            <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-12">
               Nos cartes cadeaux ouvrent les portes de milliers d&apos;événements.
               <br className="hidden md:block" />
-              Concerts, théâtre, festivals — le choix leur appartient.
+              Concerts, théâtre, festivals &mdash; le choix leur appartient.
             </p>
 
             {/* Stats */}
@@ -693,8 +692,8 @@ export default function GiftCardsPage() {
                   transition={{ delay: 0.4 + i * 0.1 }}
                   className="text-center"
                 >
-                  <p className="text-3xl md:text-4xl font-bold text-amber-400">{stat.value}</p>
-                  <p className="text-sm text-slate-400">{stat.label}</p>
+                  <p className="text-3xl md:text-4xl font-bold text-primary-400">{stat.value}</p>
+                  <p className="text-sm text-zinc-500">{stat.label}</p>
                 </motion.div>
               ))}
             </div>
@@ -706,7 +705,7 @@ export default function GiftCardsPage() {
           <svg viewBox="0 0 1440 60" fill="none" className="w-full h-auto">
             <path
               d="M0 60V30C240 10 480 0 720 10C960 20 1200 50 1440 30V60H0Z"
-              className="fill-slate-50"
+              className="fill-[#09090B]"
             />
           </svg>
         </div>
@@ -720,25 +719,25 @@ export default function GiftCardsPage() {
             {/* Step Progress */}
             <div className="hidden md:flex items-center justify-between mb-12">
               <StepIndicator step={1} currentStep={step} label="Montant" icon={Zap} />
-              <div className="flex-1 h-0.5 bg-slate-200 mx-4" />
+              <div className="flex-1 h-0.5 bg-zinc-800 mx-4" />
               <StepIndicator step={2} currentStep={step} label="Design" icon={Sparkles} />
-              <div className="flex-1 h-0.5 bg-slate-200 mx-4" />
+              <div className="flex-1 h-0.5 bg-zinc-800 mx-4" />
               <StepIndicator step={3} currentStep={step} label="Destinataire" icon={Gift} />
             </div>
 
             {/* Step 1: Amount */}
             <motion.div
-              className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 p-8 border border-slate-100"
+              className="bg-zinc-900 rounded-3xl shadow-xl shadow-black/20 p-8 border border-zinc-800"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
               <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/25">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-lg shadow-primary-500/25">
                   <Zap className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900">Choisissez le montant</h2>
-                  <p className="text-slate-500">Sélectionnez ou personnalisez</p>
+                  <h2 className="text-xl font-bold text-zinc-100">Choisissez le montant</h2>
+                  <p className="text-zinc-500">Sélectionnez ou personnalisez</p>
                 </div>
               </div>
 
@@ -757,11 +756,11 @@ export default function GiftCardsPage() {
               <div
                 className={cn(
                   "relative rounded-xl border-2 transition-all p-4",
-                  isCustom ? "border-amber-500 bg-amber-50" : "border-slate-200 bg-slate-50"
+                  isCustom ? "border-secondary-500 bg-secondary-500/10" : "border-zinc-700 bg-zinc-800"
                 )}
               >
                 <label className="flex items-center gap-4">
-                  <span className="text-sm font-medium text-slate-600">Montant libre</span>
+                  <span className="text-sm font-medium text-zinc-400">Montant libre</span>
                   <div className="flex-1 relative">
                     <input
                       type="number"
@@ -774,10 +773,10 @@ export default function GiftCardsPage() {
                       }}
                       onFocus={() => setIsCustom(true)}
                       placeholder={`${MIN_AMOUNT} - ${MAX_AMOUNT}`}
-                      className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-right text-xl font-bold"
+                      className="w-full px-4 py-3 rounded-lg border border-zinc-700 bg-zinc-800 outline-none focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 text-right text-xl font-bold text-zinc-100 placeholder-zinc-500"
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">
-                      €
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 font-medium">
+                      &#8364;
                     </span>
                   </div>
                 </label>
@@ -785,7 +784,7 @@ export default function GiftCardsPage() {
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center"
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-secondary-500 rounded-full flex items-center justify-center"
                   >
                     <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
                   </motion.div>
@@ -795,7 +794,7 @@ export default function GiftCardsPage() {
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="mt-6 w-full py-4 rounded-xl bg-slate-900 text-white font-semibold flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors"
+                className="mt-6 w-full py-4 rounded-xl bg-zinc-100 text-zinc-900 font-semibold flex items-center justify-center gap-2 hover:bg-white transition-colors"
               >
                 Continuer <ArrowRight className="w-5 h-5" />
               </button>
@@ -804,7 +803,7 @@ export default function GiftCardsPage() {
             {/* Step 2: Design */}
             <motion.div
               className={cn(
-                "bg-white rounded-3xl shadow-xl shadow-slate-200/50 p-8 border border-slate-100 transition-opacity",
+                "bg-zinc-900 rounded-3xl shadow-xl shadow-black/20 p-8 border border-zinc-800 transition-opacity",
                 step >= 2 ? "opacity-100" : "opacity-50 pointer-events-none"
               )}
               initial={{ opacity: 0, y: 20 }}
@@ -816,8 +815,8 @@ export default function GiftCardsPage() {
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900">Choisissez le design</h2>
-                  <p className="text-slate-500">6 styles exclusifs</p>
+                  <h2 className="text-xl font-bold text-zinc-100">Choisissez le design</h2>
+                  <p className="text-zinc-500">6 styles exclusifs</p>
                 </div>
               </div>
 
@@ -839,7 +838,7 @@ export default function GiftCardsPage() {
             {/* Step 3: Recipient */}
             <motion.div
               className={cn(
-                "bg-white rounded-3xl shadow-xl shadow-slate-200/50 p-8 border border-slate-100 transition-opacity",
+                "bg-zinc-900 rounded-3xl shadow-xl shadow-black/20 p-8 border border-zinc-800 transition-opacity",
                 step >= 3 ? "opacity-100" : "opacity-50 pointer-events-none"
               )}
               initial={{ opacity: 0, y: 20 }}
@@ -851,77 +850,77 @@ export default function GiftCardsPage() {
                   <Gift className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900">Informations du destinataire</h2>
-                  <p className="text-slate-500">À qui offrez-vous cette carte ?</p>
+                  <h2 className="text-xl font-bold text-zinc-100">Informations du destinataire</h2>
+                  <p className="text-zinc-500">À qui offrez-vous cette carte ?</p>
                 </div>
               </div>
 
               <div className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-zinc-300 mb-2">
                       Email du destinataire *
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                       <input
                         type="email"
                         value={formData.recipientEmail}
                         onChange={(e) => setFormData({ ...formData, recipientEmail: e.target.value })}
                         placeholder="email@exemple.com"
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 outline-none focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 text-zinc-100 placeholder-zinc-500"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-zinc-300 mb-2">
                       Nom du destinataire *
                     </label>
                     <div className="relative">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                       <input
                         type="text"
                         value={formData.recipientName}
                         onChange={(e) => setFormData({ ...formData, recipientName: e.target.value })}
                         placeholder="Marie"
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 outline-none focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 text-zinc-100 placeholder-zinc-500"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">
                     Votre nom *
                   </label>
                   <div className="relative">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                     <input
                       type="text"
                       value={formData.senderName}
                       onChange={(e) => setFormData({ ...formData, senderName: e.target.value })}
                       placeholder="Jean"
-                      className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                      className="w-full pl-12 pr-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 outline-none focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 text-zinc-100 placeholder-zinc-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-zinc-300 mb-2">
                     Message personnel{" "}
-                    <span className="text-slate-400 font-normal">(optionnel)</span>
+                    <span className="text-zinc-600 font-normal">(optionnel)</span>
                   </label>
                   <div className="relative">
-                    <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-slate-400" />
+                    <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-zinc-500" />
                     <textarea
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       maxLength={MAX_MESSAGE_LENGTH}
                       rows={3}
                       placeholder="Joyeux anniversaire ! Profite bien..."
-                      className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 resize-none"
+                      className="w-full pl-12 pr-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 outline-none focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 resize-none text-zinc-100 placeholder-zinc-500"
                     />
-                    <span className="absolute right-4 bottom-3 text-xs text-slate-400">
+                    <span className="absolute right-4 bottom-3 text-xs text-zinc-500">
                       {formData.message.length}/{MAX_MESSAGE_LENGTH}
                     </span>
                   </div>
@@ -933,19 +932,19 @@ export default function GiftCardsPage() {
                     className={cn(
                       "flex-1 flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all",
                       formData.sendDate === "now"
-                        ? "border-amber-500 bg-amber-50"
-                        : "border-slate-200 hover:border-slate-300"
+                        ? "border-secondary-500 bg-secondary-500/10"
+                        : "border-zinc-700 hover:border-zinc-600"
                     )}
                   >
                     <input
                       type="radio"
                       checked={formData.sendDate === "now"}
                       onChange={() => setFormData({ ...formData, sendDate: "now" })}
-                      className="w-4 h-4 text-amber-500"
+                      className="w-4 h-4 text-secondary-500"
                     />
                     <div>
-                      <p className="font-medium text-slate-900">Maintenant</p>
-                      <p className="text-xs text-slate-500">Envoi immédiat</p>
+                      <p className="font-medium text-zinc-100">Maintenant</p>
+                      <p className="text-xs text-zinc-500">Envoi immédiat</p>
                     </div>
                   </label>
 
@@ -953,19 +952,19 @@ export default function GiftCardsPage() {
                     className={cn(
                       "flex-1 flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all",
                       formData.sendDate === "scheduled"
-                        ? "border-amber-500 bg-amber-50"
-                        : "border-slate-200 hover:border-slate-300"
+                        ? "border-secondary-500 bg-secondary-500/10"
+                        : "border-zinc-700 hover:border-zinc-600"
                     )}
                   >
                     <input
                       type="radio"
                       checked={formData.sendDate === "scheduled"}
                       onChange={() => setFormData({ ...formData, sendDate: "scheduled" })}
-                      className="w-4 h-4 text-amber-500"
+                      className="w-4 h-4 text-secondary-500"
                     />
                     <div>
-                      <p className="font-medium text-slate-900">Programmer</p>
-                      <p className="text-xs text-slate-500">Choisir une date</p>
+                      <p className="font-medium text-zinc-100">Programmer</p>
+                      <p className="text-xs text-zinc-500">Choisir une date</p>
                     </div>
                   </label>
                 </div>
@@ -976,13 +975,13 @@ export default function GiftCardsPage() {
                     animate={{ opacity: 1, height: "auto" }}
                   >
                     <div className="relative">
-                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                       <input
                         type="date"
                         value={formData.scheduledDate}
                         onChange={(e) => setFormData({ ...formData, scheduledDate: e.target.value })}
                         min={new Date().toISOString().split("T")[0]}
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 outline-none focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 text-zinc-100"
                       />
                     </div>
                   </motion.div>
@@ -995,8 +994,8 @@ export default function GiftCardsPage() {
           <div className="lg:col-span-5">
             <div className="lg:sticky lg:top-8 space-y-6">
               {/* Card Preview */}
-              <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 p-8 border border-slate-100">
-                <p className="text-sm font-medium text-slate-500 mb-6 text-center">
+              <div className="bg-zinc-900 rounded-3xl shadow-xl shadow-black/20 p-8 border border-zinc-800">
+                <p className="text-sm font-medium text-zinc-500 mb-6 text-center">
                   Aperçu de votre carte
                 </p>
                 <AnimatePresence mode="wait">
@@ -1013,37 +1012,37 @@ export default function GiftCardsPage() {
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-100"
+                    className="mt-6 p-4 bg-zinc-800 rounded-xl border border-zinc-700"
                   >
-                    <p className="text-xs text-slate-500 mb-1">Message</p>
-                    <p className="text-sm text-slate-700 italic">&ldquo;{formData.message}&rdquo;</p>
+                    <p className="text-xs text-zinc-500 mb-1">Message</p>
+                    <p className="text-sm text-zinc-300 italic">&ldquo;{formData.message}&rdquo;</p>
                   </motion.div>
                 )}
               </div>
 
               {/* Purchase Summary */}
-              <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 text-white">
+              <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-3xl p-8 text-white">
                 <h3 className="font-bold text-lg mb-6">Récapitulatif</h3>
 
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Montant</span>
+                    <span className="text-zinc-400">Montant</span>
                     <span className="font-semibold">{formatPrice(finalAmount)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Design</span>
+                    <span className="text-zinc-400">Design</span>
                     <span className="font-semibold">{design.name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Envoi</span>
+                    <span className="text-zinc-400">Envoi</span>
                     <span className="font-semibold">
                       {formData.sendDate === "now" ? "Immédiat" : formData.scheduledDate || "À définir"}
                     </span>
                   </div>
-                  <div className="h-px bg-slate-700" />
+                  <div className="h-px bg-zinc-700" />
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-300">Total</span>
-                    <span className="text-3xl font-bold text-amber-400">
+                    <span className="text-zinc-300">Total</span>
+                    <span className="text-3xl font-bold text-primary-400">
                       {formatPrice(finalAmount)}
                     </span>
                   </div>
@@ -1056,15 +1055,15 @@ export default function GiftCardsPage() {
                   className={cn(
                     "w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all",
                     isFormValid
-                      ? "bg-gradient-to-r from-amber-400 to-orange-500 text-slate-900 hover:shadow-lg hover:shadow-amber-500/30"
-                      : "bg-slate-700 text-slate-400 cursor-not-allowed"
+                      ? "bg-gradient-to-r from-primary-500 to-secondary-500 text-white hover:shadow-lg hover:shadow-primary-500/30"
+                      : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
                   )}
                   whileHover={isFormValid ? { scale: 1.02 } : {}}
                   whileTap={isFormValid ? { scale: 0.98 } : {}}
                 >
                   {isProcessing ? (
                     <motion.div
-                      className="w-6 h-6 border-2 border-slate-900/30 border-t-slate-900 rounded-full"
+                      className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                     />
@@ -1077,9 +1076,9 @@ export default function GiftCardsPage() {
                 </motion.button>
 
                 {/* Trust */}
-                <div className="mt-6 flex items-center justify-center gap-2 text-slate-400 text-xs">
+                <div className="mt-6 flex items-center justify-center gap-2 text-zinc-500 text-xs">
                   <Check className="w-4 h-4 text-emerald-400" />
-                  Paiement sécurisé • Envoi instantané
+                  Paiement sécurisé &bull; Envoi instantané
                 </div>
               </div>
             </div>

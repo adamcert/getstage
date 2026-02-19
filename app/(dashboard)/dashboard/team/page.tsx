@@ -39,7 +39,7 @@ const mockTeam: TeamMember[] = [
     name: "Marie Martin",
     email: "marie@eventplatform.com",
     role: "admin",
-    joinedAt: "Fevrier 2024",
+    joinedAt: "Février 2024",
   },
   {
     id: "3",
@@ -58,9 +58,9 @@ const mockTeam: TeamMember[] = [
 ];
 
 const roleLabels: Record<TeamMember["role"], { label: string; color: string }> = {
-  owner: { label: "Proprietaire", color: "bg-purple-100 text-purple-700" },
+  owner: { label: "Propriétaire", color: "bg-purple-100 text-purple-700" },
   admin: { label: "Admin", color: "bg-blue-100 text-blue-700" },
-  editor: { label: "Editeur", color: "bg-green-100 text-green-700" },
+  editor: { label: "Éditeur", color: "bg-green-100 text-green-700" },
   viewer: { label: "Lecteur", color: "bg-gray-100 text-gray-700" },
 };
 
@@ -78,9 +78,9 @@ export default function TeamPage() {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Equipe</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Équipe</h1>
           <p className="mt-1 text-gray-500">
-            Gerez les membres de votre equipe et leurs permissions.
+            Gérez les membres de votre équipe et leurs permissions.
           </p>
         </div>
         <Button leftIcon={<UserPlus className="w-5 h-5" />}>
@@ -108,7 +108,7 @@ export default function TeamPage() {
                   Membre
                 </th>
                 <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                  Role
+                  Rôle
                 </th>
                 <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
                   Rejoint le
@@ -172,7 +172,7 @@ export default function TeamPage() {
                                   onClick={() => setActiveMenu(null)}
                                 >
                                   <Edit className="w-4 h-4" />
-                                  Modifier le role
+                                  Modifier le rôle
                                 </button>
                                 <button
                                   className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"

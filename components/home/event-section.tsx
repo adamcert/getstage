@@ -63,14 +63,14 @@ const headerVariants: Variants = {
  * // Default variant
  * <EventSection
  *   title="Ce soir"
- *   subtitle="Les evenements du jour"
+ *   subtitle="Les événements du jour"
  *   events={tonightEvents}
- *   viewAllLink="/events?filter=tonight"
+ *   viewAllLink="/search?filter=tonight"
  * />
  *
  * // Featured variant
  * <EventSection
- *   title="Coups de coeur"
+ *   title="Coups de cœur"
  *   events={featuredEvents}
  *   variant="featured"
  * />
@@ -101,11 +101,11 @@ export function EventSection({
           viewport={{ once: true, margin: "-100px" }}
         >
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+            <h2 className="text-2xl md:text-3xl font-bold font-display text-zinc-100">
               {title}
             </h2>
             {subtitle && (
-              <p className="mt-2 text-gray-500 text-base md:text-lg">
+              <p className="mt-2 text-zinc-500 text-base md:text-lg">
                 {subtitle}
               </p>
             )}
@@ -114,7 +114,7 @@ export function EventSection({
           {viewAllLink && (
             <Link
               href={viewAllLink}
-              className="hidden sm:flex items-center gap-1 text-primary-600 hover:text-primary-700 font-medium transition-colors group"
+              className="hidden sm:flex items-center gap-1 text-accent-400 hover:text-accent-300 font-medium transition-colors group"
             >
               Voir tout
               <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
@@ -150,7 +150,7 @@ export function EventSection({
           <div className="mt-8 text-center sm:hidden">
             <Link
               href={viewAllLink}
-              className="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 font-medium transition-colors"
+              className="inline-flex items-center gap-1 text-accent-400 hover:text-accent-300 font-medium transition-colors"
             >
               Voir tout
               <ChevronRight className="w-5 h-5" />

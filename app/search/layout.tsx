@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Rechercher des evenements",
-  description: "Recherchez et filtrez parmi des centaines d'evenements : concerts, spectacles, expositions et soirees. Trouvez l'evenement parfait pres de chez vous.",
+  title: "Rechercher des événements",
+  description: "Recherchez et filtrez parmi des centaines d'événements : concerts, spectacles, expositions et soirées. Trouvez l'événement parfait près de chez vous.",
   openGraph: {
-    title: "Rechercher des evenements | GetStage",
-    description: "Recherchez et filtrez parmi des centaines d'evenements : concerts, spectacles, expositions et soirees.",
+    title: "Rechercher des événements | GetStage",
+    description: "Recherchez et filtrez parmi des centaines d'événements : concerts, spectacles, expositions et soirées.",
   },
 };
 

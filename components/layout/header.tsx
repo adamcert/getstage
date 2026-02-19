@@ -39,7 +39,7 @@ export function Header() {
   }, [itemCount]);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
+    <header className="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -48,8 +48,8 @@ export function Header() {
               <PartyPopper className="w-5 h-5 text-white" />
             </div>
             <div className="hidden sm:flex flex-col leading-none">
-              <span className="font-bold text-lg text-gray-900 tracking-tight">GetStage</span>
-              <span className="text-[10px] font-semibold text-gray-400 tracking-widest uppercase">by SNAPSS</span>
+              <span className="font-display font-bold text-lg text-zinc-100 tracking-tight">GetStage</span>
+              <span className="text-[10px] font-semibold text-zinc-500 tracking-widest uppercase">by SNAPSS</span>
             </div>
           </Link>
 
@@ -62,8 +62,8 @@ export function Header() {
                 className={cn(
                   "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
                   pathname === link.href
-                    ? "text-secondary-600 bg-secondary-50"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    ? "text-secondary-400 bg-secondary-500/10"
+                    : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50"
                 )}
               >
                 {link.label}
@@ -104,7 +104,7 @@ export function Header() {
                     animate={{ scale: 1 }}
                     exit={{ scale: 0 }}
                     className={cn(
-                      "absolute -top-1 -right-1 w-5 h-5 bg-secondary-500 text-white text-xs font-bold rounded-full flex items-center justify-center",
+                      "absolute -top-1 -right-1 w-5 h-5 bg-primary-500 text-white text-xs font-bold rounded-full flex items-center justify-center",
                       isAnimating && "animate-pulse"
                     )}
                   >
@@ -151,7 +151,7 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-gray-100 bg-white"
+            className="md:hidden border-t border-zinc-800 bg-zinc-950"
           >
             <nav className="px-4 py-4 space-y-1">
               {navLinks.map((link) => (
@@ -162,8 +162,8 @@ export function Header() {
                   className={cn(
                     "block px-4 py-3 rounded-xl text-base font-medium transition-colors",
                     pathname === link.href
-                      ? "text-secondary-600 bg-secondary-50"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                      ? "text-secondary-400 bg-zinc-900"
+                      : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50"
                   )}
                 >
                   {link.label}

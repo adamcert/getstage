@@ -86,9 +86,9 @@ export default function RegisterPage() {
       >
         <Card variant="elevated">
           <CardContent className="py-12 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-emerald-500/15 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
-                className="w-8 h-8 text-green-500"
+                className="w-8 h-8 text-emerald-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -101,11 +101,11 @@ export default function RegisterPage() {
                 />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Check your email</h2>
-            <p className="text-gray-600 mb-6">
-              We&apos;ve sent a confirmation link to <strong>{email}</strong>
+            <h2 className="text-2xl font-bold text-zinc-100 mb-2">Check your email</h2>
+            <p className="text-zinc-400 mb-6">
+              We&apos;ve sent a confirmation link to <strong className="text-zinc-100">{email}</strong>
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-zinc-500">
               Click the link in the email to activate your account.
             </p>
           </CardContent>
@@ -123,8 +123,8 @@ export default function RegisterPage() {
       <Card variant="elevated" className="overflow-hidden">
         <CardHeader>
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900">Create an account</h1>
-            <p className="text-gray-500 mt-2">Join Events and discover amazing experiences</p>
+            <h1 className="text-2xl font-bold text-zinc-100">Create an account</h1>
+            <p className="text-zinc-500 mt-2">Join Events and discover amazing experiences</p>
           </div>
         </CardHeader>
 
@@ -175,10 +175,10 @@ export default function RegisterPage() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
+              <div className="w-full border-t border-zinc-700" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">or continue with email</span>
+              <span className="px-4 bg-zinc-900 text-zinc-500">or continue with email</span>
             </div>
           </div>
 
@@ -188,7 +188,7 @@ export default function RegisterPage() {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl"
+                className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl"
               >
                 {error}
               </motion.div>
@@ -260,7 +260,7 @@ export default function RegisterPage() {
               required
             />
 
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-zinc-600">
               Password must be at least 8 characters with one uppercase letter and one number.
             </p>
 
@@ -268,25 +268,25 @@ export default function RegisterPage() {
               Create account
             </Button>
 
-            <p className="text-xs text-center text-gray-500">
+            <p className="text-xs text-center text-zinc-500">
               By creating an account, you agree to our{" "}
-              <Link href="/terms" className="text-primary-500 hover:underline">
+              <Link href="/terms" className="text-secondary-400 hover:underline">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link href="/privacy" className="text-primary-500 hover:underline">
+              <Link href="/privacy" className="text-secondary-400 hover:underline">
                 Privacy Policy
               </Link>
             </p>
           </form>
         </CardContent>
 
-        <CardFooter className="bg-gray-50 border-t border-gray-100">
-          <p className="text-center text-gray-600 w-full">
+        <CardFooter className="bg-zinc-800/50 border-t border-zinc-800">
+          <p className="text-center text-zinc-400 w-full">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="text-primary-500 hover:text-primary-600 font-semibold"
+              className="text-secondary-400 hover:text-secondary-300 font-semibold"
             >
               Sign in
             </Link>

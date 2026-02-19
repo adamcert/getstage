@@ -40,11 +40,11 @@ interface FilterOption {
 const CATEGORIES: FilterOption[] = [
   { value: "concert", label: "Concert" },
   { value: "dj", label: "DJ & Club" },
-  { value: "theatre", label: "Theatre" },
-  { value: "comedy", label: "Comedie" },
+  { value: "theatre", label: "Théâtre" },
+  { value: "comedy", label: "Comédie" },
   { value: "expo", label: "Exposition" },
-  { value: "film", label: "Cinema" },
-  { value: "party", label: "Soiree" },
+  { value: "film", label: "Cinéma" },
+  { value: "party", label: "Soirée" },
   { value: "festival", label: "Festival" },
   { value: "other", label: "Autre" },
 ];
@@ -215,7 +215,7 @@ function Dropdown({ trigger, children, isOpen, onOpenChange, align = "left" }: D
             />
             <motion.div
               className={cn(
-                "absolute top-full mt-2 z-50 min-w-[200px] py-2 bg-white rounded-xl shadow-xl border border-gray-100",
+                "absolute top-full mt-2 z-50 min-w-[200px] py-2 bg-zinc-900 rounded-xl shadow-xl shadow-black/30 border border-zinc-800",
                 align === "right" ? "right-0" : "left-0"
               )}
               variants={dropdownVariants}
@@ -253,16 +253,16 @@ function FilterButton({ icon, label, value, isActive, onClick, className }: Filt
         "inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-200",
         "text-sm font-medium whitespace-nowrap",
         isActive
-          ? "border-primary-500 bg-primary-50 text-primary-700"
-          : "border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50",
+          ? "border-secondary-500 bg-secondary-500/10 text-secondary-300"
+          : "border-zinc-700 bg-zinc-900 text-zinc-300 hover:border-zinc-600",
         className
       )}
     >
-      <span className={cn("transition-colors", isActive ? "text-primary-500" : "text-gray-400")}>
+      <span className={cn("transition-colors", isActive ? "text-secondary-400" : "text-zinc-500")}>
         {icon}
       </span>
       <span>{value || label}</span>
-      <ChevronDown className={cn("w-4 h-4 transition-colors", isActive ? "text-primary-500" : "text-gray-400")} />
+      <ChevronDown className={cn("w-4 h-4 transition-colors", isActive ? "text-secondary-400" : "text-zinc-500")} />
     </button>
   );
 }
@@ -386,7 +386,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
         trigger={
           <FilterButton
             icon={<Tag className="w-4 h-4" />}
-            label="Categorie"
+            label="Catégorie"
             value={getSelectedCategoryLabel()}
             isActive={!!filters.category}
           />
@@ -399,11 +399,11 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
             onClick={() => handleCategoryChange(undefined)}
             className={cn(
               "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
-              !filters.category ? "bg-primary-50 text-primary-700" : "hover:bg-gray-50"
+              !filters.category ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Toutes les categories</span>
-            {!filters.category && <Check className="w-4 h-4 text-primary-500" />}
+            <span className="flex-1">Toutes les catégories</span>
+            {!filters.category && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           {CATEGORIES.map((category) => (
             <button
@@ -412,12 +412,12 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
               className={cn(
                 "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
                 filters.category === category.value
-                  ? "bg-primary-50 text-primary-700"
-                  : "hover:bg-gray-50"
+                  ? "bg-secondary-500/10 text-secondary-300"
+                  : "hover:bg-zinc-800"
               )}
             >
               <span className="flex-1">{category.label}</span>
-              {filters.category === category.value && <Check className="w-4 h-4 text-primary-500" />}
+              {filters.category === category.value && <Check className="w-4 h-4 text-secondary-400" />}
             </button>
           ))}
         </div>
@@ -441,11 +441,11 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
             onClick={() => handleCityChange(undefined)}
             className={cn(
               "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
-              !filters.city ? "bg-primary-50 text-primary-700" : "hover:bg-gray-50"
+              !filters.city ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
             )}
           >
             <span className="flex-1">Toutes les villes</span>
-            {!filters.city && <Check className="w-4 h-4 text-primary-500" />}
+            {!filters.city && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           {CITIES.map((city) => (
             <button
@@ -454,12 +454,12 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
               className={cn(
                 "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
                 filters.city === city.value
-                  ? "bg-primary-50 text-primary-700"
-                  : "hover:bg-gray-50"
+                  ? "bg-secondary-500/10 text-secondary-300"
+                  : "hover:bg-zinc-800"
               )}
             >
               <span className="flex-1">{city.label}</span>
-              {filters.city === city.value && <Check className="w-4 h-4 text-primary-500" />}
+              {filters.city === city.value && <Check className="w-4 h-4 text-secondary-400" />}
             </button>
           ))}
         </div>
@@ -491,44 +491,44 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
             className={cn(
               "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
               !filters.dateFrom && !filters.isTonight
-                ? "bg-primary-50 text-primary-700"
-                : "hover:bg-gray-50"
+                ? "bg-secondary-500/10 text-secondary-300"
+                : "hover:bg-zinc-800"
             )}
           >
             <span className="flex-1">Toutes les dates</span>
-            {!filters.dateFrom && !filters.isTonight && <Check className="w-4 h-4 text-primary-500" />}
+            {!filters.dateFrom && !filters.isTonight && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           <button
             onClick={() => handleDateChange("tonight")}
             className={cn(
               "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
-              filters.isTonight ? "bg-primary-50 text-primary-700" : "hover:bg-gray-50"
+              filters.isTonight ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
             )}
           >
             <span className="flex-1">Ce soir</span>
-            {filters.isTonight && <Check className="w-4 h-4 text-primary-500" />}
+            {filters.isTonight && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           <button
             onClick={() => handleDateChange("tomorrow")}
             className={cn(
               "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
-              getSelectedDateLabel() === "Demain" ? "bg-primary-50 text-primary-700" : "hover:bg-gray-50"
+              getSelectedDateLabel() === "Demain" ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
             )}
           >
             <span className="flex-1">Demain</span>
-            {getSelectedDateLabel() === "Demain" && <Check className="w-4 h-4 text-primary-500" />}
+            {getSelectedDateLabel() === "Demain" && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           <button
             onClick={() => handleDateChange("weekend")}
             className={cn(
               "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
               getSelectedDateLabel() === "Ce week-end"
-                ? "bg-primary-50 text-primary-700"
-                : "hover:bg-gray-50"
+                ? "bg-secondary-500/10 text-secondary-300"
+                : "hover:bg-zinc-800"
             )}
           >
             <span className="flex-1">Ce week-end</span>
-            {getSelectedDateLabel() === "Ce week-end" && <Check className="w-4 h-4 text-primary-500" />}
+            {getSelectedDateLabel() === "Ce week-end" && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
         </div>
       </Dropdown>
@@ -552,13 +552,13 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
             className={cn(
               "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
               !filters.priceMin && !filters.priceMax && !filters.isFree
-                ? "bg-primary-50 text-primary-700"
-                : "hover:bg-gray-50"
+                ? "bg-secondary-500/10 text-secondary-300"
+                : "hover:bg-zinc-800"
             )}
           >
             <span className="flex-1">Tous les prix</span>
             {!filters.priceMin && !filters.priceMax && !filters.isFree && (
-              <Check className="w-4 h-4 text-primary-500" />
+              <Check className="w-4 h-4 text-secondary-400" />
             )}
           </button>
           {PRICE_RANGES.map((range) => {
@@ -574,11 +574,11 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
                 onClick={() => handlePriceChange(range.value)}
                 className={cn(
                   "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
-                  isSelected ? "bg-primary-50 text-primary-700" : "hover:bg-gray-50"
+                  isSelected ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
                 )}
               >
                 <span className="flex-1">{range.label}</span>
-                {isSelected && <Check className="w-4 h-4 text-primary-500" />}
+                {isSelected && <Check className="w-4 h-4 text-secondary-400" />}
               </button>
             );
           })}
@@ -599,10 +599,10 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
             </Badge>
             <button
               onClick={resetFilters}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              Reinitialiser
+              Réinitialiser
             </button>
           </motion.div>
         )}
@@ -683,7 +683,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
         <>
           {/* Overlay */}
           <motion.div
-            className="fixed inset-0 bg-black/50 z-50 md:hidden"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 md:hidden"
             variants={overlayVariants}
             initial="hidden"
             animate="visible"
@@ -693,7 +693,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
 
           {/* Sheet */}
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-50 md:hidden bg-white rounded-t-3xl max-h-[85vh] overflow-hidden"
+            className="fixed inset-x-0 bottom-0 z-50 md:hidden bg-zinc-900 rounded-t-3xl max-h-[85vh] overflow-hidden"
             variants={sheetVariants}
             initial="hidden"
             animate="visible"
@@ -702,14 +702,14 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
           >
             {/* Handle */}
             <div className="flex justify-center py-3">
-              <div className="w-10 h-1 bg-gray-300 rounded-full" />
+              <div className="w-10 h-1 bg-zinc-700 rounded-full" />
             </div>
 
             {/* Header */}
-            <div className="flex items-center justify-between px-4 pb-4 border-b border-gray-100">
+            <div className="flex items-center justify-between px-4 pb-4 border-b border-zinc-800">
               <div className="flex items-center gap-2">
-                <Filter className="w-5 h-5 text-gray-600" />
-                <h2 className="text-lg font-semibold">Filtres</h2>
+                <Filter className="w-5 h-5 text-zinc-400" />
+                <h2 className="text-lg font-semibold text-zinc-100">Filtres</h2>
                 {activeFiltersCount > 0 && (
                   <Badge variant="hot" className="px-2 py-0.5 text-xs">
                     {activeFiltersCount}
@@ -718,7 +718,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
               </div>
               <button
                 onClick={onClose}
-                className="p-2 -mr-2 text-gray-400 hover:text-gray-600 transition-colors"
+                className="p-2 -mr-2 text-zinc-500 hover:text-zinc-300 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -728,9 +728,9 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
             <div className="overflow-y-auto px-4 py-6 space-y-8" style={{ maxHeight: "calc(85vh - 180px)" }}>
               {/* Category Section */}
               <div>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
-                  <Tag className="w-4 h-4 text-gray-400" />
-                  Categorie
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-100 mb-3">
+                  <Tag className="w-4 h-4 text-zinc-500" />
+                  Catégorie
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -739,7 +739,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                       "px-4 py-2 rounded-full text-sm font-medium transition-all",
                       !localFilters.category
                         ? "bg-primary-500 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
                     Toutes
@@ -757,7 +757,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         "px-4 py-2 rounded-full text-sm font-medium transition-all",
                         localFilters.category === category.value
                           ? "bg-primary-500 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                       )}
                     >
                       {category.label}
@@ -768,8 +768,8 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
 
               {/* City Section */}
               <div>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
-                  <MapPin className="w-4 h-4 text-gray-400" />
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-100 mb-3">
+                  <MapPin className="w-4 h-4 text-zinc-500" />
                   Ville
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -779,7 +779,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                       "px-4 py-2 rounded-full text-sm font-medium transition-all",
                       !localFilters.city
                         ? "bg-primary-500 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
                     Toutes
@@ -792,7 +792,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         "px-4 py-2 rounded-full text-sm font-medium transition-all",
                         localFilters.city === city.value
                           ? "bg-primary-500 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                       )}
                     >
                       {city.label}
@@ -803,8 +803,8 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
 
               {/* Date Section */}
               <div>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
-                  <Calendar className="w-4 h-4 text-gray-400" />
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-100 mb-3">
+                  <Calendar className="w-4 h-4 text-zinc-500" />
                   Date
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -821,7 +821,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                       "px-4 py-2 rounded-full text-sm font-medium transition-all",
                       !localFilters.dateFrom && !localFilters.isTonight
                         ? "bg-primary-500 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
                     Toutes
@@ -832,7 +832,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                       "px-4 py-2 rounded-full text-sm font-medium transition-all",
                       localFilters.isTonight
                         ? "bg-primary-500 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
                     Ce soir
@@ -843,7 +843,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                       "px-4 py-2 rounded-full text-sm font-medium transition-all",
                       !localFilters.isTonight && localFilters.dateFrom
                         ? "bg-primary-500 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
                     Demain
@@ -852,7 +852,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                     onClick={() => handleDatePreset("weekend")}
                     className={cn(
                       "px-4 py-2 rounded-full text-sm font-medium transition-all",
-                      "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
                     Ce week-end
@@ -862,8 +862,8 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
 
               {/* Price Section */}
               <div>
-                <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
-                  <Euro className="w-4 h-4 text-gray-400" />
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-100 mb-3">
+                  <Euro className="w-4 h-4 text-zinc-500" />
                   Prix
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -880,7 +880,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                       "px-4 py-2 rounded-full text-sm font-medium transition-all",
                       !localFilters.priceMin && !localFilters.priceMax && !localFilters.isFree
                         ? "bg-primary-500 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
                     Tous
@@ -900,7 +900,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                           "px-4 py-2 rounded-full text-sm font-medium transition-all",
                           isSelected
                             ? "bg-primary-500 text-white"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                            : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                         )}
                       >
                         {range.label}
@@ -912,10 +912,10 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
             </div>
 
             {/* Footer */}
-            <div className="sticky bottom-0 bg-white border-t border-gray-100 px-4 py-4 flex gap-3">
+            <div className="sticky bottom-0 bg-zinc-900 border-t border-zinc-800 px-4 py-4 flex gap-3">
               <Button variant="outline" className="flex-1" onClick={handleReset}>
                 <RotateCcw className="w-4 h-4 mr-2" />
-                Reinitialiser
+                Réinitialiser
               </Button>
               <Button variant="primary" className="flex-1" onClick={handleApply}>
                 Appliquer{activeFiltersCount > 0 && ` (${activeFiltersCount})`}
@@ -946,12 +946,12 @@ export function FilterTrigger({ activeCount, onClick, className }: FilterTrigger
         "md:hidden inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-200",
         "text-sm font-medium",
         activeCount > 0
-          ? "border-primary-500 bg-primary-50 text-primary-700"
-          : "border-gray-200 bg-white text-gray-700",
+          ? "border-secondary-500 bg-secondary-500/10 text-secondary-300"
+          : "border-zinc-700 bg-zinc-900 text-zinc-300",
         className
       )}
     >
-      <Filter className={cn("w-4 h-4", activeCount > 0 ? "text-primary-500" : "text-gray-400")} />
+      <Filter className={cn("w-4 h-4", activeCount > 0 ? "text-secondary-400" : "text-zinc-500")} />
       <span>Filtres</span>
       {activeCount > 0 && (
         <Badge variant="hot" className="px-2 py-0.5 text-xs ml-1">

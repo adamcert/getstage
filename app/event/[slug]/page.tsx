@@ -77,7 +77,7 @@ function EventHeader({ event, minPrice }: EventHeaderProps) {
           <Button
             variant="ghost"
             size="sm"
-            className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white"
+            className="bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800/70 text-zinc-100"
           >
             <ChevronLeft className="w-5 h-5 mr-1" />
             Retour
@@ -90,14 +90,14 @@ function EventHeader({ event, minPrice }: EventHeaderProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white"
+          className="bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800/70 text-zinc-100"
         >
           <Heart className="w-5 h-5" />
         </Button>
         <Button
           variant="ghost"
           size="sm"
-          className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white"
+          className="bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800/70 text-zinc-100"
         >
           <Share2 className="w-5 h-5" />
         </Button>
@@ -120,7 +120,7 @@ function EventHeader({ event, minPrice }: EventHeaderProps) {
           </Badge>
 
           {/* Title */}
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">{event.title}</h1>
+          <h1 className="text-3xl md:text-5xl font-bold mb-4 font-display">{event.title}</h1>
 
           {/* Quick Info */}
           <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm md:text-base text-white/90">
@@ -164,10 +164,10 @@ function EventInfoSection({ event }: EventInfoSectionProps) {
       <CardContent className="space-y-6">
         {/* Description */}
         <div>
-          <h2 className="text-xl font-bold text-gray-900 mb-3">
-            A propos de l'evenement
+          <h2 className="text-xl font-bold text-zinc-100 mb-3 font-display">
+            À propos de l'événement
           </h2>
-          <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+          <p className="text-zinc-400 leading-relaxed whitespace-pre-line">
             {event.description || event.short_description || "Aucune description disponible."}
           </p>
         </div>
@@ -175,7 +175,7 @@ function EventInfoSection({ event }: EventInfoSectionProps) {
         {/* Music Genres */}
         {event.music_genres && event.music_genres.length > 0 && (
           <div>
-            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2 flex items-center gap-2">
               <Music2 className="w-4 h-4" />
               Genres musicaux
             </h3>
@@ -190,41 +190,41 @@ function EventInfoSection({ event }: EventInfoSectionProps) {
         )}
 
         {/* Additional Info Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t border-gray-100">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t border-zinc-800">
           {/* Min Age */}
           {event.min_age && (
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-              <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-                <Users className="w-5 h-5 text-primary-600" />
+            <div className="flex items-center gap-3 p-3 bg-zinc-800 rounded-xl">
+              <div className="w-10 h-10 rounded-full bg-primary-500/15 flex items-center justify-center">
+                <Users className="w-5 h-5 text-primary-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Age minimum</p>
-                <p className="font-semibold text-gray-900">{event.min_age} ans</p>
+                <p className="text-xs text-zinc-500">Age minimum</p>
+                <p className="font-semibold text-zinc-200">{event.min_age} ans</p>
               </div>
             </div>
           )}
 
           {/* Dress Code */}
           {event.dress_code && (
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-              <div className="w-10 h-10 rounded-full bg-secondary-100 flex items-center justify-center">
-                <Shirt className="w-5 h-5 text-secondary-600" />
+            <div className="flex items-center gap-3 p-3 bg-zinc-800 rounded-xl">
+              <div className="w-10 h-10 rounded-full bg-secondary-500/15 flex items-center justify-center">
+                <Shirt className="w-5 h-5 text-secondary-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Dress code</p>
-                <p className="font-semibold text-gray-900">{event.dress_code}</p>
+                <p className="text-xs text-zinc-500">Dress code</p>
+                <p className="font-semibold text-zinc-200">{event.dress_code}</p>
               </div>
             </div>
           )}
 
           {/* Category */}
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-            <div className="w-10 h-10 rounded-full bg-accent-100 flex items-center justify-center">
-              <Info className="w-5 h-5 text-accent-600" />
+          <div className="flex items-center gap-3 p-3 bg-zinc-800 rounded-xl">
+            <div className="w-10 h-10 rounded-full bg-accent-500/15 flex items-center justify-center">
+              <Info className="w-5 h-5 text-accent-400" />
             </div>
             <div>
-              <p className="text-xs text-gray-500">Categorie</p>
-              <p className="font-semibold text-gray-900">
+              <p className="text-xs text-zinc-500">Catégorie</p>
+              <p className="font-semibold text-zinc-200">
                 {getCategoryLabel(event.category)}
               </p>
             </div>
@@ -233,8 +233,8 @@ function EventInfoSection({ event }: EventInfoSectionProps) {
 
         {/* Additional Info */}
         {event.additional_info && (
-          <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
-            <p className="text-sm text-amber-800">{event.additional_info}</p>
+          <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+            <p className="text-sm text-amber-200">{event.additional_info}</p>
           </div>
         )}
       </CardContent>
@@ -261,11 +261,11 @@ function VenueSection({ event }: VenueSectionProps) {
   return (
     <Card>
       <CardContent className="space-y-4">
-        <h2 className="text-xl font-bold text-gray-900">Lieu</h2>
+        <h2 className="text-xl font-bold text-zinc-100 font-display">Lieu</h2>
 
         <div className="flex items-start gap-4">
           {/* Venue Logo or Icon */}
-          <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+          <div className="w-16 h-16 rounded-xl overflow-hidden bg-zinc-800 flex-shrink-0">
             {venue.cover_image ? (
               <Image
                 src={venue.cover_image}
@@ -285,29 +285,29 @@ function VenueSection({ event }: VenueSectionProps) {
           <div className="flex-1">
             <Link
               href={`/venue/${venue.slug}`}
-              className="text-lg font-semibold text-gray-900 hover:text-primary-500 transition-colors"
+              className="text-lg font-semibold text-zinc-100 hover:text-primary-400 transition-colors"
             >
               {venue.name}
             </Link>
-            <p className="text-gray-500 text-sm mt-1">
+            <p className="text-zinc-500 text-sm mt-1">
               {venue.address}
               <br />
               {venue.postal_code} {venue.city}
             </p>
             {venue.phone && (
-              <p className="text-gray-500 text-sm mt-1">{venue.phone}</p>
+              <p className="text-zinc-500 text-sm mt-1">{venue.phone}</p>
             )}
           </div>
         </div>
 
         {/* Map Placeholder */}
-        <div className="relative w-full h-48 bg-gray-100 rounded-xl overflow-hidden">
+        <div className="relative w-full h-48 bg-zinc-800 rounded-xl overflow-hidden">
           {/* Placeholder for Mapbox */}
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900">
             <div className="text-center">
-              <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm text-gray-500">Carte interactive</p>
-              <p className="text-xs text-gray-400">Mapbox integration</p>
+              <MapPin className="w-12 h-12 text-zinc-600 mx-auto mb-2" />
+              <p className="text-sm text-zinc-500">Carte interactive</p>
+              <p className="text-xs text-zinc-600">Mapbox integration</p>
             </div>
           </div>
         </div>
@@ -317,10 +317,10 @@ function VenueSection({ event }: VenueSectionProps) {
           href={googleMapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full py-3 bg-gray-100 hover:bg-gray-200 rounded-xl text-gray-700 font-medium transition-colors"
+          className="flex items-center justify-center gap-2 w-full py-3 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-zinc-300 font-medium transition-colors"
         >
           <Navigation className="w-5 h-5" />
-          Voir l'itineraire
+          Voir l'itinéraire
           <ExternalLink className="w-4 h-4" />
         </a>
       </CardContent>
@@ -344,7 +344,7 @@ function LineupSection({ event }: LineupSectionProps) {
   return (
     <Card>
       <CardContent className="space-y-4">
-        <h2 className="text-xl font-bold text-gray-900">Line-up</h2>
+        <h2 className="text-xl font-bold text-zinc-100 font-display">Line-up</h2>
 
         <div className="space-y-4">
           {artists.map((ea) => (
@@ -368,8 +368,8 @@ function ArtistCard({ eventArtist }: ArtistCardProps) {
       className={cn(
         "flex items-center gap-4 p-4 rounded-xl transition-all",
         is_headliner
-          ? "bg-gradient-to-r from-primary-50 to-secondary-50 border border-primary-100"
-          : "bg-gray-50 hover:bg-gray-100"
+          ? "bg-gradient-to-r from-primary-500/10 to-secondary-500/10 border border-primary-500/20"
+          : "bg-zinc-800 hover:bg-zinc-700"
       )}
     >
       {/* Artist Image */}
@@ -383,26 +383,26 @@ function ArtistCard({ eventArtist }: ArtistCardProps) {
       {/* Artist Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <h3 className="font-semibold text-gray-900">{artist.name}</h3>
+          <h3 className="font-semibold text-zinc-100">{artist.name}</h3>
           {is_headliner && (
             <Badge variant="featured" className="text-[10px] px-2 py-0.5">
-              Tete d'affiche
+              Tête d'affiche
             </Badge>
           )}
         </div>
         {artist.genres && artist.genres.length > 0 && (
-          <p className="text-sm text-gray-500 mt-0.5">
+          <p className="text-sm text-zinc-500 mt-0.5">
             {artist.genres.slice(0, 3).join(", ")}
           </p>
         )}
-        <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+        <div className="flex items-center gap-3 mt-2 text-xs text-zinc-600">
           {set_time && (
             <span className="flex items-center gap-1">
               <Clock className="w-3 h-3" />
               {formatTime(set_time)}
             </span>
           )}
-          {stage && <span>Scene: {stage}</span>}
+          {stage && <span>Scène: {stage}</span>}
         </div>
       </div>
 
@@ -439,8 +439,8 @@ function SidebarSticky({ event, minPrice }: SidebarStickyProps) {
       {/* Price Preview Card */}
       <Card className="mb-4 overflow-hidden">
         <div className="bg-gradient-to-r from-primary-500 to-secondary-500 p-4 text-white">
-          <p className="text-sm opacity-90">A partir de</p>
-          <p className="text-3xl font-bold">
+          <p className="text-sm opacity-90">À partir de</p>
+          <p className="text-3xl font-bold font-display">
             {minPrice === 0 ? "Gratuit" : formatPrice(minPrice)}
           </p>
         </div>
@@ -507,24 +507,24 @@ function MobileBottomSheet({
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl max-h-[85vh] overflow-y-auto"
+            className="fixed bottom-0 left-0 right-0 z-50 bg-zinc-900 rounded-t-3xl max-h-[85vh] overflow-y-auto"
           >
             {/* Handle */}
-            <div className="sticky top-0 bg-white pt-3 pb-2 px-4 flex justify-center border-b border-gray-100">
-              <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
+            <div className="sticky top-0 bg-zinc-900 pt-3 pb-2 px-4 flex justify-center border-b border-zinc-800">
+              <div className="w-12 h-1.5 bg-zinc-700 rounded-full" />
             </div>
 
             {/* Close button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-zinc-800 hover:bg-zinc-700 transition-colors"
             >
-              <X className="w-5 h-5 text-gray-600" />
+              <X className="w-5 h-5 text-zinc-400" />
             </button>
 
             {/* Content */}
             <div className="p-4 pb-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
+              <h3 className="text-xl font-bold text-zinc-100 mb-4 font-display">
                 Choisir vos billets
               </h3>
               {event.ticket_types && event.ticket_types.length > 0 && (
@@ -557,17 +557,17 @@ function MobileFloatingButton({ minPrice, onClick }: MobileFloatingButtonProps) 
     <motion.div
       initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 lg:hidden z-40"
+      className="fixed bottom-0 left-0 right-0 p-4 bg-zinc-900 border-t border-zinc-800 lg:hidden z-40"
     >
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-xs text-gray-500">A partir de</p>
-          <p className="text-xl font-bold text-gray-900">
+          <p className="text-xs text-zinc-500">À partir de</p>
+          <p className="text-xl font-bold text-zinc-100">
             {minPrice === 0 ? "Gratuit" : formatPrice(minPrice)}
           </p>
         </div>
         <Button onClick={onClick} className="flex-1 max-w-[200px]">
-          Reserver
+          Réserver
         </Button>
       </div>
     </motion.div>
@@ -580,7 +580,7 @@ function MobileFloatingButton({ minPrice, onClick }: MobileFloatingButtonProps) 
 
 function EventDetailSkeleton() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#09090B]">
       {/* Header Skeleton */}
       <Skeleton className="w-full aspect-video md:aspect-[21/9]" />
 
@@ -611,11 +611,11 @@ function getCategoryLabel(category: string): string {
   const labels: Record<string, string> = {
     concert: "Concert",
     dj: "DJ / Club",
-    theatre: "Theatre",
+    theatre: "Théâtre",
     comedy: "Humour",
     expo: "Exposition",
-    film: "Cinema",
-    party: "Soiree",
+    film: "Cinéma",
+    party: "Soirée",
     festival: "Festival",
     other: "Autre",
   };
@@ -665,16 +665,16 @@ export default function EventDetailPage() {
   // Not found state
   if (!event) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-[#09090B] flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Evenement introuvable
+          <h1 className="text-2xl font-bold text-zinc-100 mb-2 font-display">
+            Événement introuvable
           </h1>
-          <p className="text-gray-500 mb-6">
-            Cet evenement n'existe pas ou a ete supprime.
+          <p className="text-zinc-500 mb-6">
+            Cet événement n'existe pas ou a été supprimé.
           </p>
           <Link href="/">
-            <Button>Retour a l'accueil</Button>
+            <Button>Retour à l'accueil</Button>
           </Link>
         </div>
       </div>
@@ -688,7 +688,7 @@ export default function EventDetailPage() {
       : 0;
 
   return (
-    <div className="min-h-screen bg-background pb-24 lg:pb-8">
+    <div className="min-h-screen bg-[#09090B] pb-24 lg:pb-8">
       {/* Event Header */}
       <EventHeader event={event} minPrice={minPrice} />
 

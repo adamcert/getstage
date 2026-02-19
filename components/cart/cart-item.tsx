@@ -41,15 +41,15 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
       exit="exit"
       transition={{ duration: 0.2 }}
       layout
-      className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm"
+      className="bg-zinc-800 rounded-xl border border-zinc-700 border-l-2 border-l-primary-500/50 p-4"
     >
       {/* Event Title */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">
-          <h4 className="font-semibold text-gray-900 truncate">
+          <h4 className="font-semibold text-zinc-100 truncate">
             {item.eventTitle}
           </h4>
-          <div className="flex items-center gap-1.5 text-sm text-gray-500 mt-1">
+          <div className="flex items-center gap-1.5 text-sm text-zinc-500 mt-1">
             <Calendar className="w-3.5 h-3.5" />
             <span>{formatDate(item.eventDate)}</span>
           </div>
@@ -58,7 +58,7 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
           variant="ghost"
           size="sm"
           onClick={() => onRemove(item.ticketTypeId)}
-          className="text-gray-400 hover:text-red-500 hover:bg-red-50 -mr-2 -mt-1"
+          className="text-zinc-500 hover:text-primary-400 hover:bg-primary-500/10 -mr-2 -mt-1"
           aria-label="Supprimer"
         >
           <Trash2 className="w-4 h-4" />
@@ -66,10 +66,10 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
       </div>
 
       {/* Ticket Type */}
-      <div className="flex items-center gap-2 mb-3 px-3 py-2 bg-gray-50 rounded-lg">
-        <Ticket className="w-4 h-4 text-primary-500" />
-        <span className="text-sm font-medium text-gray-700">{item.name}</span>
-        <span className="text-sm text-gray-500 ml-auto">
+      <div className="flex items-center gap-2 mb-3 px-3 py-2 bg-zinc-900 rounded-lg">
+        <Ticket className="w-4 h-4 text-primary-400" />
+        <span className="text-sm font-medium text-zinc-300">{item.name}</span>
+        <span className="text-sm text-zinc-500 ml-auto">
           {formatPrice(item.price)}
         </span>
       </div>
@@ -78,8 +78,8 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
       <div className="flex items-center justify-between">
         {/* Quantity Selector */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-500 mr-1">Quantite :</span>
-          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+          <span className="text-sm text-zinc-500 mr-1">Quantité :</span>
+          <div className="flex items-center gap-1 bg-zinc-900 rounded-lg p-1">
             <button
               type="button"
               onClick={() => onUpdateQuantity(item.ticketTypeId, item.quantity - 1)}
@@ -87,21 +87,21 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
               className={cn(
                 "w-7 h-7 flex items-center justify-center rounded-md transition-colors",
                 item.quantity <= 1
-                  ? "text-gray-300 cursor-not-allowed"
-                  : "text-gray-600 hover:bg-white hover:shadow-sm"
+                  ? "text-zinc-600 cursor-not-allowed"
+                  : "text-zinc-300 hover:bg-zinc-700"
               )}
-              aria-label="Diminuer la quantite"
+              aria-label="Diminuer la quantité"
             >
               <Minus className="w-3.5 h-3.5" />
             </button>
-            <span className="w-8 text-center font-semibold text-gray-900">
+            <span className="w-8 text-center font-semibold text-zinc-100">
               {item.quantity}
             </span>
             <button
               type="button"
               onClick={() => onUpdateQuantity(item.ticketTypeId, item.quantity + 1)}
-              className="w-7 h-7 flex items-center justify-center rounded-md text-gray-600 hover:bg-white hover:shadow-sm transition-colors"
-              aria-label="Augmenter la quantite"
+              className="w-7 h-7 flex items-center justify-center rounded-md text-zinc-300 hover:bg-zinc-700 transition-colors"
+              aria-label="Augmenter la quantité"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -110,8 +110,8 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
 
         {/* Subtotal */}
         <div className="text-right">
-          <span className="text-sm text-gray-500">Sous-total</span>
-          <p className="font-bold text-gray-900">{formatPrice(subtotal)}</p>
+          <span className="text-sm text-zinc-500">Sous-total</span>
+          <p className="font-bold text-zinc-100">{formatPrice(subtotal)}</p>
         </div>
       </div>
     </motion.div>

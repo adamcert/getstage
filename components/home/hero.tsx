@@ -141,11 +141,11 @@ export function Hero() {
         {/* Title & Subtitle */}
         <div className="text-center mb-10">
           <motion.h1
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight"
+            className="text-5xl sm:text-6xl lg:text-8xl font-display font-bold text-white mb-4 tracking-tighter"
             variants={itemVariants}
           >
             Découvrez les meilleurs{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-300 to-secondary-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-accent-400 to-secondary-400">
               événements
             </span>
           </motion.h1>
@@ -160,29 +160,29 @@ export function Hero() {
         {/* Search Bar */}
         <motion.form
           onSubmit={handleSearch}
-          className="bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl p-3 sm:p-4"
+          className="bg-zinc-900/80 backdrop-blur-lg border border-zinc-700/50 rounded-2xl shadow-2xl p-3 sm:p-4"
           variants={searchBarVariants}
         >
           <div className="flex flex-col lg:flex-row gap-3">
             {/* Search Input */}
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
               <input
                 type="text"
                 placeholder="Rechercher un événement, artiste, lieu..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all duration-200 placeholder:text-gray-400"
+                className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-zinc-700 bg-zinc-800/50 text-zinc-100 placeholder:text-zinc-500 focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 outline-none transition-all duration-200"
               />
             </div>
 
             {/* City Select */}
             <div className="relative lg:w-48">
-              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 pointer-events-none" />
               <select
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
-                className="w-full pl-12 pr-8 py-3.5 rounded-xl border border-gray-200 bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all duration-200 appearance-none cursor-pointer text-gray-700"
+                className="w-full pl-12 pr-8 py-3.5 rounded-xl border border-zinc-700 bg-zinc-800/50 text-zinc-300 focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 outline-none transition-all duration-200 appearance-none cursor-pointer"
               >
                 {cities.map((city) => (
                   <option key={city.value} value={city.value}>
@@ -191,7 +191,7 @@ export function Hero() {
                 ))}
               </select>
               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
@@ -199,11 +199,11 @@ export function Hero() {
 
             {/* Category Select */}
             <div className="relative lg:w-48">
-              <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+              <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 pointer-events-none" />
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full pl-12 pr-8 py-3.5 rounded-xl border border-gray-200 bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all duration-200 appearance-none cursor-pointer text-gray-700"
+                className="w-full pl-12 pr-8 py-3.5 rounded-xl border border-zinc-700 bg-zinc-800/50 text-zinc-300 focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 outline-none transition-all duration-200 appearance-none cursor-pointer"
               >
                 {categories.map((category) => (
                   <option key={category.value} value={category.value}>
@@ -212,7 +212,7 @@ export function Hero() {
                 ))}
               </select>
               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
@@ -245,8 +245,8 @@ export function Hero() {
                 className={cn(
                   "inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all duration-200",
                   isActive
-                    ? "bg-white text-primary-600 shadow-lg"
-                    : "bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+                    ? "bg-primary-500 text-white shadow-lg"
+                    : "bg-zinc-800/60 text-zinc-300 hover:bg-zinc-700/60 backdrop-blur-sm border border-zinc-700/50"
                 )}
                 variants={quickFilterVariants}
                 custom={index}

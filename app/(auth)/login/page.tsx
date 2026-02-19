@@ -59,8 +59,8 @@ function LoginForm() {
       <Card variant="elevated" className="overflow-hidden">
         <CardHeader>
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-            <p className="text-gray-500 mt-2">Sign in to continue to Events</p>
+            <h1 className="text-2xl font-bold text-zinc-100">Welcome back</h1>
+            <p className="text-zinc-500 mt-2">Sign in to continue to Events</p>
           </div>
         </CardHeader>
 
@@ -111,10 +111,10 @@ function LoginForm() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
+              <div className="w-full border-t border-zinc-700" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">or continue with email</span>
+              <span className="px-4 bg-zinc-900 text-zinc-500">or continue with email</span>
             </div>
           </div>
 
@@ -124,7 +124,7 @@ function LoginForm() {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl"
+                className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl"
               >
                 {error}
               </motion.div>
@@ -168,7 +168,7 @@ function LoginForm() {
             <div className="flex justify-end">
               <Link
                 href="/forgot-password"
-                className="text-sm text-primary-500 hover:text-primary-600 font-medium"
+                className="text-sm text-secondary-400 hover:text-secondary-300 font-medium"
               >
                 Forgot password?
               </Link>
@@ -180,12 +180,12 @@ function LoginForm() {
           </form>
         </CardContent>
 
-        <CardFooter className="bg-gray-50 border-t border-gray-100">
-          <p className="text-center text-gray-600 w-full">
+        <CardFooter className="bg-zinc-800/50 border-t border-zinc-800">
+          <p className="text-center text-zinc-400 w-full">
             Don&apos;t have an account?{" "}
             <Link
               href="/register"
-              className="text-primary-500 hover:text-primary-600 font-semibold"
+              className="text-secondary-400 hover:text-secondary-300 font-semibold"
             >
               Sign up
             </Link>
@@ -201,20 +201,20 @@ function LoginSkeleton() {
     <Card variant="elevated" className="overflow-hidden">
       <CardHeader>
         <div className="text-center">
-          <div className="h-8 w-40 bg-gray-200 rounded mx-auto animate-pulse" />
-          <div className="h-4 w-56 bg-gray-100 rounded mx-auto mt-2 animate-pulse" />
+          <div className="h-8 w-40 bg-zinc-800 rounded mx-auto animate-pulse" />
+          <div className="h-4 w-56 bg-zinc-800 rounded mx-auto mt-2 animate-pulse" />
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-3">
-          <div className="h-11 bg-gray-100 rounded-xl animate-pulse" />
-          <div className="h-11 bg-gray-100 rounded-xl animate-pulse" />
+          <div className="h-11 bg-zinc-800 rounded-xl animate-pulse" />
+          <div className="h-11 bg-zinc-800 rounded-xl animate-pulse" />
         </div>
-        <div className="h-4 bg-gray-100 rounded animate-pulse" />
+        <div className="h-4 bg-zinc-800 rounded animate-pulse" />
         <div className="space-y-4">
-          <div className="h-16 bg-gray-100 rounded-xl animate-pulse" />
-          <div className="h-16 bg-gray-100 rounded-xl animate-pulse" />
-          <div className="h-11 bg-gray-200 rounded-xl animate-pulse" />
+          <div className="h-16 bg-zinc-800 rounded-xl animate-pulse" />
+          <div className="h-16 bg-zinc-800 rounded-xl animate-pulse" />
+          <div className="h-11 bg-zinc-800 rounded-xl animate-pulse" />
         </div>
       </CardContent>
     </Card>
