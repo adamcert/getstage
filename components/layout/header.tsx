@@ -44,12 +44,12 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
-              <PartyPopper className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
+              <PartyPopper className="w-6 h-6 text-white" />
             </div>
             <div className="hidden sm:flex flex-col leading-none">
-              <span className="font-display font-bold text-lg text-zinc-100 tracking-tight">GetStage</span>
-              <span className="text-[10px] font-semibold text-zinc-500 tracking-widest uppercase">by SNAPSS</span>
+              <span className="font-display font-bold text-xl text-zinc-100 tracking-tight">GetStage</span>
+              <span className="text-[10px] font-semibold text-zinc-500 tracking-widest uppercase self-end">by SNAPSS</span>
             </div>
           </Link>
 
