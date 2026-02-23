@@ -3,26 +3,26 @@ import { Instagram, Twitter, Facebook, Youtube, PartyPopper } from "lucide-react
 
 const footerLinks = {
   discover: [
-    { href: "/search", label: "Explorer" },
+    { href: "/search", label: "Explore" },
     { href: "/search?category=concert", label: "Concerts" },
     { href: "/search?category=dj", label: "Clubs & DJ" },
-    { href: "/search?category=theatre", label: "Théâtre" },
-    { href: "/search?category=expo", label: "Expositions" },
+    { href: "/search?category=theatre", label: "Theatre" },
+    { href: "/search?category=expo", label: "Exhibitions" },
   ],
   services: [
-    { href: "/resale", label: "Revente de billets" },
-    { href: "/gift-cards", label: "Cartes cadeaux" },
-    { href: "/for-organizers", label: "Pour les organisateurs" },
-    { href: "/pricing", label: "Tarifs" },
+    { href: "/resale", label: "Ticket Resale" },
+    { href: "/gift-cards", label: "Gift Cards" },
+    { href: "/for-organizers", label: "For Organizers" },
+    { href: "/pricing", label: "Pricing" },
   ],
   support: [
-    { href: "/help", label: "Centre d'aide" },
+    { href: "/help", label: "Help Center" },
     { href: "/contact", label: "Contact" },
     { href: "/faq", label: "FAQ" },
   ],
   legal: [
-    { href: "/terms", label: "CGU" },
-    { href: "/privacy", label: "Confidentialité" },
+    { href: "/terms", label: "Terms" },
+    { href: "/privacy", label: "Privacy" },
     { href: "/cookies", label: "Cookies" },
   ],
 };
@@ -54,7 +54,7 @@ export function Footer() {
               </div>
             </div>
             <p className="text-zinc-500 text-sm mb-4">
-              Découvrez les meilleurs événements près de chez vous.
+              Discover the best events near you.
             </p>
             <div className="flex gap-3">
               {socialLinks.map((social) => (
@@ -74,7 +74,7 @@ export function Footer() {
 
           {/* Discover */}
           <div>
-            <h4 className="font-display font-semibold mb-4">Découvrir</h4>
+            <h4 className="font-display font-semibold mb-4">Discover</h4>
             <ul className="space-y-2">
               {footerLinks.discover.map((link) => (
                 <li key={link.href}>
@@ -130,7 +130,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-zinc-800 mt-12 pt-8 text-center text-zinc-500 text-sm">
-          <p>&copy; {new Date().getFullYear()} GetStage <span className="text-zinc-600">by SNAPSS</span>. Tous droits réservés.</p>
+          <p>&copy; {new Date().getFullYear()} GetStage <span className="text-zinc-600">by SNAPSS</span>. All rights reserved.</p>
         </div>
       </div>
     </footer>

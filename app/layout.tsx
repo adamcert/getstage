@@ -20,42 +20,42 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   title: {
     template: "%s | GetStage",
-    default: "GetStage - Découvrez les meilleurs événements",
+    default: "GetStage - Discover the best events",
   },
-  description: "Billetterie en ligne pour concerts, clubs, théâtre, expositions et plus encore. Réservez vos places en toute sécurité.",
+  description: "Online ticketing for concerts, clubs, theatre, exhibitions and more. Book your seats safely.",
   keywords: [
-    "billetterie",
-    "événements",
+    "ticketing",
+    "events",
     "concerts",
-    "théâtre",
-    "expositions",
-    "spectacles",
-    "réservation",
-    "billets",
-    "sorties",
+    "theatre",
+    "exhibitions",
+    "shows",
+    "booking",
+    "tickets",
+    "outings",
     "culture",
   ],
   authors: [{ name: "GetStage by SNAPSS" }],
   creator: "GetStage by SNAPSS",
   openGraph: {
     type: "website",
-    locale: "fr_FR",
+    locale: "en_US",
     siteName: "GetStage",
-    title: "GetStage - Découvrez les meilleurs événements",
-    description: "Billetterie en ligne pour concerts, clubs, théâtre, expositions et plus encore. Réservez vos places en toute sécurité.",
+    title: "GetStage - Discover the best events",
+    description: "Online ticketing for concerts, clubs, theatre, exhibitions and more. Book your seats safely.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "GetStage - Plateforme de billetterie by SNAPSS",
+        alt: "GetStage - Ticketing platform by SNAPSS",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "GetStage - Découvrez les meilleurs événements",
-    description: "Billetterie en ligne pour concerts, clubs, théâtre, expositions et plus encore.",
+    title: "GetStage - Discover the best events",
+    description: "Online ticketing for concerts, clubs, theatre, exhibitions and more.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -70,7 +70,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html lang="en">
       <body className={`${inter.variable} ${spaceGrotesk.variable} ${unbounded.variable} font-sans bg-[#09090B] text-zinc-100 noise-overlay`}>
         <Header />
         <main className="min-h-screen">{children}</main>

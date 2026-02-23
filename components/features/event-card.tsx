@@ -75,7 +75,7 @@ function isHot(event: Event): boolean {
  * Formats the price display text
  */
 function formatPriceDisplay(price: number): string {
-  return price === 0 ? "Gratuit" : `${formatPrice(price)}`;
+  return price === 0 ? "Free" : `${formatPrice(price)}`;
 }
 
 /**
@@ -104,7 +104,7 @@ function EventCardCompact({ event }: { event: Event }) {
             />
             {isSoldOut(event) && (
               <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                <span className="text-white text-xs font-semibold">Complet</span>
+                <span className="text-white text-xs font-semibold">Sold out</span>
               </div>
             )}
           </div>
@@ -117,7 +117,7 @@ function EventCardCompact({ event }: { event: Event }) {
               {formatDate(event.start_date)}
             </p>
             <p className="text-sm font-semibold text-primary-400 mt-1">
-              {minPrice === 0 ? "Gratuit" : `Des ${formatPrice(minPrice)}`}
+              {minPrice === 0 ? "Free" : `From ${formatPrice(minPrice)}`}
             </p>
           </div>
         </Card>
@@ -158,11 +158,11 @@ function EventCardFeatured({ event }: { event: Event }) {
 
           {/* Badges - Top Left */}
           <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-            {event.is_featured && <Badge variant="featured">Coup de coeur</Badge>}
-            {event.is_new && <Badge variant="new">Nouveau</Badge>}
-            {hot && !soldOut && <Badge variant="hot">Populaire</Badge>}
-            {tonight && <Badge variant="tonight">Ce soir</Badge>}
-            {soldOut && <Badge variant="soldout">Complet</Badge>}
+            {event.is_featured && <Badge variant="featured">Featured</Badge>}
+            {event.is_new && <Badge variant="new">New</Badge>}
+            {hot && !soldOut && <Badge variant="hot">Popular</Badge>}
+            {tonight && <Badge variant="tonight">Tonight</Badge>}
+            {soldOut && <Badge variant="soldout">Sold out</Badge>}
           </div>
 
           {/* Content - Bottom */}
@@ -190,10 +190,10 @@ function EventCardFeatured({ event }: { event: Event }) {
             {/* Price and CTA */}
             <div className="flex items-center justify-between">
               <span className="text-lg font-bold">
-                {minPrice === 0 ? "Gratuit" : `Des ${formatPrice(minPrice)}`}
+                {minPrice === 0 ? "Free" : `From ${formatPrice(minPrice)}`}
               </span>
               <span className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
-                Réserver
+                Book
               </span>
             </div>
           </div>
@@ -236,11 +236,11 @@ function EventCardDefault({ event }: { event: Event }) {
 
             {/* Badges - Top Left */}
             <div className="absolute top-3 left-3 flex flex-wrap gap-2">
-              {event.is_featured && <Badge variant="featured">Coup de coeur</Badge>}
-              {event.is_new && <Badge variant="new">Nouveau</Badge>}
-              {hot && !soldOut && <Badge variant="hot">Populaire</Badge>}
-              {tonight && <Badge variant="tonight">Ce soir</Badge>}
-              {soldOut && <Badge variant="soldout">Complet</Badge>}
+              {event.is_featured && <Badge variant="featured">Featured</Badge>}
+              {event.is_new && <Badge variant="new">New</Badge>}
+              {hot && !soldOut && <Badge variant="hot">Popular</Badge>}
+              {tonight && <Badge variant="tonight">Tonight</Badge>}
+              {soldOut && <Badge variant="soldout">Sold out</Badge>}
             </div>
 
             {/* Price Tag - Bottom Right */}
@@ -254,7 +254,7 @@ function EventCardDefault({ event }: { event: Event }) {
             {soldOut && (
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                 <span className="bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                  Complet
+                  Sold out
                 </span>
               </div>
             )}

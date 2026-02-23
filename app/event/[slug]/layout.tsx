@@ -16,8 +16,8 @@ export async function generateMetadata({
 
   if (!event) {
     return {
-      title: "Événement introuvable",
-      description: "Cet événement n'existe pas ou a été supprimé.",
+      title: "Event not found",
+      description: "This event does not exist or has been deleted.",
     };
   }
 
@@ -26,7 +26,7 @@ export async function generateMetadata({
   const truncatedDescription =
     description.length > 155
       ? description.substring(0, 152) + "..."
-      : description || `Découvrez ${event.title} sur Events. Réservez vos billets en ligne.`;
+      : description || `Discover ${event.title} on Events. Book your tickets online.`;
 
   return {
     title: event.title,
@@ -35,7 +35,7 @@ export async function generateMetadata({
       title: `${event.title} | Events`,
       description: truncatedDescription,
       type: "website",
-      locale: "fr_FR",
+      locale: "en_US",
       images: event.cover_image
         ? [
             {

@@ -43,7 +43,7 @@ function getMinPrice(event: Event): number {
 }
 
 function formatPriceDisplay(price: number): string {
-  return price === 0 ? "Gratuit" : `Dès ${formatPrice(price)}`;
+  return price === 0 ? "Free" : `From ${formatPrice(price)}`;
 }
 
 // ─── Animation Variants ────────────────────────────────────────────
@@ -67,12 +67,12 @@ const stagger: Variants = {
 const demoCategories = [
   { id: "concert", label: "Concerts", icon: Music, color: "from-primary-500 to-rose-600" },
   { id: "dj", label: "Clubs & DJ", icon: Disc3, color: "from-secondary-500 to-purple-600" },
-  { id: "theatre", label: "Théâtre", icon: Drama, color: "from-fuchsia-500 to-pink-600" },
-  { id: "comedy", label: "Comédie", icon: Laugh, color: "from-pink-500 to-rose-600" },
+  { id: "theatre", label: "Theatre", icon: Drama, color: "from-fuchsia-500 to-pink-600" },
+  { id: "comedy", label: "Comedy", icon: Laugh, color: "from-pink-500 to-rose-600" },
   { id: "festival", label: "Festivals", icon: Tent, color: "from-emerald-500 to-green-600" },
   { id: "sport", label: "Sport", icon: Trophy, color: "from-rose-500 to-pink-600" },
   { id: "expo", label: "Expos", icon: Frame, color: "from-indigo-500 to-blue-600" },
-  { id: "film", label: "Cinéma", icon: Film, color: "from-cyan-500 to-sky-600" },
+  { id: "film", label: "Cinema", icon: Film, color: "from-cyan-500 to-sky-600" },
 ];
 
 // ═══════════════════════════════════════════════════════════════════
@@ -96,11 +96,11 @@ export function DemoHome({
   const spotlightEvents =
     tonightEvents.length > 0 ? tonightEvents : allEvents.slice(0, 5);
   const spotlightTitle =
-    tonightEvents.length > 0 ? "CE SOIR" : "À NE PAS MANQUER";
+    tonightEvents.length > 0 ? "TONIGHT" : "DON'T MISS OUT";
   const spotlightSub =
     tonightEvents.length > 0
-      ? "Les événements qui ont lieu ce soir"
-      : "Les prochains événements à ne pas rater";
+      ? "Events happening tonight"
+      : "Upcoming events you can't miss";
 
   return (
     <div className="bg-[#050507] -mt-16">
@@ -165,10 +165,10 @@ export function DemoHome({
               className="font-extrabold tracking-[-0.03em] leading-[1.1]"
             >
               <span className="block text-[14vw] sm:text-[11vw] lg:text-[9vw] text-zinc-100">
-                VIVEZ
+                LIVE
               </span>
               <span className="block text-[16vw] sm:text-[13vw] lg:text-[11vw] text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-secondary-400 to-fuchsia-400">
-                LA SCÈNE
+                THE STAGE
               </span>
             </h1>
           </motion.div>
@@ -201,7 +201,7 @@ export function DemoHome({
               <div className="relative">
                 <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-600 group-hover:text-primary-400 transition-colors" />
                 <div className="w-full pl-14 pr-6 py-4 rounded-2xl bg-white/[0.04] border border-zinc-800 text-zinc-600 group-hover:border-zinc-700 group-hover:bg-white/[0.06] transition-all cursor-pointer text-left">
-                  Rechercher un événement, artiste, lieu...
+                  Search for an event, artist, venue...
                 </div>
               </div>
             </Link>
@@ -215,9 +215,9 @@ export function DemoHome({
             className="mt-10 flex flex-wrap justify-center gap-8 sm:gap-12 text-sm text-zinc-600"
           >
             {[
-              { n: "10K+", l: "événements" },
-              { n: "50+", l: "villes" },
-              { n: "100K+", l: "passionnés" },
+              { n: "10K+", l: "events" },
+              { n: "50+", l: "cities" },
+              { n: "100K+", l: "fans" },
             ].map((s) => (
               <div key={s.l} className="flex items-baseline gap-2">
                 <span
@@ -329,10 +329,10 @@ export function DemoHome({
               style={displayFont}
               className="text-5xl sm:text-6xl lg:text-8xl font-extrabold text-zinc-100 tracking-[-0.04em]"
             >
-              &Agrave; L&apos;AFFICHE
+              NOW SHOWING
             </h2>
             <p className="mt-3 text-lg text-zinc-500">
-              Notre sélection des meilleurs événements
+              Our selection of the best events
             </p>
           </motion.div>
 
@@ -369,7 +369,7 @@ export function DemoHome({
               EXPLORE
             </h2>
             <p className="mt-3 text-lg text-zinc-500">
-              Trouvez les événements qui vous passionnent
+              Find events that inspire you
             </p>
           </motion.div>
 
@@ -414,7 +414,7 @@ export function DemoHome({
         </motion.div>
       </section>
 
-      {/* ═══════════════ NOUVEAUTÉS - RANKED LIST ═══════════════ */}
+      {/* ═══════════════ NEW - RANKED LIST ═══════════════ */}
       <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <motion.div
           initial="hidden"
@@ -434,14 +434,14 @@ export function DemoHome({
                 FRESH
               </h2>
               <p className="mt-3 text-lg text-zinc-500">
-                Les derniers événements ajoutés
+                The latest events added
               </p>
             </div>
             <Link
               href="/search?sort=new"
               className="hidden sm:flex items-center gap-2 text-fuchsia-400 hover:text-fuchsia-300 font-semibold transition-colors"
             >
-              Voir tout <ArrowRight className="w-4 h-4" />
+              See all <ArrowRight className="w-4 h-4" />
             </Link>
           </motion.div>
 
@@ -459,7 +459,7 @@ export function DemoHome({
               href="/search?sort=new"
               className="inline-flex items-center gap-2 text-fuchsia-400 font-semibold"
             >
-              Voir tout <ArrowRight className="w-4 h-4" />
+              See all <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </motion.div>
@@ -494,17 +494,17 @@ export function DemoHome({
             style={displayFont}
             className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-zinc-100 tracking-[-0.04em]"
           >
-            Rejoignez{" "}
+            Join{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-secondary-400">
-              la scène
+              the stage
             </span>
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="mt-5 text-lg sm:text-xl text-zinc-400"
           >
-            Plus de 10 000 événements vous attendent. Concerts, clubs, festivals
-            et plus encore.
+            Over 10,000 events await you. Concerts, clubs, festivals
+            and more.
           </motion.p>
           <motion.div variants={fadeUp} className="mt-10">
             <Link
@@ -512,7 +512,7 @@ export function DemoHome({
               style={displayFont}
               className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-bold text-lg shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
             >
-              Explorer les événements
+              Explore events
               <ArrowRight className="w-5 h-5" />
             </Link>
           </motion.div>

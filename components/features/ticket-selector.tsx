@@ -68,9 +68,9 @@ function TicketRow({ ticket, quantity, onQuantityChange }: TicketRowProps) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <h4 className="font-semibold text-zinc-100">{ticket.name}</h4>
-          {isSoldOut && <Badge variant="soldout">Complet</Badge>}
+          {isSoldOut && <Badge variant="soldout">Sold out</Badge>}
           {isLowStock && !isSoldOut && (
-            <Badge variant="hot">Plus que {available}!</Badge>
+            <Badge variant="hot">Only {available} left!</Badge>
           )}
         </div>
         {ticket.description && (
@@ -79,12 +79,11 @@ function TicketRow({ ticket, quantity, onQuantityChange }: TicketRowProps) {
           </p>
         )}
         <p className="text-lg font-bold text-zinc-100 mt-2">
-          {ticket.price === 0 ? "Gratuit" : formatPrice(ticket.price)}
+          {ticket.price === 0 ? "Free" : formatPrice(ticket.price)}
         </p>
         {!isSoldOut && (
           <p className="text-xs text-zinc-600 mt-1">
-            {available} place{available > 1 ? "s" : ""} restante
-            {available > 1 ? "s" : ""}
+            {available} spot{available > 1 ? "s" : ""} remaining
           </p>
         )}
       </div>
@@ -103,7 +102,7 @@ function TicketRow({ ticket, quantity, onQuantityChange }: TicketRowProps) {
                   ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
                   : "bg-zinc-700 text-zinc-300 hover:bg-zinc-600 active:bg-zinc-500"
               )}
-              aria-label="Diminuer la quantité"
+              aria-label="Decrease quantity"
             >
               <Minus className="w-4 h-4" />
             </motion.button>
@@ -130,13 +129,13 @@ function TicketRow({ ticket, quantity, onQuantityChange }: TicketRowProps) {
                   ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
                   : "bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700"
               )}
-              aria-label="Augmenter la quantité"
+              aria-label="Increase quantity"
             >
               <Plus className="w-4 h-4" />
             </motion.button>
           </div>
         ) : (
-          <span className="text-sm text-zinc-400 italic">Indisponible</span>
+          <span className="text-sm text-zinc-400 italic">Unavailable</span>
         )}
 
         {/* Line Total */}
@@ -148,7 +147,7 @@ function TicketRow({ ticket, quantity, onQuantityChange }: TicketRowProps) {
               exit={{ opacity: 0, x: -10, width: 0 }}
               className="text-right min-w-[80px]"
             >
-              <p className="text-sm text-zinc-500">Sous-total</p>
+              <p className="text-sm text-zinc-500">Subtotal</p>
               <p className="font-bold text-secondary-400">
                 {formatPrice(ticket.price * quantity)}
               </p>
@@ -244,10 +243,10 @@ export function TicketSelector({
         <CardContent className="flex flex-col items-center justify-center py-12 text-center">
           <AlertCircle className="w-12 h-12 text-zinc-600 mb-4" />
           <h3 className="text-lg font-semibold text-zinc-100">
-            Aucun billet disponible
+            No tickets available
           </h3>
           <p className="text-zinc-500 mt-1">
-            Les billets ne sont pas encore en vente pour cet événement.
+            Tickets are not yet on sale for this event.
           </p>
         </CardContent>
       </Card>
@@ -263,9 +262,9 @@ export function TicketSelector({
             <Ticket className="w-5 h-5 text-primary-400" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-zinc-100">Billets</h3>
+            <h3 className="text-lg font-bold text-zinc-100">Tickets</h3>
             <p className="text-sm text-zinc-500">
-              Sélectionnez vos billets ci-dessous
+              Select your tickets below
             </p>
           </div>
         </div>
@@ -291,8 +290,8 @@ export function TicketSelector({
           >
             <AlertCircle className="w-5 h-5 text-zinc-500 flex-shrink-0" />
             <p className="text-sm text-zinc-400">
-              Tous les billets sont épuisés pour cet événement. Inscrivez-vous à
-              la liste d&apos;attente pour être notifié en cas de disponibilité.
+              All tickets are sold out for this event. Sign up for
+              the waitlist to be notified if tickets become available.
             </p>
           </motion.div>
         )}
@@ -317,7 +316,7 @@ export function TicketSelector({
             </AnimatePresence>
             {totalQuantity > 0 && (
               <p className="text-xs text-zinc-500">
-                {totalQuantity} billet{totalQuantity > 1 ? "s" : ""}
+                {totalQuantity} ticket{totalQuantity > 1 ? "s" : ""}
               </p>
             )}
           </div>
@@ -331,7 +330,7 @@ export function TicketSelector({
             leftIcon={<ShoppingCart className="w-5 h-5" />}
             className="w-full sm:w-auto"
           >
-            Ajouter au panier
+            Add to cart
           </Button>
         </div>
       </CardFooter>

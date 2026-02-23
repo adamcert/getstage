@@ -11,10 +11,10 @@ import { useCartStore, selectCartItemCount } from "@/stores/cart-store";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/", label: "Accueil" },
-  { href: "/search", label: "Explorer" },
-  { href: "/resale", label: "Revente" },
-  { href: "/gift-cards", label: "Cartes cadeaux" },
+  { href: "/", label: "Home" },
+  { href: "/search", label: "Explore" },
+  { href: "/resale", label: "Resale" },
+  { href: "/gift-cards", label: "Gift Cards" },
 ];
 
 export function Header() {
@@ -94,7 +94,7 @@ export function Header() {
                 isAnimating && "animate-bounce"
               )}
               onClick={() => setIsCartOpen(true)}
-              aria-label="Ouvrir le panier"
+              aria-label="Open cart"
             >
               <ShoppingBag className="w-5 h-5" />
               <AnimatePresence>
@@ -126,7 +126,7 @@ export function Header() {
             ) : (
               <Link href="/login">
                 <Button variant="primary" size="sm">
-                  Connexion
+                  Sign In
                 </Button>
               </Link>
             )}

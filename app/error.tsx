@@ -55,12 +55,12 @@ export default function Error({ error, reset }: ErrorProps) {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Oups ! Une erreur est survenue
+            Oops! An error occurred
           </h1>
           <p className="text-gray-500 mb-8 leading-relaxed">
-            Nous sommes desoles, quelque chose s'est mal passe.
+            We're sorry, something went wrong.
             <br />
-            Ne vous inquietez pas, notre equipe a ete informee.
+            Don't worry, our team has been notified.
           </p>
         </motion.div>
 
@@ -74,7 +74,7 @@ export default function Error({ error, reset }: ErrorProps) {
           >
             <div className="flex items-center gap-2 text-red-700 font-medium mb-2">
               <Bug className="w-4 h-4" />
-              <span>Details de l'erreur</span>
+              <span>Error details</span>
             </div>
             <p className="text-sm text-red-600 font-mono break-all">
               {error.message}
@@ -99,14 +99,14 @@ export default function Error({ error, reset }: ErrorProps) {
             variant="primary"
             leftIcon={<RefreshCw className="w-4 h-4" />}
           >
-            Reessayer
+            Try again
           </Button>
           <Link href="/">
             <Button
               variant="outline"
               leftIcon={<Home className="w-4 h-4" />}
             >
-              Retour a l'accueil
+              Back to home
             </Button>
           </Link>
         </motion.div>

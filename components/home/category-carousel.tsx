@@ -42,21 +42,21 @@ const categories: Category[] = [
   },
   {
     id: "theatre",
-    label: "Théâtre",
+    label: "Theatre",
     icon: Drama,
     gradient: "from-accent-500/10 to-accent-500/5",
     hoverGradient: "from-accent-500 to-accent-600",
   },
   {
     id: "comedie",
-    label: "Comédie",
+    label: "Comedy",
     icon: Laugh,
     gradient: "from-pink-500/10 to-pink-500/5",
     hoverGradient: "from-pink-500 to-pink-600",
   },
   {
     id: "exposition",
-    label: "Exposition",
+    label: "Exhibition",
     icon: Frame,
     gradient: "from-cyan-500/10 to-cyan-500/5",
     hoverGradient: "from-cyan-500 to-cyan-600",
@@ -77,7 +77,7 @@ const categories: Category[] = [
   },
   {
     id: "cinema",
-    label: "Cinéma",
+    label: "Cinema",
     icon: Film,
     gradient: "from-indigo-500/10 to-indigo-500/5",
     hoverGradient: "from-indigo-500 to-indigo-600",
@@ -154,10 +154,10 @@ export function CategoryCarousel() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              Explorer par catégorie
+              Explore by category
             </h2>
             <p className="mt-2 text-gray-600">
-              Trouvez les événements qui vous passionnent
+              Find events that inspire you
             </p>
           </div>
 
@@ -172,7 +172,7 @@ export function CategoryCarousel() {
                   ? "hover:border-primary-500 hover:text-primary-500 hover:shadow-md cursor-pointer"
                   : "opacity-40 cursor-not-allowed"
               )}
-              aria-label="Défiler vers la gauche"
+              aria-label="Scroll left"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -185,7 +185,7 @@ export function CategoryCarousel() {
                   ? "hover:border-primary-500 hover:text-primary-500 hover:shadow-md cursor-pointer"
                   : "opacity-40 cursor-not-allowed"
               )}
-              aria-label="Défiler vers la droite"
+              aria-label="Scroll right"
             >
               <ChevronRight className="w-5 h-5" />
             </button>

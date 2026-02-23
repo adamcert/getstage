@@ -8,9 +8,9 @@ import {
 } from "@/lib/data/mock-events";
 
 export const metadata: Metadata = {
-  title: "LEVELED UP - La Scène Autrement",
+  title: "LEVELED UP - The Stage Reimagined",
   description:
-    "Vivez la scène comme jamais. Concerts, clubs, culture et plus encore.",
+    "Experience the stage like never before. Concerts, clubs, culture and more.",
 };
 
 export default function DemoPage() {

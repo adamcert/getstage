@@ -28,31 +28,31 @@ const stats = [
   {
     name: "Total Events",
     value: "12",
-    change: "+2 ce mois",
+    change: "+2 this month",
     icon: CalendarDays,
     color: "text-primary-500",
     bgColor: "bg-primary-50",
   },
   {
-    name: "Tickets Vendus",
+    name: "Tickets Sold",
     value: "1,234",
-    change: "+15% vs dernier mois",
+    change: "+15% vs last month",
     icon: Ticket,
     color: "text-secondary-500",
     bgColor: "bg-secondary-50",
   },
   {
-    name: "Participants",
+    name: "Attendees",
     value: "890",
-    change: "+8% vs dernier mois",
+    change: "+8% vs last month",
     icon: Users,
     color: "text-green-500",
     bgColor: "bg-green-50",
   },
   {
-    name: "Revenus",
+    name: "Revenue",
     value: "45,670 EUR",
-    change: "+23% vs dernier mois",
+    change: "+23% vs last month",
     icon: TrendingUp,
     color: "text-orange-500",
     bgColor: "bg-orange-50",
@@ -62,11 +62,11 @@ const stats = [
 // Helper to get status badge variant
 function getStatusBadge(status: EventStatus) {
   const statusConfig: Record<EventStatus, { label: string; variant: "default" | "new" | "hot" | "tonight" | "soldout" | "featured" }> = {
-    draft: { label: "Brouillon", variant: "default" },
-    preview: { label: "Aperçu", variant: "new" },
-    published: { label: "Publié", variant: "hot" },
-    cancelled: { label: "Annulé", variant: "soldout" },
-    past: { label: "Terminé", variant: "default" },
+    draft: { label: "Draft", variant: "default" },
+    preview: { label: "Preview", variant: "new" },
+    published: { label: "Published", variant: "hot" },
+    cancelled: { label: "Cancelled", variant: "soldout" },
+    past: { label: "Past", variant: "default" },
   };
   return statusConfig[status] || statusConfig.draft;
 }
@@ -84,7 +84,7 @@ function getTicketsSold(event: Event): { sold: number; total: number } {
 // Format date
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString("fr-FR", {
+  return date.toLocaleDateString("en-US", {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -113,15 +113,15 @@ export default function DashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Bienvenue sur votre Dashboard
+            Welcome to your Dashboard
           </h1>
           <p className="mt-1 text-gray-500">
-            Gérez vos événements et suivez vos performances.
+            Manage your events and track your performance.
           </p>
         </div>
         <Link href="/dashboard/events/new">
           <Button leftIcon={<Plus className="w-5 h-5" />}>
-            Créer un événement
+            Create an event
           </Button>
         </Link>
       </div>
@@ -155,11 +155,11 @@ export default function DashboardPage() {
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <h2 className="text-lg font-semibold text-gray-900">
-            Mes Événements
+            My Events
           </h2>
           <div className="w-full sm:w-72">
             <Input
-              placeholder="Rechercher un événement..."
+              placeholder="Search for an event..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               leftIcon={<Search className="w-5 h-5" />}
@@ -175,7 +175,7 @@ export default function DashboardPage() {
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
                     <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                      Événement
+                      Event
                     </th>
                     <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
                       Date
@@ -184,7 +184,7 @@ export default function DashboardPage() {
                       Status
                     </th>
                     <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                      Tickets vendus
+                      Tickets sold
                     </th>
                     <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
                       Actions
@@ -223,7 +223,7 @@ export default function DashboardPage() {
                                 {event.title}
                               </Link>
                               <p className="text-sm text-gray-500 truncate">
-                                {event.venue?.name || "Lieu non défini"}
+                                {event.venue?.name || "Venue not set"}
                               </p>
                             </div>
                           </div>
@@ -296,14 +296,14 @@ export default function DashboardPage() {
                                       }}
                                     >
                                       <Copy className="w-4 h-4" />
-                                      Copier le lien
+                                      Copy link
                                     </button>
                                     <button
                                       className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                       onClick={() => setActiveMenu(null)}
                                     >
                                       <Trash2 className="w-4 h-4" />
-                                      Supprimer
+                                      Delete
                                     </button>
                                   </div>
                                 </>
@@ -378,7 +378,7 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-2 mt-3">
                           <Link href={`/dashboard/events/${event.id}`} className="flex-1">
                             <Button variant="outline" size="sm" className="w-full">
-                              Modifier
+                              Edit
                             </Button>
                           </Link>
                           <Link href={`/event/${event.slug}`} target="_blank">
@@ -398,16 +398,16 @@ export default function DashboardPage() {
           <Card className="p-6">
             <div className="text-center py-12 text-gray-500">
               <CalendarDays className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-              <p className="text-lg font-medium">Aucun événement</p>
+              <p className="text-lg font-medium">No events</p>
               <p className="text-sm mt-1 mb-6">
                 {searchQuery
-                  ? "Aucun événement ne correspond à votre recherche."
-                  : "Commencez par créer votre premier événement."}
+                  ? "No events match your search."
+                  : "Start by creating your first event."}
               </p>
               {!searchQuery && (
                 <Link href="/dashboard/events/new">
                   <Button leftIcon={<Plus className="w-5 h-5" />}>
-                    Créer un événement
+                    Create an event
                   </Button>
                 </Link>
               )}

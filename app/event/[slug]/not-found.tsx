@@ -117,12 +117,12 @@ export default function EventNotFound() {
           transition={{ delay: 0.4, duration: 0.5 }}
         >
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Événement introuvable
+            Event not found
           </h1>
           <p className="text-gray-500 mb-8 text-lg leading-relaxed">
-            Cet événement n'existe pas ou a été supprimé.
+            This event does not exist or has been deleted.
             <br />
-            Il a peut-être eu lieu ou été annulé.
+            It may have already taken place or been cancelled.
           </p>
         </motion.div>
 
@@ -139,7 +139,7 @@ export default function EventNotFound() {
               leftIcon={<Search className="w-4 h-4" />}
               className="w-full sm:w-auto"
             >
-              Rechercher un événement
+              Search for an event
             </Button>
           </Link>
           <Link href="/">
@@ -148,7 +148,7 @@ export default function EventNotFound() {
               leftIcon={<Calendar className="w-4 h-4" />}
               className="w-full sm:w-auto"
             >
-              Voir tous les événements
+              View all events
             </Button>
           </Link>
         </motion.div>
@@ -165,7 +165,7 @@ export default function EventNotFound() {
             leftIcon={<ArrowLeft className="w-4 h-4" />}
             className="text-gray-400 hover:text-gray-600"
           >
-            Retour
+            Back
           </Button>
         </motion.div>
 
@@ -177,13 +177,13 @@ export default function EventNotFound() {
           className="mt-12 p-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-100"
         >
           <p className="text-sm text-gray-400 uppercase tracking-wider mb-4">
-            Explorez par catégorie
+            Browse by category
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {[
               { label: "Concerts", href: "/search?category=concert" },
               { label: "DJ / Club", href: "/search?category=dj" },
-              { label: "Théâtre", href: "/search?category=theatre" },
+              { label: "Theatre", href: "/search?category=theatre" },
               { label: "Festivals", href: "/search?category=festival" },
             ].map((cat) => (
               <Link key={cat.label} href={cat.href}>

@@ -23,14 +23,14 @@ import {
 // Event categories
 const categories: { value: EventCategory; label: string }[] = [
   { value: "concert", label: "Concert" },
-  { value: "dj", label: "DJ / Soirée" },
-  { value: "theatre", label: "Théâtre" },
-  { value: "comedy", label: "Comédie / Humour" },
-  { value: "expo", label: "Exposition" },
-  { value: "film", label: "Cinéma" },
-  { value: "party", label: "Fête" },
+  { value: "dj", label: "DJ / Party" },
+  { value: "theatre", label: "Theatre" },
+  { value: "comedy", label: "Comedy / Humor" },
+  { value: "expo", label: "Exhibition" },
+  { value: "film", label: "Cinema" },
+  { value: "party", label: "Party" },
   { value: "festival", label: "Festival" },
-  { value: "other", label: "Autre" },
+  { value: "other", label: "Other" },
 ];
 
 // Mock venues for select
@@ -138,10 +138,10 @@ export default function NewEventPage() {
         </Link>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Créer un événement
+            Create an event
           </h1>
           <p className="text-gray-500 mt-1">
-            Remplissez les informations de votre événement
+            Fill in your event information
           </p>
         </div>
       </div>
@@ -152,13 +152,13 @@ export default function NewEventPage() {
         <Card>
           <CardHeader>
             <h2 className="text-lg font-semibold text-gray-900">
-              Informations générales
+              General information
             </h2>
           </CardHeader>
           <CardContent className="space-y-4">
             <Input
-              label="Titre de l'événement *"
-              placeholder="Ex: Concert de Jazz au Sunset"
+              label="Event title *"
+              placeholder="E.g.: Jazz Concert at Sunset"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
@@ -169,7 +169,7 @@ export default function NewEventPage() {
               </label>
               <textarea
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all duration-200 placeholder:text-gray-400 min-h-[120px] resize-y"
-                placeholder="Décrivez votre événement..."
+                placeholder="Describe your event..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -177,7 +177,7 @@ export default function NewEventPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Catégorie *
+                Category *
               </label>
               <select
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all duration-200"
@@ -198,20 +198,20 @@ export default function NewEventPage() {
         <Card>
           <CardHeader>
             <h2 className="text-lg font-semibold text-gray-900">
-              Date et heure
+              Date and time
             </h2>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="Date de début *"
+                label="Start date *"
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 leftIcon={<CalendarDays className="w-5 h-5" />}
               />
               <Input
-                label="Heure de début *"
+                label="Start time *"
                 type="time"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
@@ -220,14 +220,14 @@ export default function NewEventPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="Date de fin"
+                label="End date"
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 leftIcon={<CalendarDays className="w-5 h-5" />}
               />
               <Input
-                label="Heure de fin"
+                label="End time"
                 type="time"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
@@ -240,12 +240,12 @@ export default function NewEventPage() {
         {/* Location */}
         <Card>
           <CardHeader>
-            <h2 className="text-lg font-semibold text-gray-900">Lieu</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Venue</h2>
           </CardHeader>
           <CardContent>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Sélectionner un lieu *
+                Select a venue *
               </label>
               <div className="relative">
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -254,7 +254,7 @@ export default function NewEventPage() {
                   value={venueId}
                   onChange={(e) => setVenueId(e.target.value)}
                 >
-                  <option value="">Choisir un lieu...</option>
+                  <option value="">Choose a venue...</option>
                   {mockVenues.map((venue) => (
                     <option key={venue.id} value={venue.id}>
                       {venue.name}
@@ -270,7 +270,7 @@ export default function NewEventPage() {
         <Card>
           <CardHeader>
             <h2 className="text-lg font-semibold text-gray-900">
-              Image de couverture
+              Cover image
             </h2>
           </CardHeader>
           <CardContent>
@@ -294,10 +294,10 @@ export default function NewEventPage() {
               >
                 <ImageIcon className="w-12 h-12 mb-2" />
                 <span className="text-sm font-medium">
-                  Cliquez pour ajouter une image
+                  Click to add an image
                 </span>
                 <span className="text-xs mt-1">
-                  PNG, JPG jusqu'à 10MB
+                  PNG, JPG up to 10MB
                 </span>
               </button>
             )}
@@ -309,7 +309,7 @@ export default function NewEventPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
-                Types de billets
+                Ticket types
               </h2>
               <Button
                 variant="outline"
@@ -317,7 +317,7 @@ export default function NewEventPage() {
                 onClick={addTicketType}
                 leftIcon={<Plus className="w-4 h-4" />}
               >
-                Ajouter
+                Add
               </Button>
             </div>
           </CardHeader>
@@ -329,14 +329,14 @@ export default function NewEventPage() {
               >
                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <Input
-                    placeholder="Nom du billet"
+                    placeholder="Ticket name"
                     value={ticket.name}
                     onChange={(e) =>
                       updateTicketType(ticket.id, "name", e.target.value)
                     }
                   />
                   <Input
-                    placeholder="Prix"
+                    placeholder="Price"
                     type="number"
                     min="0"
                     step="0.01"
@@ -347,7 +347,7 @@ export default function NewEventPage() {
                     leftIcon={<Euro className="w-5 h-5" />}
                   />
                   <Input
-                    placeholder="Quantité"
+                    placeholder="Quantity"
                     type="number"
                     min="1"
                     value={ticket.quantity}
@@ -373,7 +373,7 @@ export default function NewEventPage() {
         <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pb-8">
           <Link href="/dashboard" className="w-full sm:w-auto">
             <Button variant="ghost" className="w-full sm:w-auto">
-              Annuler
+              Cancel
             </Button>
           </Link>
           <Button
@@ -383,7 +383,7 @@ export default function NewEventPage() {
             isLoading={isSubmitting}
             leftIcon={<Save className="w-5 h-5" />}
           >
-            Enregistrer brouillon
+            Save draft
           </Button>
           <Button
             className="w-full sm:w-auto"
@@ -391,7 +391,7 @@ export default function NewEventPage() {
             isLoading={isSubmitting}
             leftIcon={<Send className="w-5 h-5" />}
           >
-            Publier
+            Publish
           </Button>
         </div>
       </div>

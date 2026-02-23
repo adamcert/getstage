@@ -303,7 +303,7 @@ function GiftCard3D({
                     className="text-[10px] font-semibold uppercase tracking-[0.2em]"
                     style={{ color: isLightDesign ? design.accent : `${design.accent}CC` }}
                   >
-                    Carte Cadeau
+                    Gift Card
                   </p>
                   <p
                     className={cn(
@@ -366,7 +366,7 @@ function GiftCard3D({
                       isLightDesign ? "text-slate-600" : "text-white/80"
                     )}
                   >
-                    Pour{" "}
+                    For{" "}
                     <span className={cn("font-semibold", isLightDesign ? "text-slate-800" : "text-white")}>
                       {recipientName}
                     </span>
@@ -379,7 +379,7 @@ function GiftCard3D({
                       isLightDesign ? "text-slate-500" : "text-white/60"
                     )}
                   >
-                    De la part de {senderName}
+                    From {senderName}
                   </p>
                 )}
               </div>
@@ -556,7 +556,7 @@ function StepIndicator({
       </motion.div>
       <div>
         <p className={cn("text-sm font-medium", isActive ? "text-zinc-100" : "text-zinc-600")}>
-          &#201;tape {step}
+          Step {step}
         </p>
         <p className={cn("text-xs", isActive ? "text-zinc-500" : "text-zinc-600")}>{label}</p>
       </div>
@@ -613,7 +613,7 @@ export default function GiftCardsPage() {
     if (!isFormValid) return;
     setIsProcessing(true);
     await new Promise((r) => setTimeout(r, 2000));
-    alert(`Carte cadeau de ${formatPrice(finalAmount)} créée avec succès !`);
+    alert(`Gift card of ${formatPrice(finalAmount)} created successfully!`);
     setIsProcessing(false);
   };
 
@@ -658,32 +658,32 @@ export default function GiftCardsPage() {
             >
               <Star className="w-4 h-4 text-primary-400" />
               <span className="text-sm text-primary-300 font-medium">
-                Le cadeau parfait pour les amateurs de sorties
+                The perfect gift for entertainment lovers
               </span>
             </motion.div>
 
             <h1
               className="text-5xl md:text-7xl font-bold font-display mb-6"
             >
-              <span className="text-white">Offrez des</span>
+              <span className="text-white">Give</span>
               <br />
               <span className="bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 bg-clip-text text-transparent">
-                moments inoubliables
+                unforgettable moments
               </span>
             </h1>
 
             <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-12">
-              Nos cartes cadeaux ouvrent les portes de milliers d&apos;événements.
+              Our gift cards open the doors to thousands of events.
               <br className="hidden md:block" />
-              Concerts, théâtre, festivals &mdash; le choix leur appartient.
+              Concerts, theatre, festivals &mdash; the choice is theirs.
             </p>
 
             {/* Stats */}
             <div className="flex items-center justify-center gap-12 md:gap-20">
               {[
-                { value: "10K+", label: "Événements" },
-                { value: "12", label: "Mois de validité" },
-                { value: "100%", label: "Sécurisé" },
+                { value: "10K+", label: "Events" },
+                { value: "12", label: "Months validity" },
+                { value: "100%", label: "Secure" },
               ].map((stat, i) => (
                 <motion.div
                   key={stat.label}
@@ -718,11 +718,11 @@ export default function GiftCardsPage() {
           <div className="lg:col-span-7 space-y-8">
             {/* Step Progress */}
             <div className="hidden md:flex items-center justify-between mb-12">
-              <StepIndicator step={1} currentStep={step} label="Montant" icon={Zap} />
+              <StepIndicator step={1} currentStep={step} label="Amount" icon={Zap} />
               <div className="flex-1 h-0.5 bg-zinc-800 mx-4" />
               <StepIndicator step={2} currentStep={step} label="Design" icon={Sparkles} />
               <div className="flex-1 h-0.5 bg-zinc-800 mx-4" />
-              <StepIndicator step={3} currentStep={step} label="Destinataire" icon={Gift} />
+              <StepIndicator step={3} currentStep={step} label="Recipient" icon={Gift} />
             </div>
 
             {/* Step 1: Amount */}
@@ -736,8 +736,8 @@ export default function GiftCardsPage() {
                   <Zap className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-zinc-100">Choisissez le montant</h2>
-                  <p className="text-zinc-500">Sélectionnez ou personnalisez</p>
+                  <h2 className="text-xl font-bold text-zinc-100">Choose the amount</h2>
+                  <p className="text-zinc-500">Select or customize</p>
                 </div>
               </div>
 
@@ -760,7 +760,7 @@ export default function GiftCardsPage() {
                 )}
               >
                 <label className="flex items-center gap-4">
-                  <span className="text-sm font-medium text-zinc-400">Montant libre</span>
+                  <span className="text-sm font-medium text-zinc-400">Custom amount</span>
                   <div className="flex-1 relative">
                     <input
                       type="number"
@@ -796,7 +796,7 @@ export default function GiftCardsPage() {
                 onClick={() => setStep(2)}
                 className="mt-6 w-full py-4 rounded-xl bg-zinc-100 text-zinc-900 font-semibold flex items-center justify-center gap-2 hover:bg-white transition-colors"
               >
-                Continuer <ArrowRight className="w-5 h-5" />
+                Continue <ArrowRight className="w-5 h-5" />
               </button>
             </motion.div>
 
@@ -815,8 +815,8 @@ export default function GiftCardsPage() {
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-zinc-100">Choisissez le design</h2>
-                  <p className="text-zinc-500">6 styles exclusifs</p>
+                  <h2 className="text-xl font-bold text-zinc-100">Choose the design</h2>
+                  <p className="text-zinc-500">6 exclusive styles</p>
                 </div>
               </div>
 
@@ -850,8 +850,8 @@ export default function GiftCardsPage() {
                   <Gift className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-zinc-100">Informations du destinataire</h2>
-                  <p className="text-zinc-500">À qui offrez-vous cette carte ?</p>
+                  <h2 className="text-xl font-bold text-zinc-100">Recipient information</h2>
+                  <p className="text-zinc-500">Who are you giving this card to?</p>
                 </div>
               </div>
 
@@ -859,7 +859,7 @@ export default function GiftCardsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-medium text-zinc-300 mb-2">
-                      Email du destinataire *
+                      Recipient email *
                     </label>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
@@ -867,14 +867,14 @@ export default function GiftCardsPage() {
                         type="email"
                         value={formData.recipientEmail}
                         onChange={(e) => setFormData({ ...formData, recipientEmail: e.target.value })}
-                        placeholder="email@exemple.com"
+                        placeholder="email@example.com"
                         className="w-full pl-12 pr-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 outline-none focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 text-zinc-100 placeholder-zinc-500"
                       />
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-zinc-300 mb-2">
-                      Nom du destinataire *
+                      Recipient name *
                     </label>
                     <div className="relative">
                       <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
@@ -891,7 +891,7 @@ export default function GiftCardsPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-zinc-300 mb-2">
-                    Votre nom *
+                    Your name *
                   </label>
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
@@ -907,8 +907,8 @@ export default function GiftCardsPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-zinc-300 mb-2">
-                    Message personnel{" "}
-                    <span className="text-zinc-600 font-normal">(optionnel)</span>
+                    Personal message{" "}
+                    <span className="text-zinc-600 font-normal">(optional)</span>
                   </label>
                   <div className="relative">
                     <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-zinc-500" />
@@ -917,7 +917,7 @@ export default function GiftCardsPage() {
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       maxLength={MAX_MESSAGE_LENGTH}
                       rows={3}
-                      placeholder="Joyeux anniversaire ! Profite bien..."
+                      placeholder="Happy birthday! Enjoy..."
                       className="w-full pl-12 pr-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 outline-none focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 resize-none text-zinc-100 placeholder-zinc-500"
                     />
                     <span className="absolute right-4 bottom-3 text-xs text-zinc-500">
@@ -943,8 +943,8 @@ export default function GiftCardsPage() {
                       className="w-4 h-4 text-secondary-500"
                     />
                     <div>
-                      <p className="font-medium text-zinc-100">Maintenant</p>
-                      <p className="text-xs text-zinc-500">Envoi immédiat</p>
+                      <p className="font-medium text-zinc-100">Now</p>
+                      <p className="text-xs text-zinc-500">Immediate delivery</p>
                     </div>
                   </label>
 
@@ -963,8 +963,8 @@ export default function GiftCardsPage() {
                       className="w-4 h-4 text-secondary-500"
                     />
                     <div>
-                      <p className="font-medium text-zinc-100">Programmer</p>
-                      <p className="text-xs text-zinc-500">Choisir une date</p>
+                      <p className="font-medium text-zinc-100">Schedule</p>
+                      <p className="text-xs text-zinc-500">Choose a date</p>
                     </div>
                   </label>
                 </div>
@@ -996,14 +996,14 @@ export default function GiftCardsPage() {
               {/* Card Preview */}
               <div className="bg-zinc-900 rounded-3xl shadow-xl shadow-black/20 p-8 border border-zinc-800">
                 <p className="text-sm font-medium text-zinc-500 mb-6 text-center">
-                  Aperçu de votre carte
+                  Preview of your card
                 </p>
                 <AnimatePresence mode="wait">
                   <GiftCard3D
                     key={design.id}
                     design={design}
                     amount={finalAmount}
-                    recipientName={formData.recipientName || "Destinataire"}
+                    recipientName={formData.recipientName || "Recipient"}
                     senderName={formData.senderName}
                   />
                 </AnimatePresence>
@@ -1022,11 +1022,11 @@ export default function GiftCardsPage() {
 
               {/* Purchase Summary */}
               <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-3xl p-8 text-white">
-                <h3 className="font-bold text-lg mb-6">Récapitulatif</h3>
+                <h3 className="font-bold text-lg mb-6">Summary</h3>
 
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between">
-                    <span className="text-zinc-400">Montant</span>
+                    <span className="text-zinc-400">Amount</span>
                     <span className="font-semibold">{formatPrice(finalAmount)}</span>
                   </div>
                   <div className="flex justify-between">
@@ -1034,9 +1034,9 @@ export default function GiftCardsPage() {
                     <span className="font-semibold">{design.name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-400">Envoi</span>
+                    <span className="text-zinc-400">Delivery</span>
                     <span className="font-semibold">
-                      {formData.sendDate === "now" ? "Immédiat" : formData.scheduledDate || "À définir"}
+                      {formData.sendDate === "now" ? "Immediate" : formData.scheduledDate || "To be set"}
                     </span>
                   </div>
                   <div className="h-px bg-zinc-700" />
@@ -1070,7 +1070,7 @@ export default function GiftCardsPage() {
                   ) : (
                     <>
                       <Gift className="w-5 h-5" />
-                      Acheter la carte
+                      Buy the card
                     </>
                   )}
                 </motion.button>
@@ -1078,7 +1078,7 @@ export default function GiftCardsPage() {
                 {/* Trust */}
                 <div className="mt-6 flex items-center justify-center gap-2 text-zinc-500 text-xs">
                   <Check className="w-4 h-4 text-emerald-400" />
-                  Paiement sécurisé &bull; Envoi instantané
+                  Secure payment &bull; Instant delivery
                 </div>
               </div>
             </div>

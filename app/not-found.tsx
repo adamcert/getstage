@@ -101,10 +101,10 @@ export default function NotFound() {
           transition={{ delay: 0.3, duration: 0.6 }}
         >
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-            Page non trouvée
+            Page not found
           </h2>
           <p className="text-gray-500 mb-8 text-lg leading-relaxed max-w-md mx-auto">
-            Désolée, la page que vous recherchez semble avoir disparu ou n'existe plus.
+            Sorry, the page you are looking for seems to have disappeared or no longer exists.
           </p>
         </motion.div>
 
@@ -126,7 +126,7 @@ export default function NotFound() {
                 className="flex items-center gap-2 px-5 py-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100"
               >
                 <Home className="w-5 h-5 text-primary-500" />
-                <span className="font-medium text-gray-700">Accueil</span>
+                <span className="font-medium text-gray-700">Home</span>
               </motion.div>
             </Link>
             <Link href="/search">
@@ -136,7 +136,7 @@ export default function NotFound() {
                 className="flex items-center gap-2 px-5 py-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100"
               >
                 <Search className="w-5 h-5 text-secondary-500" />
-                <span className="font-medium text-gray-700">Rechercher</span>
+                <span className="font-medium text-gray-700">Search</span>
               </motion.div>
             </Link>
             <Link href="/search?category=concert">
@@ -146,7 +146,7 @@ export default function NotFound() {
                 className="flex items-center gap-2 px-5 py-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100"
               >
                 <Calendar className="w-5 h-5 text-accent-500" />
-                <span className="font-medium text-gray-700">Événements</span>
+                <span className="font-medium text-gray-700">Events</span>
               </motion.div>
             </Link>
           </div>
@@ -164,7 +164,7 @@ export default function NotFound() {
             leftIcon={<ArrowLeft className="w-4 h-4" />}
             className="text-gray-500 hover:text-gray-700"
           >
-            Retour à la page précédente
+            Back to previous page
           </Button>
         </motion.div>
       </div>

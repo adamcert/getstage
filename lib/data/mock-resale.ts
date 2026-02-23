@@ -90,7 +90,7 @@ export const mockResaleTickets: ResaleTicket[] = [
       id: "ticket-event-1-2",
       event_id: "event-1",
       name: "VIP",
-      description: "Acces VIP avec coupe de champagne",
+      description: "VIP access with glass of champagne",
       price: 50,
       quantity_total: 50,
       quantity_sold: 30,
@@ -107,7 +107,7 @@ export const mockResaleTickets: ResaleTicket[] = [
     resalePrice: 45,
     listedAt: getRelativeDate(-2),
   },
-  // Ticket 2 - Phoenix en Concert - Fosse at original price
+  // Ticket 2 - Phoenix in Concert - Pit at original price
   {
     id: "resale-2",
     ticket: {
@@ -127,8 +127,8 @@ export const mockResaleTickets: ResaleTicket[] = [
     ticketType: {
       id: "ticket-event-2-0",
       event_id: "event-2",
-      name: "Fosse",
-      description: "Place debout en fosse",
+      name: "Pit",
+      description: "Standing in pit",
       price: 45,
       quantity_total: 800,
       quantity_sold: 800,
@@ -145,7 +145,7 @@ export const mockResaleTickets: ResaleTicket[] = [
     resalePrice: 45,
     listedAt: getRelativeDate(-1),
   },
-  // Ticket 3 - Le Roi Lion - Categorie 1 with discount
+  // Ticket 3 - The Lion King - Category 1 with discount
   {
     id: "resale-3",
     ticket: {
@@ -165,8 +165,8 @@ export const mockResaleTickets: ResaleTicket[] = [
     ticketType: {
       id: "ticket-event-5-2",
       event_id: "event-5",
-      name: "Categorie 1",
-      description: "Meilleures places orchestre",
+      name: "Category 1",
+      description: "Best orchestra seats",
       price: 119,
       quantity_total: 100,
       quantity_sold: 95,
@@ -183,7 +183,7 @@ export const mockResaleTickets: ResaleTicket[] = [
     resalePrice: 99,
     listedAt: getRelativeDate(-3),
   },
-  // Ticket 4 - Stromae - Tribune
+  // Ticket 4 - Stromae - Stand
   {
     id: "resale-4",
     ticket: {
@@ -203,8 +203,8 @@ export const mockResaleTickets: ResaleTicket[] = [
     ticketType: {
       id: "ticket-event-6-1",
       event_id: "event-6",
-      name: "Tribune",
-      description: "Place assise en tribune",
+      name: "Stand",
+      description: "Seated in stand",
       price: 49,
       quantity_total: 3000,
       quantity_sold: 2800,
@@ -242,7 +242,7 @@ export const mockResaleTickets: ResaleTicket[] = [
       id: "ticket-event-4-1",
       event_id: "event-4",
       name: "Pass 24h",
-      description: "Acces complet pendant 24h",
+      description: "Full access for 24h",
       price: 45,
       quantity_total: 200,
       quantity_sold: 180,
@@ -259,7 +259,7 @@ export const mockResaleTickets: ResaleTicket[] = [
     resalePrice: 40,
     listedAt: getRelativeDate(-2),
   },
-  // Ticket 6 - Angele - Orchestre
+  // Ticket 6 - Angele - Orchestra
   {
     id: "resale-6",
     ticket: {
@@ -279,8 +279,8 @@ export const mockResaleTickets: ResaleTicket[] = [
     ticketType: {
       id: "ticket-event-7-0",
       event_id: "event-7",
-      name: "Orchestre",
-      description: "Place en orchestre",
+      name: "Orchestra",
+      description: "Orchestra seat",
       price: 55,
       quantity_total: 500,
       quantity_sold: 200,
@@ -297,7 +297,7 @@ export const mockResaleTickets: ResaleTicket[] = [
     resalePrice: 50,
     listedAt: getRelativeDate(0),
   },
-  // Ticket 7 - Festival Electro Week - Pass 3 Jours
+  // Ticket 7 - Festival Electro Week - 3 Day Pass
   {
     id: "resale-7",
     ticket: {
@@ -317,8 +317,8 @@ export const mockResaleTickets: ResaleTicket[] = [
     ticketType: {
       id: "ticket-event-13-1",
       event_id: "event-13",
-      name: "Pass 3 Jours",
-      description: "Acces aux 3 jours du festival",
+      name: "3 Day Pass",
+      description: "Access to all 3 days of the festival",
       price: 99,
       quantity_total: 1500,
       quantity_sold: 1100,
@@ -356,7 +356,7 @@ export const mockResaleTickets: ResaleTicket[] = [
       id: "ticket-event-14-2",
       event_id: "event-14",
       name: "Premium",
-      description: "Meilleures places avec acces backstage",
+      description: "Best seats with backstage access",
       price: 75,
       quantity_total: 100,
       quantity_sold: 90,
@@ -394,7 +394,7 @@ export const mockResaleTickets: ResaleTicket[] = [
       id: "ticket-event-8-1",
       event_id: "event-8",
       name: "Regular",
-      description: "Entree standard",
+      description: "Standard entry",
       price: 28,
       quantity_total: 250,
       quantity_sold: 30,
@@ -411,7 +411,7 @@ export const mockResaleTickets: ResaleTicket[] = [
     resalePrice: 25,
     listedAt: getRelativeDate(0),
   },
-  // Ticket 10 - Ibeyi Live - Debout
+  // Ticket 10 - Ibeyi Live - Standing
   {
     id: "resale-10",
     ticket: {
@@ -431,8 +431,8 @@ export const mockResaleTickets: ResaleTicket[] = [
     ticketType: {
       id: "ticket-event-11-0",
       event_id: "event-11",
-      name: "Debout",
-      description: "Place debout",
+      name: "Standing",
+      description: "Standing ticket",
       price: 35,
       quantity_total: 600,
       quantity_sold: 150,

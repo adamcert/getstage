@@ -59,7 +59,7 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
           size="sm"
           onClick={() => onRemove(item.ticketTypeId)}
           className="text-zinc-500 hover:text-primary-400 hover:bg-primary-500/10 -mr-2 -mt-1"
-          aria-label="Supprimer"
+          aria-label="Remove"
         >
           <Trash2 className="w-4 h-4" />
         </Button>
@@ -78,7 +78,7 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
       <div className="flex items-center justify-between">
         {/* Quantity Selector */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-zinc-500 mr-1">Quantité :</span>
+          <span className="text-sm text-zinc-500 mr-1">Quantity:</span>
           <div className="flex items-center gap-1 bg-zinc-900 rounded-lg p-1">
             <button
               type="button"
@@ -90,7 +90,7 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
                   ? "text-zinc-600 cursor-not-allowed"
                   : "text-zinc-300 hover:bg-zinc-700"
               )}
-              aria-label="Diminuer la quantité"
+              aria-label="Decrease quantity"
             >
               <Minus className="w-3.5 h-3.5" />
             </button>
@@ -101,7 +101,7 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
               type="button"
               onClick={() => onUpdateQuantity(item.ticketTypeId, item.quantity + 1)}
               className="w-7 h-7 flex items-center justify-center rounded-md text-zinc-300 hover:bg-zinc-700 transition-colors"
-              aria-label="Augmenter la quantité"
+              aria-label="Increase quantity"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -110,7 +110,7 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
 
         {/* Subtotal */}
         <div className="text-right">
-          <span className="text-sm text-zinc-500">Sous-total</span>
+          <span className="text-sm text-zinc-500">Subtotal</span>
           <p className="font-bold text-zinc-100">{formatPrice(subtotal)}</p>
         </div>
       </div>

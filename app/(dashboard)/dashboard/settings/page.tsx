@@ -18,11 +18,11 @@ import {
 } from "lucide-react";
 
 const tabs = [
-  { id: "profile", label: "Profil", icon: User },
-  { id: "organization", label: "Organisation", icon: Building2 },
-  { id: "billing", label: "Facturation", icon: CreditCard },
+  { id: "profile", label: "Profile", icon: User },
+  { id: "organization", label: "Organization", icon: Building2 },
+  { id: "billing", label: "Billing", icon: CreditCard },
   { id: "notifications", label: "Notifications", icon: Bell },
-  { id: "security", label: "Sécurité", icon: Shield },
+  { id: "security", label: "Security", icon: Shield },
 ];
 
 export default function SettingsPage() {
@@ -31,7 +31,7 @@ export default function SettingsPage() {
     fullName: "Jean Dupont",
     email: "jean@eventplatform.com",
     phone: "+33 6 12 34 56 78",
-    bio: "Organisateur d'événements passionné",
+    bio: "Passionate event organizer",
     orgName: "Events Pro",
     orgWebsite: "https://eventspro.fr",
     orgAddress: "123 Avenue des Champs-Élysées, Paris",
@@ -44,9 +44,9 @@ export default function SettingsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Paramètres</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
         <p className="mt-1 text-gray-500">
-          Gérez votre compte et vos préférences.
+          Manage your account and preferences.
         </p>
       </div>
 
@@ -85,7 +85,7 @@ export default function SettingsPage() {
           {activeTab === "profile" && (
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
-                Informations personnelles
+                Personal information
               </h2>
 
               {/* Avatar */}
@@ -93,7 +93,7 @@ export default function SettingsPage() {
                 <Avatar size="xl" fallback="JD" />
                 <div>
                   <Button variant="outline" size="sm" leftIcon={<Upload className="w-4 h-4" />}>
-                    Changer la photo
+                    Change photo
                   </Button>
                   <p className="text-sm text-gray-500 mt-2">
                     JPG, PNG ou GIF. Max 2MB.
@@ -105,7 +105,7 @@ export default function SettingsPage() {
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Input
-                    label="Nom complet"
+                    label="Full name"
                     value={formData.fullName}
                     onChange={(e) => handleChange("fullName", e.target.value)}
                   />
@@ -117,7 +117,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <Input
-                  label="Téléphone"
+                  label="Phone"
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => handleChange("phone", e.target.value)}
@@ -135,7 +135,7 @@ export default function SettingsPage() {
                 </div>
                 <div className="flex justify-end">
                   <Button leftIcon={<Save className="w-4 h-4" />}>
-                    Enregistrer
+                    Save
                   </Button>
                 </div>
               </div>
@@ -149,25 +149,25 @@ export default function SettingsPage() {
               </h2>
               <div className="space-y-6">
                 <Input
-                  label="Nom de l'organisation"
+                  label="Organization name"
                   value={formData.orgName}
                   onChange={(e) => handleChange("orgName", e.target.value)}
                   leftIcon={<Building2 className="w-5 h-5" />}
                 />
                 <Input
-                  label="Site web"
+                  label="Website"
                   value={formData.orgWebsite}
                   onChange={(e) => handleChange("orgWebsite", e.target.value)}
                   leftIcon={<Globe className="w-5 h-5" />}
                 />
                 <Input
-                  label="Adresse"
+                  label="Address"
                   value={formData.orgAddress}
                   onChange={(e) => handleChange("orgAddress", e.target.value)}
                 />
                 <div className="flex justify-end">
                   <Button leftIcon={<Save className="w-4 h-4" />}>
-                    Enregistrer
+                    Save
                   </Button>
                 </div>
               </div>
@@ -177,15 +177,15 @@ export default function SettingsPage() {
           {activeTab === "billing" && (
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
-                Facturation
+                Billing
               </h2>
               <div className="text-center py-12 text-gray-500">
                 <CreditCard className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                <p className="text-lg font-medium">Aucun moyen de paiement</p>
+                <p className="text-lg font-medium">No payment method</p>
                 <p className="text-sm mt-1 mb-6">
-                  Ajoutez un moyen de paiement pour recevoir vos revenus.
+                  Add a payment method to receive your revenue.
                 </p>
-                <Button>Ajouter un moyen de paiement</Button>
+                <Button>Add a payment method</Button>
               </div>
             </Card>
           )}
@@ -193,14 +193,14 @@ export default function SettingsPage() {
           {activeTab === "notifications" && (
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
-                Préférences de notifications
+                Notification preferences
               </h2>
               <div className="space-y-6">
                 {[
-                  { id: "sales", label: "Nouvelles ventes", description: "Recevoir un email pour chaque vente" },
-                  { id: "reviews", label: "Avis clients", description: "Être notifié des nouveaux avis" },
-                  { id: "marketing", label: "Marketing", description: "Conseils et actualités Events" },
-                  { id: "security", label: "Sécurité", description: "Alertes de connexion et sécurité" },
+                  { id: "sales", label: "New sales", description: "Receive an email for each sale" },
+                  { id: "reviews", label: "Customer reviews", description: "Be notified of new reviews" },
+                  { id: "marketing", label: "Marketing", description: "Tips and Events news" },
+                  { id: "security", label: "Security", description: "Login and security alerts" },
                 ].map((item) => (
                   <div
                     key={item.id}
@@ -223,19 +223,19 @@ export default function SettingsPage() {
           {activeTab === "security" && (
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
-                Sécurité
+                Security
               </h2>
               <div className="space-y-6">
                 <div className="p-4 bg-gray-50 rounded-xl">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-900">Mot de passe</p>
+                      <p className="font-medium text-gray-900">Password</p>
                       <p className="text-sm text-gray-500">
-                        Dernière modification il y a 3 mois
+                        Last changed 3 months ago
                       </p>
                     </div>
                     <Button variant="outline" size="sm">
-                      Modifier
+                      Edit
                     </Button>
                   </div>
                 </div>
@@ -243,27 +243,27 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium text-gray-900">
-                        Authentification à deux facteurs
+                        Two-factor authentication
                       </p>
                       <p className="text-sm text-gray-500">
-                        Ajoutez une couche de sécurité supplémentaire
+                        Add an extra layer of security
                       </p>
                     </div>
                     <Button variant="outline" size="sm">
-                      Activer
+                      Enable
                     </Button>
                   </div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-900">Sessions actives</p>
+                      <p className="font-medium text-gray-900">Active sessions</p>
                       <p className="text-sm text-gray-500">
-                        Gérez vos appareils connectés
+                        Manage your connected devices
                       </p>
                     </div>
                     <Button variant="outline" size="sm">
-                      Voir
+                      View
                     </Button>
                   </div>
                 </div>

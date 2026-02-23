@@ -13,28 +13,28 @@ import {
 
 const stats = [
   {
-    name: "Vues totales",
+    name: "Total views",
     value: "24,567",
     change: "+12.5%",
     trend: "up",
     icon: BarChart3,
   },
   {
-    name: "Taux de conversion",
+    name: "Conversion rate",
     value: "3.2%",
     change: "+0.4%",
     trend: "up",
     icon: TrendingUp,
   },
   {
-    name: "Visiteurs uniques",
+    name: "Unique visitors",
     value: "8,234",
     change: "-2.1%",
     trend: "down",
     icon: Users,
   },
   {
-    name: "Tickets vendus",
+    name: "Tickets sold",
     value: "1,234",
     change: "+18.2%",
     trend: "up",
@@ -43,11 +43,11 @@ const stats = [
 ];
 
 const recentActivity = [
-  { event: "Techno Night w/ Amelie Lens", tickets: 12, revenue: "180 EUR", time: "Il y a 2h" },
-  { event: "Phoenix en Concert", tickets: 4, revenue: "180 EUR", time: "Il y a 3h" },
-  { event: "House Music Marathon", tickets: 8, revenue: "240 EUR", time: "Il y a 5h" },
-  { event: "Stand-Up Comedy Night", tickets: 6, revenue: "108 EUR", time: "Il y a 6h" },
-  { event: "Stromae - Multitude Tour", tickets: 15, revenue: "735 EUR", time: "Il y a 8h" },
+  { event: "Techno Night w/ Amelie Lens", tickets: 12, revenue: "180 EUR", time: "2h ago" },
+  { event: "Phoenix en Concert", tickets: 4, revenue: "180 EUR", time: "3h ago" },
+  { event: "House Music Marathon", tickets: 8, revenue: "240 EUR", time: "5h ago" },
+  { event: "Stand-Up Comedy Night", tickets: 6, revenue: "108 EUR", time: "6h ago" },
+  { event: "Stromae - Multitude Tour", tickets: 15, revenue: "735 EUR", time: "8h ago" },
 ];
 
 export default function AnalyticsPage() {
@@ -56,7 +56,7 @@ export default function AnalyticsPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
         <p className="mt-1 text-gray-500">
-          Suivez les performances de vos événements en temps réel.
+          Track your event performance in real time.
         </p>
       </div>
 
@@ -96,26 +96,26 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Ventes par jour
+            Sales per day
           </h3>
           <div className="h-64 bg-gray-50 rounded-xl flex items-center justify-center">
             <div className="text-center text-gray-400">
               <BarChart3 className="w-12 h-12 mx-auto mb-2" />
-              <p>Graphique des ventes</p>
-              <p className="text-sm">(Intégration à venir)</p>
+              <p>Sales chart</p>
+              <p className="text-sm">(Coming soon)</p>
             </div>
           </div>
         </Card>
 
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Trafic par source
+            Traffic by source
           </h3>
           <div className="h-64 bg-gray-50 rounded-xl flex items-center justify-center">
             <div className="text-center text-gray-400">
               <TrendingUp className="w-12 h-12 mx-auto mb-2" />
-              <p>Graphique du trafic</p>
-              <p className="text-sm">(Intégration à venir)</p>
+              <p>Traffic chart</p>
+              <p className="text-sm">(Coming soon)</p>
             </div>
           </div>
         </Card>
@@ -125,7 +125,7 @@ export default function AnalyticsPage() {
       <Card className="overflow-hidden">
         <div className="p-6 border-b border-gray-100">
           <h3 className="text-lg font-semibold text-gray-900">
-            Activité récente
+            Recent activity
           </h3>
         </div>
         <div className="divide-y divide-gray-100">
@@ -141,7 +141,7 @@ export default function AnalyticsPage() {
                 <div>
                   <p className="font-medium text-gray-900">{activity.event}</p>
                   <p className="text-sm text-gray-500">
-                    {activity.tickets} tickets vendus
+                    {activity.tickets} tickets sold
                   </p>
                 </div>
               </div>

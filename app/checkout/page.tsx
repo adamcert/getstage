@@ -42,7 +42,7 @@ interface FormErrors {
 // CONSTANTS
 // =============================================================================
 
-const SERVICE_FEE_PER_TICKET = 2; // 2 euros par billet
+const SERVICE_FEE_PER_TICKET = 2; // 2 euros per ticket
 
 // =============================================================================
 // VALIDATION
@@ -57,23 +57,23 @@ function validateForm(data: FormData): FormErrors {
   const errors: FormErrors = {};
 
   if (!data.email.trim()) {
-    errors.email = "L'email est requis";
+    errors.email = "Email is required";
   } else if (!validateEmail(data.email)) {
-    errors.email = "L'email n'est pas valide";
+    errors.email = "Email is not valid";
   }
 
   if (!data.fullName.trim()) {
-    errors.fullName = "Le nom complet est requis";
+    errors.fullName = "Full name is required";
   } else if (data.fullName.trim().length < 2) {
-    errors.fullName = "Le nom doit contenir au moins 2 caractères";
+    errors.fullName = "Name must contain at least 2 characters";
   }
 
   if (data.phone && !/^[+\d\s()-]{6,}$/.test(data.phone)) {
-    errors.phone = "Le numéro de téléphone n'est pas valide";
+    errors.phone = "Phone number is not valid";
   }
 
   if (!data.acceptTerms) {
-    errors.acceptTerms = "Vous devez accepter les conditions générales";
+    errors.acceptTerms = "You must accept the terms and conditions";
   }
 
   return errors;
@@ -126,9 +126,9 @@ function OrderSummary({
             <ShoppingBag className="w-5 h-5 text-primary-600" />
           </div>
           <div>
-            <h2 className="font-bold text-gray-900">Résumé de commande</h2>
+            <h2 className="font-bold text-gray-900">Order summary</h2>
             <p className="text-sm text-gray-500">
-              {totalTickets} {totalTickets > 1 ? "billets" : "billet"}
+              {totalTickets} {totalTickets > 1 ? "tickets" : "ticket"}
             </p>
           </div>
         </div>
@@ -167,14 +167,14 @@ function OrderSummary({
       {/* Totals */}
       <div className="bg-gray-50 px-6 py-4 space-y-3">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">Sous-total</span>
+          <span className="text-gray-600">Subtotal</span>
           <span className="font-medium text-gray-900">
             {formatPrice(subtotal)}
           </span>
         </div>
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">
-            Frais de service ({formatPrice(SERVICE_FEE_PER_TICKET)} x{" "}
+            Service fees ({formatPrice(SERVICE_FEE_PER_TICKET)} x{" "}
             {totalTickets})
           </span>
           <span className="font-medium text-gray-900">
@@ -195,7 +195,7 @@ function OrderSummary({
       <div className="px-6 py-4 border-t border-gray-100">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <Shield className="w-4 h-4 text-green-500" />
-          <span>Paiement sécurisé - Vos données sont protégées</span>
+          <span>Secure payment - Your data is protected</span>
         </div>
       </div>
     </div>
@@ -313,14 +313,14 @@ export default function CheckoutPage() {
 
       // Show success message
       alert(
-        `Paiement réussi ! \n\nMerci ${formData.fullName} pour votre commande de ${formatPrice(total)}.\n\nUn email de confirmation a été envoyé à ${formData.email}.`
+        `Payment successful! \n\nThank you ${formData.fullName} for your order of ${formatPrice(total)}.\n\nA confirmation email has been sent to ${formData.email}.`
       );
 
       // Clear cart and redirect
       clearCart();
       router.push("/");
     } catch {
-      alert("Une erreur est survenue lors du paiement. Veuillez réessayer.");
+      alert("An error occurred during payment. Please try again.");
     } finally {
       setIsProcessing(false);
     }
@@ -360,15 +360,15 @@ export default function CheckoutPage() {
             className="flex items-center gap-2 text-gray-600 hover:text-primary-500 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
-            <span>Retour</span>
+            <span>Back</span>
           </button>
         </motion.div>
 
         {/* Page Title */}
         <motion.div variants={itemVariants} className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Finaliser ma commande</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Complete my order</h1>
           <p className="text-gray-500 mt-2">
-            Complétez vos informations pour recevoir vos billets
+            Fill in your information to receive your tickets
           </p>
         </motion.div>
 
@@ -385,10 +385,10 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <h2 className="font-bold text-gray-900">
-                      Informations personnelles
+                      Personal information
                     </h2>
                     <p className="text-sm text-gray-500">
-                      Ces informations seront utilisées pour vos billets
+                      This information will be used for your tickets
                     </p>
                   </div>
                 </div>
@@ -409,7 +409,7 @@ export default function CheckoutPage() {
 
                   {/* Full Name */}
                   <Input
-                    label="Nom complet *"
+                    label="Full name *"
                     type="text"
                     name="fullName"
                     value={formData.fullName}
@@ -422,7 +422,7 @@ export default function CheckoutPage() {
 
                   {/* Phone */}
                   <Input
-                    label="Téléphone (optionnel)"
+                    label="Phone (optional)"
                     type="tel"
                     name="phone"
                     value={formData.phone}
@@ -453,21 +453,21 @@ export default function CheckoutPage() {
                   />
                   <div className="flex-1">
                     <span className="text-gray-700">
-                      J&apos;accepte les{" "}
+                      I accept the{" "}
                       <a
                         href="/terms"
                         className="text-primary-500 hover:underline"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        conditions générales de vente
+                        terms and conditions
                       </a>{" "}
-                      et la{" "}
+                      and the{" "}
                       <a
                         href="/privacy"
                         className="text-primary-500 hover:underline"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        politique de confidentialité
+                        privacy policy
                       </a>{" "}
                       *
                     </span>
@@ -494,7 +494,7 @@ export default function CheckoutPage() {
                     !isProcessing ? <CreditCard className="w-5 h-5" /> : undefined
                   }
                 >
-                  {isProcessing ? "Traitement en cours..." : `Payer ${formatPrice(total)}`}
+                  {isProcessing ? "Processing..." : `Pay ${formatPrice(total)}`}
                 </Button>
 
                 {/* Form validation summary */}
@@ -504,17 +504,17 @@ export default function CheckoutPage() {
                       <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                       <div className="text-sm text-amber-700">
                         <p className="font-medium">
-                          Veuillez compléter le formulaire
+                          Please complete the form
                         </p>
                         <ul className="mt-1 list-disc list-inside">
-                          {!formData.email && <li>Email requis</li>}
+                          {!formData.email && <li>Email required</li>}
                           {formData.email &&
                             !validateEmail(formData.email) && (
-                              <li>Email invalide</li>
+                              <li>Invalid email</li>
                             )}
-                          {!formData.fullName && <li>Nom complet requis</li>}
+                          {!formData.fullName && <li>Full name required</li>}
                           {!formData.acceptTerms && (
-                            <li>Acceptation des CGU requise</li>
+                            <li>Terms acceptance required</li>
                           )}
                         </ul>
                       </div>
@@ -528,7 +528,7 @@ export default function CheckoutPage() {
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-5 h-5 text-green-500" />
                       <span className="text-sm text-green-700 font-medium">
-                        Formulaire complet - Prêt à payer
+                        Form complete - Ready to pay
                       </span>
                     </div>
                   </div>

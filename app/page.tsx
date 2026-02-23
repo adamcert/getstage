@@ -8,13 +8,13 @@ import {
 } from "@/lib/data/mock-events";
 
 export const metadata: Metadata = {
-  title: "Accueil - Vivez la scène comme jamais",
+  title: "Home - Experience the stage like never before",
   description:
-    "Vivez la scène comme jamais. Concerts, clubs, culture et plus encore. Réservez vos billets en ligne en toute sécurité.",
+    "Experience the stage like never before. Concerts, clubs, culture and more. Book your tickets online securely.",
   openGraph: {
-    title: "GetStage - Vivez la scène comme jamais",
+    title: "GetStage - Experience the stage like never before",
     description:
-      "Concerts, clubs, culture et plus encore. Réservez vos billets en ligne en toute sécurité.",
+      "Concerts, clubs, culture and more. Book your tickets online securely.",
   },
 };
 

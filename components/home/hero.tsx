@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const cities = [
-  { value: "", label: "Toutes les villes" },
+  { value: "", label: "All cities" },
   { value: "paris", label: "Paris" },
   { value: "lyon", label: "Lyon" },
   { value: "marseille", label: "Marseille" },
@@ -20,22 +20,22 @@ const cities = [
 ];
 
 const categories = [
-  { value: "", label: "Toutes catégories" },
+  { value: "", label: "All categories" },
   { value: "concerts", label: "Concerts" },
-  { value: "clubs", label: "Clubs & Soirées" },
-  { value: "theatre", label: "Théâtre" },
-  { value: "spectacles", label: "Spectacles" },
+  { value: "clubs", label: "Clubs & Parties" },
+  { value: "theatre", label: "Theatre" },
+  { value: "spectacles", label: "Shows" },
   { value: "festivals", label: "Festivals" },
   { value: "sport", label: "Sport" },
-  { value: "expositions", label: "Expositions" },
-  { value: "comedie", label: "Comédie" },
+  { value: "expositions", label: "Exhibitions" },
+  { value: "comedie", label: "Comedy" },
 ];
 
 const quickFilters = [
-  { id: "tonight", label: "Ce soir", icon: Flame },
-  { id: "weekend", label: "Ce week-end", icon: Calendar },
-  { id: "free", label: "Gratuit", icon: Gift },
-  { id: "new", label: "Nouveautés", icon: Sparkles },
+  { id: "tonight", label: "Tonight", icon: Flame },
+  { id: "weekend", label: "This weekend", icon: Calendar },
+  { id: "free", label: "Free", icon: Gift },
+  { id: "new", label: "New", icon: Sparkles },
 ];
 
 const containerVariants: Variants = {
@@ -144,16 +144,16 @@ export function Hero() {
             className="text-5xl sm:text-6xl lg:text-8xl font-display font-bold text-white mb-4 tracking-tighter"
             variants={itemVariants}
           >
-            Découvrez les meilleurs{" "}
+            Discover the best{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-accent-400 to-secondary-400">
-              événements
+              events
             </span>
           </motion.h1>
           <motion.p
             className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto"
             variants={itemVariants}
           >
-            Concerts, clubs, théâtre et plus encore près de chez vous
+            Concerts, clubs, theatre and more near you
           </motion.p>
         </div>
 
@@ -169,7 +169,7 @@ export function Hero() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
               <input
                 type="text"
-                placeholder="Rechercher un événement, artiste, lieu..."
+                placeholder="Search for an event, artist, venue..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-zinc-700 bg-zinc-800/50 text-zinc-100 placeholder:text-zinc-500 focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 outline-none transition-all duration-200"
@@ -226,7 +226,7 @@ export function Hero() {
               className="lg:w-auto whitespace-nowrap"
               leftIcon={<Search className="w-5 h-5" />}
             >
-              Rechercher
+              Search
             </Button>
           </div>
         </motion.form>
@@ -269,17 +269,17 @@ export function Hero() {
         >
           <div className="flex items-center gap-2">
             <span className="font-bold text-white text-lg">10K+</span>
-            <span>événements</span>
+            <span>events</span>
           </div>
           <div className="w-px h-4 bg-white/30" />
           <div className="flex items-center gap-2">
             <span className="font-bold text-white text-lg">50+</span>
-            <span>villes</span>
+            <span>cities</span>
           </div>
           <div className="w-px h-4 bg-white/30" />
           <div className="flex items-center gap-2">
             <span className="font-bold text-white text-lg">100K+</span>
-            <span>utilisateurs</span>
+            <span>users</span>
           </div>
         </motion.div>
       </motion.div>

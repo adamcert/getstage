@@ -343,7 +343,7 @@ function SearchPageContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            Explorer les événements
+            Explore events
           </motion.h1>
 
           {/* Search Input */}
@@ -356,7 +356,7 @@ function SearchPageContent() {
               value={searchQuery}
               onChange={setSearchQuery}
               onSubmit={handleSearch}
-              placeholder="Rechercher un événement, un artiste, un lieu..."
+              placeholder="Search for an event, artist, venue..."
               className="max-w-2xl"
             />
           </motion.div>
@@ -391,7 +391,7 @@ function SearchPageContent() {
             >
               <span className="font-semibold text-zinc-100">{filteredEvents.length}</span>
               <span className="ml-1">
-                événement{filteredEvents.length !== 1 ? "s" : ""} trouvé{filteredEvents.length !== 1 ? "s" : ""}
+                event{filteredEvents.length !== 1 ? "s" : ""} found
               </span>
             </motion.div>
           </div>
@@ -409,7 +409,7 @@ function SearchPageContent() {
           animate={{ opacity: 1 }}
         >
           <span className="font-semibold text-zinc-100">{filteredEvents.length}</span>
-          {" "}événement{filteredEvents.length !== 1 ? "s" : ""} trouvé{filteredEvents.length !== 1 ? "s" : ""}
+          {" "}event{filteredEvents.length !== 1 ? "s" : ""} found
         </motion.p>
 
         <AnimatePresence mode="wait">
@@ -450,12 +450,12 @@ function SearchPageContent() {
                 <Search className="w-10 h-10 md:w-12 md:h-12 text-zinc-400" />
               </div>
               <h2 className="text-xl md:text-2xl font-bold text-zinc-100 mb-2 text-center">
-                Aucun événement trouvé
+                No events found
               </h2>
               <p className="text-zinc-500 text-center max-w-md mb-6">
                 {filters.query
-                  ? `Aucun résultat pour "${filters.query}". Essayez de modifier vos critères de recherche.`
-                  : "Aucun événement ne correspond à vos filtres. Essayez d'ajuster vos critères."}
+                  ? `No results for "${filters.query}". Try changing your search criteria.`
+                  : "No events match your filters. Try adjusting your criteria."}
               </p>
               <button
                 onClick={() => {
@@ -466,7 +466,7 @@ function SearchPageContent() {
                 className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-xl font-semibold hover:bg-primary-600 transition-colors"
               >
                 <SlidersHorizontal className="w-4 h-4" />
-                Réinitialiser les filtres
+                Reset filters
               </button>
             </motion.div>
           )}

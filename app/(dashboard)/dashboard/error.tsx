@@ -57,7 +57,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
               </motion.div>
             </motion.div>
             <h1 className="text-xl font-bold text-white text-center mt-4">
-              Erreur Dashboard
+              Dashboard Error
             </h1>
           </div>
 
@@ -69,8 +69,8 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
               transition={{ delay: 0.3 }}
             >
               <p className="text-gray-600 text-center mb-6">
-                Une erreur inattendue s'est produite lors du chargement du dashboard.
-                Veuillez réessayer ou contacter le support si le problème persiste.
+                An unexpected error occurred while loading the dashboard.
+                Please try again or contact support if the problem persists.
               </p>
 
               {/* Error Details (Development) */}
@@ -78,7 +78,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
                 <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl">
                   <div className="flex items-center gap-2 text-red-700 font-medium text-sm mb-2">
                     <Bug className="w-4 h-4" />
-                    <span>Détails techniques</span>
+                    <span>Technical details</span>
                   </div>
                   <p className="text-sm text-red-600 font-mono break-all">
                     {error.message}
@@ -99,7 +99,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
                   leftIcon={<RefreshCw className="w-4 h-4" />}
                   className="w-full"
                 >
-                  Réessayer
+                  Try again
                 </Button>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -118,7 +118,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
                       leftIcon={<Settings className="w-4 h-4" />}
                       className="w-full"
                     >
-                      Paramètres
+                      Settings
                     </Button>
                   </Link>
                 </div>
@@ -134,13 +134,13 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
             className="px-6 py-4 bg-gray-50 border-t border-gray-100"
           >
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-400">Besoin d'aide ?</span>
+              <span className="text-gray-400">Need help?</span>
               <a
                 href="mailto:support@events.com"
                 className="flex items-center gap-2 text-primary-500 hover:text-primary-600 font-medium transition-colors"
               >
                 <LifeBuoy className="w-4 h-4" />
-                Contacter le support
+                Contact support
               </a>
             </div>
           </motion.div>
@@ -153,7 +153,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
           transition={{ delay: 0.6 }}
           className="mt-6 text-center"
         >
-          <p className="text-sm text-gray-400 mb-3">Actions rapides</p>
+          <p className="text-sm text-gray-400 mb-3">Quick actions</p>
           <div className="flex flex-wrap justify-center gap-2">
             <Link href="/dashboard/events/new">
               <motion.span
@@ -161,7 +161,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
                 whileTap={{ scale: 0.95 }}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg text-sm text-gray-600 hover:text-primary-500 border border-gray-200 hover:border-primary-200 transition-colors"
               >
-                Créer un événement
+                Create an event
               </motion.span>
             </Link>
             <Link href="/dashboard/analytics">
@@ -170,7 +170,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
                 whileTap={{ scale: 0.95 }}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg text-sm text-gray-600 hover:text-primary-500 border border-gray-200 hover:border-primary-200 transition-colors"
               >
-                Voir les analytics
+                View analytics
               </motion.span>
             </Link>
             <Link href="/">
@@ -179,7 +179,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
                 whileTap={{ scale: 0.95 }}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg text-sm text-gray-600 hover:text-primary-500 border border-gray-200 hover:border-primary-200 transition-colors"
               >
-                Retour au site
+                Back to site
               </motion.span>
             </Link>
           </div>

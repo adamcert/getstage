@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Paiement",
-  description: "Finalisez votre commande en toute sécurité. Paiement sécurisé par Stripe avec protection des données.",
+  title: "Checkout",
+  description: "Complete your order securely. Secure payment by Stripe with data protection.",
   robots: {
     index: false,
     follow: false,
   },
   openGraph: {
-    title: "Paiement | GetStage",
-    description: "Finalisez votre commande en toute sécurité.",
+    title: "Checkout | GetStage",
+    description: "Complete your order securely.",
   },
 };
 

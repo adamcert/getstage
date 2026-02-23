@@ -96,13 +96,13 @@ const emptyStateVariants: Variants = {
 const categoryLabels: Record<EventCategory, string> = {
   concert: "Concert",
   dj: "DJ / Electro",
-  theatre: "Théâtre",
-  comedy: "Humour",
-  expo: "Exposition",
-  film: "Cinéma",
-  party: "Soirée",
+  theatre: "Theatre",
+  comedy: "Comedy",
+  expo: "Exhibition",
+  film: "Cinema",
+  party: "Party",
   festival: "Festival",
-  other: "Autre",
+  other: "Other",
 };
 
 // =============================================================================
@@ -193,7 +193,7 @@ function ResaleTicketCard({ ticket }: ResaleTicketCardProps) {
           <div className="mt-auto">
             <div className="flex items-end justify-between mb-3">
               <div>
-                <p className="text-xs text-zinc-500 mb-0.5">Prix de revente</p>
+                <p className="text-xs text-zinc-500 mb-0.5">Resale price</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-bold text-zinc-100">
                     {formatPrice(ticket.resalePrice)}
@@ -211,7 +211,7 @@ function ResaleTicketCard({ ticket }: ResaleTicketCardProps) {
                 <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-zinc-700 shadow-sm">
                   <Image
                     src={ticket.seller.avatar_url || "/placeholder-avatar.jpg"}
-                    alt={ticket.seller.full_name || "Vendeur"}
+                    alt={ticket.seller.full_name || "Seller"}
                     fill
                     className="object-cover"
                     sizes="32px"
@@ -225,7 +225,7 @@ function ResaleTicketCard({ ticket }: ResaleTicketCardProps) {
             <Link href={`/checkout?resale=${ticket.id}`}>
               <Button className="w-full" size="md">
                 <Ticket className="w-4 h-4" />
-                Acheter
+                Buy
               </Button>
             </Link>
           </div>
@@ -277,27 +277,27 @@ function FilterSelect({ label, value, onChange, options, icon }: FilterSelectPro
 const howItWorksSteps = [
   {
     icon: <ShieldCheck className="w-8 h-8" />,
-    title: "Transactions sécurisées",
+    title: "Secure transactions",
     description:
-      "Chaque billet est vérifié et le paiement est sécurisé par Stripe. Vous êtes protégé contre la fraude.",
+      "Every ticket is verified and payment is secured by Stripe. You are protected against fraud.",
   },
   {
     icon: <Tag className="w-8 h-8" />,
-    title: "Prix équitables",
+    title: "Fair prices",
     description:
-      "Les billets sont revendus au prix d'achat original ou moins. Jamais de spéculation.",
+      "Tickets are resold at the original purchase price or less. No speculation ever.",
   },
   {
     icon: <RefreshCcw className="w-8 h-8" />,
-    title: "Transfert instantané",
+    title: "Instant transfer",
     description:
-      "Une fois l'achat confirmé, le billet est automatiquement transféré sur votre compte.",
+      "Once the purchase is confirmed, the ticket is automatically transferred to your account.",
   },
   {
     icon: <CreditCard className="w-8 h-8" />,
-    title: "Remboursement garanti",
+    title: "Guaranteed refund",
     description:
-      "Si l'événement est annulé, vous êtes remboursé intégralement sous 48h.",
+      "If the event is cancelled, you are fully refunded within 48 hours.",
   },
 ];
 
@@ -316,13 +316,13 @@ function HowItWorksSection() {
             className="text-3xl md:text-4xl font-bold font-display text-zinc-100 mb-4"
             variants={fadeInUp}
           >
-            Comment ça marche ?
+            How it works
           </motion.h2>
           <motion.p
             className="text-zinc-500 max-w-2xl mx-auto"
             variants={fadeInUp}
           >
-            Notre système de revente sécurisé vous permet d'acheter des billets en toute confiance
+            Our secure resale system lets you buy tickets with confidence
           </motion.p>
         </div>
 
@@ -379,11 +379,11 @@ export default function ResalePage() {
 
   // Price options
   const priceOptions = [
-    { value: "25", label: "Jusqu'à 25 EUR" },
-    { value: "50", label: "Jusqu'à 50 EUR" },
-    { value: "75", label: "Jusqu'à 75 EUR" },
-    { value: "100", label: "Jusqu'à 100 EUR" },
-    { value: "150", label: "Jusqu'à 150 EUR" },
+    { value: "25", label: "Up to 25 EUR" },
+    { value: "50", label: "Up to 50 EUR" },
+    { value: "75", label: "Up to 75 EUR" },
+    { value: "100", label: "Up to 100 EUR" },
+    { value: "150", label: "Up to 150 EUR" },
   ];
 
   // Filter tickets
@@ -461,15 +461,14 @@ export default function ResalePage() {
               transition={{ duration: 0.3, delay: 0.2 }}
             >
               <ShieldCheck className="w-4 h-4 text-primary-300" />
-              <span className="text-primary-300">100% sécurisé et garanti</span>
+              <span className="text-primary-300">100% secure and guaranteed</span>
             </motion.div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-zinc-100 mb-6">
-              Revente de billets
+              Ticket Resale
             </h1>
             <p className="text-lg md:text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
-              Trouvez des billets pour des événements complets. Achetez en toute sécurité
-              auprès d'autres fans, à prix équitable.
+              Find tickets for sold-out events. Buy safely from other fans at fair prices.
             </p>
 
             {/* Stats */}
@@ -481,13 +480,13 @@ export default function ResalePage() {
             >
               <div className="text-center">
                 <p className="text-3xl md:text-4xl font-bold text-zinc-100">{mockResaleTickets.length}</p>
-                <p className="text-zinc-500 text-sm">Billets disponibles</p>
+                <p className="text-zinc-500 text-sm">Available tickets</p>
               </div>
               <div className="text-center">
                 <p className="text-3xl md:text-4xl font-bold text-zinc-100">
                   {new Set(mockResaleTickets.map((t) => t.event.id)).size}
                 </p>
-                <p className="text-zinc-500 text-sm">Événements</p>
+                <p className="text-zinc-500 text-sm">Events</p>
               </div>
               <div className="text-center">
                 <p className="text-3xl md:text-4xl font-bold text-zinc-100">0%</p>
@@ -516,7 +515,7 @@ export default function ResalePage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Rechercher un événement, un lieu, un type de billet..."
+                placeholder="Search for an event, venue, ticket type..."
                 className="w-full pl-12 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-secondary-500/20 focus:border-secondary-500 transition-all"
               />
               {searchQuery && (
@@ -532,14 +531,14 @@ export default function ResalePage() {
             {/* Filter Selects */}
             <div className="flex flex-col sm:flex-row gap-3">
               <FilterSelect
-                label="Catégorie"
+                label="Category"
                 value={selectedCategory}
                 onChange={setSelectedCategory}
                 options={availableCategories}
                 icon={<Tag className="w-4 h-4" />}
               />
               <FilterSelect
-                label="Prix max"
+                label="Max price"
                 value={maxPrice}
                 onChange={setMaxPrice}
                 options={priceOptions}
@@ -556,7 +555,7 @@ export default function ResalePage() {
                   className="flex items-center justify-center gap-2 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-zinc-300 font-medium transition-colors"
                 >
                   <X className="w-4 h-4" />
-                  Effacer ({activeFiltersCount})
+                  Clear ({activeFiltersCount})
                 </motion.button>
               )}
             </div>
@@ -571,11 +570,11 @@ export default function ResalePage() {
           >
             <p className="text-zinc-500">
               <span className="font-semibold text-zinc-100">{filteredTickets.length}</span>
-              {" "}billet{filteredTickets.length !== 1 ? "s" : ""} disponible{filteredTickets.length !== 1 ? "s" : ""}
+              {" "}ticket{filteredTickets.length !== 1 ? "s" : ""} available
             </p>
             {searchQuery && (
               <p className="text-zinc-500">
-                Résultats pour &quot;{searchQuery}&quot;
+                Results for &quot;{searchQuery}&quot;
               </p>
             )}
           </motion.div>
@@ -618,16 +617,16 @@ export default function ResalePage() {
                 <Ticket className="w-12 h-12 text-zinc-500" />
               </motion.div>
               <h2 className="text-2xl font-bold text-zinc-100 mb-2 text-center">
-                Aucun billet trouvé
+                No tickets found
               </h2>
               <p className="text-zinc-500 text-center max-w-md mb-6">
                 {searchQuery
-                  ? `Aucun résultat pour "${searchQuery}". Essayez de modifier vos critères de recherche.`
-                  : "Aucun billet ne correspond à vos filtres. Essayez d'ajuster vos critères."}
+                  ? `No results for "${searchQuery}". Try changing your search criteria.`
+                  : "No tickets match your filters. Try adjusting your criteria."}
               </p>
               <Button onClick={clearFilters} variant="outline">
                 <SlidersHorizontal className="w-4 h-4" />
-                Réinitialiser les filtres
+                Reset filters
               </Button>
             </motion.div>
           )}
@@ -653,18 +652,18 @@ export default function ResalePage() {
           <Card className="bg-gradient-to-br from-secondary-500 to-secondary-600 p-8 md:p-12 text-white text-center">
             <motion.div variants={fadeInUp}>
               <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                Vous avez des billets à revendre ?
+                Have tickets to resell?
               </h2>
               <p className="text-white/90 max-w-xl mx-auto mb-6">
-                Mettez vos billets en vente en quelques clics. C'est gratuit, sécurisé
-                et vous récupérez votre argent rapidement.
+                List your tickets for sale in a few clicks. It&apos;s free, secure,
+                and you get your money back quickly.
               </p>
               <Link href="/account/tickets">
                 <Button
                   variant="outline"
                   className="border-white text-white hover:bg-white hover:text-secondary-600"
                 >
-                  Revendre mes billets
+                  Resell my tickets
                 </Button>
               </Link>
             </motion.div>

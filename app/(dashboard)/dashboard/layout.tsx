@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Dashboard",
-  description: "Gérez vos événements, suivez vos ventes et consultez vos statistiques depuis votre tableau de bord organisateur.",
+  description: "Manage your events, track your sales and view your statistics from your organizer dashboard.",
   robots: {
     index: false,
     follow: false,
   },
   openGraph: {
     title: "Dashboard | Events",
-    description: "Gérez vos événements et suivez vos ventes depuis votre tableau de bord.",
+    description: "Manage your events and track your sales from your dashboard.",
   },
 };
 

@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Connexion",
-  description: "Connectez-vous a votre compte Events pour acceder a vos billets et gerer vos reservations.",
+  title: "Sign In",
+  description: "Sign in to your Events account to access your tickets and manage your bookings.",
   robots: {
     index: false,
     follow: true,
   },
   openGraph: {
-    title: "Connexion | Events",
-    description: "Connectez-vous a votre compte Events pour acceder a vos billets.",
+    title: "Sign In | Events",
+    description: "Sign in to your Events account to access your tickets.",
   },
 };
 

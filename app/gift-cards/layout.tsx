@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cartes Cadeaux",
-  description: "Offrez des expériences inoubliables avec nos cartes cadeaux. Valables sur tous les événements de la plateforme, un cadeau parfait pour toutes les occasions.",
+  title: "Gift Cards",
+  description: "Give unforgettable experiences with our gift cards. Valid for all events on the platform, a perfect gift for any occasion.",
   openGraph: {
-    title: "Cartes Cadeaux | GetStage",
-    description: "Offrez des expériences inoubliables avec nos cartes cadeaux. Valables sur tous les événements de la plateforme.",
+    title: "Gift Cards | GetStage",
+    description: "Give unforgettable experiences with our gift cards. Valid for all events on the platform.",
   },
 };
 

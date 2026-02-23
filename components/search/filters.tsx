@@ -40,13 +40,13 @@ interface FilterOption {
 const CATEGORIES: FilterOption[] = [
   { value: "concert", label: "Concert" },
   { value: "dj", label: "DJ & Club" },
-  { value: "theatre", label: "Théâtre" },
-  { value: "comedy", label: "Comédie" },
-  { value: "expo", label: "Exposition" },
-  { value: "film", label: "Cinéma" },
-  { value: "party", label: "Soirée" },
+  { value: "theatre", label: "Theatre" },
+  { value: "comedy", label: "Comedy" },
+  { value: "expo", label: "Exhibition" },
+  { value: "film", label: "Cinema" },
+  { value: "party", label: "Party" },
   { value: "festival", label: "Festival" },
-  { value: "other", label: "Autre" },
+  { value: "other", label: "Other" },
 ];
 
 const CITIES: FilterOption[] = [
@@ -63,7 +63,7 @@ const CITIES: FilterOption[] = [
 ];
 
 const PRICE_RANGES: FilterOption[] = [
-  { value: "free", label: "Gratuit" },
+  { value: "free", label: "Free" },
   { value: "0-20", label: "0 - 20 EUR" },
   { value: "20-50", label: "20 - 50 EUR" },
   { value: "50+", label: "50 EUR+" },
@@ -359,19 +359,19 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
   };
 
   const getSelectedDateLabel = () => {
-    if (filters.isTonight) return "Ce soir";
+    if (filters.isTonight) return "Tonight";
     if (filters.dateFrom) {
       const date = new Date(filters.dateFrom);
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      if (date.toDateString() === tomorrow.toDateString()) return "Demain";
-      return "Ce week-end";
+      if (date.toDateString() === tomorrow.toDateString()) return "Tomorrow";
+      return "This weekend";
     }
     return undefined;
   };
 
   const getSelectedPriceLabel = () => {
-    if (filters.isFree) return "Gratuit";
+    if (filters.isFree) return "Free";
     if (filters.priceMin !== undefined && filters.priceMax !== undefined) {
       return `${filters.priceMin} - ${filters.priceMax} EUR`;
     }
@@ -386,7 +386,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
         trigger={
           <FilterButton
             icon={<Tag className="w-4 h-4" />}
-            label="Catégorie"
+            label="Category"
             value={getSelectedCategoryLabel()}
             isActive={!!filters.category}
           />
@@ -402,7 +402,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
               !filters.category ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Toutes les catégories</span>
+            <span className="flex-1">All categories</span>
             {!filters.category && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           {CATEGORIES.map((category) => (
@@ -428,7 +428,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
         trigger={
           <FilterButton
             icon={<MapPin className="w-4 h-4" />}
-            label="Ville"
+            label="City"
             value={getSelectedCityLabel()}
             isActive={!!filters.city}
           />
@@ -444,7 +444,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
               !filters.city ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Toutes les villes</span>
+            <span className="flex-1">All cities</span>
             {!filters.city && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           {CITIES.map((city) => (
@@ -495,7 +495,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
                 : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Toutes les dates</span>
+            <span className="flex-1">All dates</span>
             {!filters.dateFrom && !filters.isTonight && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           <button
@@ -505,30 +505,30 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
               filters.isTonight ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Ce soir</span>
+            <span className="flex-1">Tonight</span>
             {filters.isTonight && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           <button
             onClick={() => handleDateChange("tomorrow")}
             className={cn(
               "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
-              getSelectedDateLabel() === "Demain" ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
+              getSelectedDateLabel() === "Tomorrow" ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Demain</span>
-            {getSelectedDateLabel() === "Demain" && <Check className="w-4 h-4 text-secondary-400" />}
+            <span className="flex-1">Tomorrow</span>
+            {getSelectedDateLabel() === "Tomorrow" && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           <button
             onClick={() => handleDateChange("weekend")}
             className={cn(
               "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
-              getSelectedDateLabel() === "Ce week-end"
+              getSelectedDateLabel() === "This weekend"
                 ? "bg-secondary-500/10 text-secondary-300"
                 : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Ce week-end</span>
-            {getSelectedDateLabel() === "Ce week-end" && <Check className="w-4 h-4 text-secondary-400" />}
+            <span className="flex-1">This weekend</span>
+            {getSelectedDateLabel() === "This weekend" && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
         </div>
       </Dropdown>
@@ -538,7 +538,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
         trigger={
           <FilterButton
             icon={<Euro className="w-4 h-4" />}
-            label="Prix"
+            label="Price"
             value={getSelectedPriceLabel()}
             isActive={!!(filters.priceMin !== undefined || filters.priceMax !== undefined || filters.isFree)}
           />
@@ -556,7 +556,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
                 : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Tous les prix</span>
+            <span className="flex-1">All prices</span>
             {!filters.priceMin && !filters.priceMax && !filters.isFree && (
               <Check className="w-4 h-4 text-secondary-400" />
             )}
@@ -595,14 +595,14 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
             className="flex items-center gap-2"
           >
             <Badge variant="hot" className="px-3 py-1">
-              {activeFiltersCount} filtre{activeFiltersCount > 1 ? "s" : ""}
+              {activeFiltersCount} filter{activeFiltersCount > 1 ? "s" : ""}
             </Badge>
             <button
               onClick={resetFilters}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              Réinitialiser
+              Reset
             </button>
           </motion.div>
         )}
@@ -709,7 +709,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
             <div className="flex items-center justify-between px-4 pb-4 border-b border-zinc-800">
               <div className="flex items-center gap-2">
                 <Filter className="w-5 h-5 text-zinc-400" />
-                <h2 className="text-lg font-semibold text-zinc-100">Filtres</h2>
+                <h2 className="text-lg font-semibold text-zinc-100">Filters</h2>
                 {activeFiltersCount > 0 && (
                   <Badge variant="hot" className="px-2 py-0.5 text-xs">
                     {activeFiltersCount}
@@ -730,7 +730,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
               <div>
                 <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-100 mb-3">
                   <Tag className="w-4 h-4 text-zinc-500" />
-                  Catégorie
+                  Category
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -742,7 +742,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Toutes
+                    All
                   </button>
                   {CATEGORIES.map((category) => (
                     <button
@@ -770,7 +770,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
               <div>
                 <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-100 mb-3">
                   <MapPin className="w-4 h-4 text-zinc-500" />
-                  Ville
+                  City
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -782,7 +782,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Toutes
+                    All
                   </button>
                   {CITIES.map((city) => (
                     <button
@@ -824,7 +824,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Toutes
+                    All
                   </button>
                   <button
                     onClick={() => handleDatePreset("tonight")}
@@ -835,7 +835,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Ce soir
+                    Tonight
                   </button>
                   <button
                     onClick={() => handleDatePreset("tomorrow")}
@@ -846,7 +846,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Demain
+                    Tomorrow
                   </button>
                   <button
                     onClick={() => handleDatePreset("weekend")}
@@ -855,7 +855,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                       "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Ce week-end
+                    This weekend
                   </button>
                 </div>
               </div>
@@ -864,7 +864,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
               <div>
                 <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-100 mb-3">
                   <Euro className="w-4 h-4 text-zinc-500" />
-                  Prix
+                  Price
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -883,7 +883,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Tous
+                    All
                   </button>
                   {PRICE_RANGES.map((range) => {
                     const isSelected =
@@ -915,10 +915,10 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
             <div className="sticky bottom-0 bg-zinc-900 border-t border-zinc-800 px-4 py-4 flex gap-3">
               <Button variant="outline" className="flex-1" onClick={handleReset}>
                 <RotateCcw className="w-4 h-4 mr-2" />
-                Réinitialiser
+                Reset
               </Button>
               <Button variant="primary" className="flex-1" onClick={handleApply}>
-                Appliquer{activeFiltersCount > 0 && ` (${activeFiltersCount})`}
+                Apply{activeFiltersCount > 0 && ` (${activeFiltersCount})`}
               </Button>
             </div>
           </motion.div>
@@ -952,7 +952,7 @@ export function FilterTrigger({ activeCount, onClick, className }: FilterTrigger
       )}
     >
       <Filter className={cn("w-4 h-4", activeCount > 0 ? "text-secondary-400" : "text-zinc-500")} />
-      <span>Filtres</span>
+      <span>Filters</span>
       {activeCount > 0 && (
         <Badge variant="hot" className="px-2 py-0.5 text-xs ml-1">
           {activeCount}

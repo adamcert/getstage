@@ -62,15 +62,15 @@ const headerVariants: Variants = {
  * @example
  * // Default variant
  * <EventSection
- *   title="Ce soir"
- *   subtitle="Les événements du jour"
+ *   title="Tonight"
+ *   subtitle="Today's events"
  *   events={tonightEvents}
  *   viewAllLink="/search?filter=tonight"
  * />
  *
  * // Featured variant
  * <EventSection
- *   title="Coups de cœur"
+ *   title="Featured"
  *   events={featuredEvents}
  *   variant="featured"
  * />
@@ -116,7 +116,7 @@ export function EventSection({
               href={viewAllLink}
               className="hidden sm:flex items-center gap-1 text-accent-400 hover:text-accent-300 font-medium transition-colors group"
             >
-              Voir tout
+              See all
               <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </Link>
           )}
@@ -152,7 +152,7 @@ export function EventSection({
               href={viewAllLink}
               className="inline-flex items-center gap-1 text-accent-400 hover:text-accent-300 font-medium transition-colors"
             >
-              Voir tout
+              See all
               <ChevronRight className="w-5 h-5" />
             </Link>
           </div>

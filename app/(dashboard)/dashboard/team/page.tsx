@@ -32,36 +32,36 @@ const mockTeam: TeamMember[] = [
     name: "Jean Dupont",
     email: "jean@eventplatform.com",
     role: "owner",
-    joinedAt: "Janvier 2024",
+    joinedAt: "January 2024",
   },
   {
     id: "2",
     name: "Marie Martin",
     email: "marie@eventplatform.com",
     role: "admin",
-    joinedAt: "Février 2024",
+    joinedAt: "February 2024",
   },
   {
     id: "3",
     name: "Pierre Bernard",
     email: "pierre@eventplatform.com",
     role: "editor",
-    joinedAt: "Mars 2024",
+    joinedAt: "March 2024",
   },
   {
     id: "4",
     name: "Sophie Leroy",
     email: "sophie@eventplatform.com",
     role: "viewer",
-    joinedAt: "Avril 2024",
+    joinedAt: "April 2024",
   },
 ];
 
 const roleLabels: Record<TeamMember["role"], { label: string; color: string }> = {
-  owner: { label: "Propriétaire", color: "bg-purple-100 text-purple-700" },
+  owner: { label: "Owner", color: "bg-purple-100 text-purple-700" },
   admin: { label: "Admin", color: "bg-blue-100 text-blue-700" },
-  editor: { label: "Éditeur", color: "bg-green-100 text-green-700" },
-  viewer: { label: "Lecteur", color: "bg-gray-100 text-gray-700" },
+  editor: { label: "Editor", color: "bg-green-100 text-green-700" },
+  viewer: { label: "Viewer", color: "bg-gray-100 text-gray-700" },
 };
 
 export default function TeamPage() {
@@ -78,20 +78,20 @@ export default function TeamPage() {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Équipe</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Team</h1>
           <p className="mt-1 text-gray-500">
-            Gérez les membres de votre équipe et leurs permissions.
+            Manage your team members and their permissions.
           </p>
         </div>
         <Button leftIcon={<UserPlus className="w-5 h-5" />}>
-          Inviter un membre
+          Invite a member
         </Button>
       </div>
 
       {/* Search */}
       <div className="w-full sm:w-72">
         <Input
-          placeholder="Rechercher un membre..."
+          placeholder="Search for a member..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           leftIcon={<Search className="w-5 h-5" />}
@@ -105,13 +105,13 @@ export default function TeamPage() {
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                  Membre
+                  Member
                 </th>
                 <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                  Rôle
+                  Role
                 </th>
                 <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                  Rejoint le
+                  Joined
                 </th>
                 <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
                   Actions
@@ -172,14 +172,14 @@ export default function TeamPage() {
                                   onClick={() => setActiveMenu(null)}
                                 >
                                   <Edit className="w-4 h-4" />
-                                  Modifier le rôle
+                                  Change role
                                 </button>
                                 <button
                                   className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                   onClick={() => setActiveMenu(null)}
                                 >
                                   <Trash2 className="w-4 h-4" />
-                                  Retirer
+                                  Remove
                                 </button>
                               </div>
                             </>
@@ -224,12 +224,12 @@ export default function TeamPage() {
         <div className="flex items-center gap-3 mb-4">
           <Mail className="w-5 h-5 text-gray-400" />
           <h3 className="text-lg font-semibold text-gray-900">
-            Invitations en attente
+            Pending invitations
           </h3>
         </div>
         <div className="text-center py-8 text-gray-500">
           <Users className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-          <p>Aucune invitation en attente</p>
+          <p>No pending invitations</p>
         </div>
       </Card>
     </div>

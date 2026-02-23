@@ -16,7 +16,7 @@ export default function Loading() {
 
         {/* Loading text */}
         <p className="text-gray-500 font-medium animate-pulse">
-          Chargement...
+          Loading...
         </p>
       </div>
     </div>

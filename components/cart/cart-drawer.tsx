@@ -58,14 +58,14 @@ function EmptyCart({ onClose }: { onClose: () => void }) {
         <ShoppingBag className="w-10 h-10 text-zinc-400" />
       </div>
       <h3 className="text-lg font-semibold text-zinc-100 mb-2">
-        Votre panier est vide
+        Your cart is empty
       </h3>
       <p className="text-zinc-500 mb-6 max-w-xs">
-        Explorez nos événements et ajoutez des billets à votre panier pour
-        continuer.
+        Explore our events and add tickets to your cart to
+        continue.
       </p>
       <Button variant="primary" onClick={onClose}>
-        Découvrir les événements
+        Discover events
       </Button>
     </motion.div>
   );
@@ -177,10 +177,10 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     id="cart-drawer-title"
                     className="text-lg font-bold text-zinc-100"
                   >
-                    Mon panier
+                    My cart
                   </h2>
                   <p className="text-sm text-zinc-500">
-                    {itemCount} {itemCount > 1 ? "articles" : "article"}
+                    {itemCount} {itemCount > 1 ? "items" : "item"}
                   </p>
                 </div>
               </div>
@@ -189,7 +189,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 size="sm"
                 onClick={onClose}
                 className="text-zinc-500 hover:text-zinc-300"
-                aria-label="Fermer le panier"
+                aria-label="Close cart"
               >
                 <X className="w-5 h-5" />
               </Button>
@@ -230,7 +230,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         className="flex items-center gap-2 text-sm text-zinc-500 hover:text-primary-400 transition-colors mx-auto"
                       >
                         <Trash2 className="w-4 h-4" />
-                        Vider le panier
+                        Clear cart
                       </button>
                     </motion.div>
                   )}
@@ -284,7 +284,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   onClick={handleCheckout}
                   rightIcon={<ArrowRight className="w-5 h-5" />}
                 >
-                  Passer la commande
+                  Place order
                 </Button>
 
                 {/* Continue Shopping Link */}
@@ -293,7 +293,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   onClick={onClose}
                   className="w-full text-center text-sm text-zinc-500 hover:text-primary-400 transition-colors"
                 >
-                  Continuer mes achats
+                  Continue shopping
                 </button>
               </motion.div>
             )}
