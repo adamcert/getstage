@@ -1,15 +1,21 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Menu, X, User, ShoppingBag, Heart, PartyPopper, Globe } from "lucide-react";
+import { Search, Menu, X, User, ShoppingBag, Heart, PartyPopper, ChevronDown, Check } from "lucide-react";
 import { Button, Avatar } from "@/components/ui";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { useCartStore, selectCartItemCount } from "@/stores/cart-store";
 import { useTranslation, useLocale } from "@/hooks/use-translation";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/i18n";
+
+const LANGUAGES: { code: Locale; flag: string; label: string; short: string }[] = [
+  { code: "fr", flag: "🇫🇷", label: "Français", short: "FR" },
+  { code: "en", flag: "🇬🇧", label: "English", short: "EN" },
+];
 
 export function Header() {
   const pathname = usePathname();
@@ -20,7 +26,23 @@ export function Header() {
   const [user, setUser] = useState<any>(null); // TODO: Get from auth
 
   const { t } = useTranslation("header");
-  const { locale, toggleLocale } = useLocale();
+  const { locale, setLocale } = useLocale();
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+
+  // Close language dropdown on click outside
+  useEffect(() => {
+    if (!langOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [langOpen]);
+
+  const currentLang = LANGUAGES.find((l) => l.code === locale) ?? LANGUAGES[0];
 
   const navLinks = [
     { href: "/", label: t("home") },
@@ -141,15 +163,52 @@ export function Header() {
               </Link>
             )}
 
-            {/* Language toggle */}
-            <button
-              onClick={toggleLocale}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors border border-zinc-800 hover:border-zinc-700"
-              aria-label={locale === "fr" ? "Switch to English" : "Passer en Français"}
-            >
-              <Globe className="w-3.5 h-3.5" />
-              {locale === "fr" ? "EN" : "FR"}
-            </button>
+            {/* Language selector */}
+            <div ref={langRef} className="relative">
+              <button
+                onClick={() => setLangOpen(!langOpen)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors border border-zinc-800 hover:border-zinc-700"
+                aria-label="Change language"
+                aria-expanded={langOpen}
+              >
+                <span className="text-sm leading-none">{currentLang.flag}</span>
+                {currentLang.short}
+                <ChevronDown className={cn("w-3 h-3 transition-transform", langOpen && "rotate-180")} />
+              </button>
+              <AnimatePresence>
+                {langOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -4, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 mt-2 w-40 rounded-xl bg-zinc-900 border border-zinc-800 shadow-xl shadow-black/40 overflow-hidden z-50"
+                  >
+                    {LANGUAGES.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => {
+                          setLocale(lang.code);
+                          setLangOpen(false);
+                        }}
+                        className={cn(
+                          "w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm transition-colors",
+                          locale === lang.code
+                            ? "text-zinc-100 bg-zinc-800/60"
+                            : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/40"
+                        )}
+                      >
+                        <span className="text-base leading-none">{lang.flag}</span>
+                        <span className="font-medium">{lang.label}</span>
+                        {locale === lang.code && (
+                          <Check className="w-3.5 h-3.5 text-secondary-400 ml-auto" />
+                        )}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* Mobile menu button */}
             <Button
