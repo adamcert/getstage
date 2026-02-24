@@ -12,6 +12,9 @@ import {
   Tent,
   Trophy,
   Film,
+  Presentation,
+  Store,
+  Users,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -20,7 +23,7 @@ import { useTranslation } from "@/hooks/use-translation";
 
 interface Category {
   id: string;
-  labelKey: "concert" | "dj" | "theatre" | "comedy" | "expo" | "festival" | "sport" | "cinema";
+  labelKey: "concert" | "dj" | "theatre" | "comedy" | "expo" | "festival" | "sport" | "cinema" | "conference" | "salon" | "teamBuilding";
   icon: React.ComponentType<{ className?: string }>;
   gradient: string;
   hoverGradient: string;
@@ -82,6 +85,27 @@ const categoryDefs: Category[] = [
     icon: Film,
     gradient: "from-indigo-500/10 to-indigo-500/5",
     hoverGradient: "from-indigo-500 to-indigo-600",
+  },
+  {
+    id: "conference",
+    labelKey: "conference",
+    icon: Presentation,
+    gradient: "from-sky-500/10 to-sky-500/5",
+    hoverGradient: "from-sky-500 to-sky-600",
+  },
+  {
+    id: "salon",
+    labelKey: "salon",
+    icon: Store,
+    gradient: "from-teal-500/10 to-teal-500/5",
+    hoverGradient: "from-teal-500 to-teal-600",
+  },
+  {
+    id: "team-building",
+    labelKey: "teamBuilding",
+    icon: Users,
+    gradient: "from-violet-500/10 to-violet-500/5",
+    hoverGradient: "from-violet-500 to-violet-600",
   },
 ];
 

@@ -25,7 +25,7 @@ export function Footer() {
       { href: "/search?category=expo", label: tCat("expos") },
     ],
     services: [
-      { href: "/resale", label: t("ticketResale") },
+      { href: "/corporate", label: t("corporateEvents") },
       { href: "/gift-cards", label: tHeader("giftCards") },
       { href: "/for-organizers", label: t("forOrganizers") },
       { href: "/pricing", label: t("pricing") },

@@ -38,7 +38,7 @@ interface FilterOption {
 // CONSTANTS
 // =============================================================================
 
-const CATEGORY_KEYS: { value: string; labelKey: "concert" | "dj" | "theatre" | "comedy" | "expo" | "cinema" | "party" | "festival" | "other" }[] = [
+const CATEGORY_KEYS: { value: string; labelKey: "concert" | "dj" | "theatre" | "comedy" | "expo" | "cinema" | "party" | "festival" | "conference" | "salon" | "seminar" | "teamBuilding" | "gala" | "other" }[] = [
   { value: "concert", labelKey: "concert" },
   { value: "dj", labelKey: "dj" },
   { value: "theatre", labelKey: "theatre" },
@@ -47,6 +47,11 @@ const CATEGORY_KEYS: { value: string; labelKey: "concert" | "dj" | "theatre" | "
   { value: "film", labelKey: "cinema" },
   { value: "party", labelKey: "party" },
   { value: "festival", labelKey: "festival" },
+  { value: "conference", labelKey: "conference" },
+  { value: "salon", labelKey: "salon" },
+  { value: "seminar", labelKey: "seminar" },
+  { value: "team-building", labelKey: "teamBuilding" },
+  { value: "gala", labelKey: "gala" },
   { value: "other", labelKey: "other" },
 ];
 
