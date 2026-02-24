@@ -18,6 +18,10 @@ import {
   Film,
   Frame,
   Flame,
+  Presentation,
+  Store,
+  Users,
+  PartyPopper,
 } from "lucide-react";
 import { cn, formatDate, formatTime, formatPrice } from "@/lib/utils";
 import { useTranslation } from "@/hooks/use-translation";
@@ -68,12 +72,14 @@ const stagger: Variants = {
 const demoCategoryDefs = [
   { id: "concert", labelKey: "concerts" as const, icon: Music, color: "from-primary-500 to-rose-600" },
   { id: "dj", labelKey: "dj" as const, icon: Disc3, color: "from-secondary-500 to-purple-600" },
+  { id: "conference", labelKey: "conference" as const, icon: Presentation, color: "from-sky-500 to-blue-600" },
+  { id: "salon", labelKey: "salon" as const, icon: Store, color: "from-teal-500 to-emerald-600" },
   { id: "theatre", labelKey: "theatre" as const, icon: Drama, color: "from-fuchsia-500 to-pink-600" },
-  { id: "comedy", labelKey: "comedy" as const, icon: Laugh, color: "from-pink-500 to-rose-600" },
   { id: "festival", labelKey: "festivals" as const, icon: Tent, color: "from-emerald-500 to-green-600" },
-  { id: "sport", labelKey: "sport" as const, icon: Trophy, color: "from-rose-500 to-pink-600" },
+  { id: "gala", labelKey: "gala" as const, icon: PartyPopper, color: "from-amber-500 to-orange-600" },
+  { id: "team-building", labelKey: "teamBuilding" as const, icon: Users, color: "from-violet-500 to-purple-600" },
+  { id: "comedy", labelKey: "comedy" as const, icon: Laugh, color: "from-pink-500 to-rose-600" },
   { id: "expo", labelKey: "expos" as const, icon: Frame, color: "from-indigo-500 to-blue-600" },
-  { id: "film", labelKey: "cinema" as const, icon: Film, color: "from-cyan-500 to-sky-600" },
 ];
 
 // ═══════════════════════════════════════════════════════════════════
@@ -191,7 +197,7 @@ export function DemoHome({
               style={displayFont}
               className="text-xs sm:text-sm tracking-[0.35em] uppercase text-zinc-500 font-medium"
             >
-              Concerts &middot; Clubs &middot; Culture
+              {td("concertsCulture")} &middot; {td("conferencesEvents")}
             </span>
             <span className="h-px flex-1 max-w-20 bg-gradient-to-l from-transparent to-zinc-700" />
           </motion.div>
@@ -381,7 +387,7 @@ export function DemoHome({
 
           <motion.div
             variants={stagger}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4"
+            className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4"
           >
             {demoCategoryDefs.map((cat) => {
               const Icon = cat.icon;

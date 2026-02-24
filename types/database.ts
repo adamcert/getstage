@@ -4,8 +4,8 @@
 
 export type UserRole = "user" | "organizer" | "admin";
 export type UserPlan = "free" | "pro" | "business";
-export type VenueCategory = "bar" | "club" | "restaurant" | "theatre" | "gallery" | "concert_hall" | "other";
-export type EventCategory = "concert" | "dj" | "theatre" | "comedy" | "expo" | "film" | "party" | "festival" | "other";
+export type VenueCategory = "bar" | "club" | "restaurant" | "theatre" | "gallery" | "concert_hall" | "convention_center" | "other";
+export type EventCategory = "concert" | "dj" | "theatre" | "comedy" | "expo" | "film" | "party" | "festival" | "conference" | "salon" | "seminar" | "team-building" | "gala" | "other";
 export type EventStatus = "draft" | "preview" | "published" | "cancelled" | "past";
 export type OrderStatus = "pending" | "paid" | "refunded" | "cancelled";
 export type TicketStatus = "valid" | "used" | "resale" | "transferred" | "refunded";

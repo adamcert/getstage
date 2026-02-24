@@ -522,6 +522,7 @@ export const translations = {
     exploreEvents: { fr: "Explorer les événements", en: "Explore events" },
     searchPlaceholder: { fr: "Rechercher un événement, artiste, lieu...", en: "Search for an event, artist, venue..." },
     concertsCulture: { fr: "Concerts · Clubs · Culture", en: "Concerts · Clubs · Culture" },
+    conferencesEvents: { fr: "Salons · Conférences · Corporate", en: "Trade Shows · Conferences · Corporate" },
     clubsDj: { fr: "Clubs & DJ", en: "Clubs & DJ" },
   },
 
