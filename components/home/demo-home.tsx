@@ -105,6 +105,24 @@ export function DemoHome({
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 150]);
 
+  // Interleave entertainment and corporate events for each section
+  const corporateCategories = ["conference", "salon", "seminar", "team-building", "gala"];
+  const isCorporate = (e: Event) => corporateCategories.includes(e.category);
+
+  const mixEvents = (events: Event[], max: number) => {
+    const entertainment = events.filter((e) => !isCorporate(e));
+    const corporate = events.filter((e) => isCorporate(e));
+    const mixed: Event[] = [];
+    let ei = 0, ci = 0;
+    while (mixed.length < max && (ei < entertainment.length || ci < corporate.length)) {
+      // 2 entertainment, then 1 corporate
+      if (ei < entertainment.length && mixed.length < max) mixed.push(entertainment[ei++]);
+      if (ei < entertainment.length && mixed.length < max) mixed.push(entertainment[ei++]);
+      if (ci < corporate.length && mixed.length < max) mixed.push(corporate[ci++]);
+    }
+    return mixed;
+  };
+
   const spotlightEvents =
     tonightEvents.length > 0 ? tonightEvents : allEvents.slice(0, 5);
   const spotlightTitle =
@@ -113,6 +131,9 @@ export function DemoHome({
     tonightEvents.length > 0
       ? td("tonightSub")
       : td("dontMissSub");
+
+  const mixedFeatured = mixEvents(featuredEvents, 5);
+  const mixedNew = mixEvents(newEvents, 6);
 
   return (
     <div className="bg-[#050507] -mt-16">
@@ -353,7 +374,7 @@ export function DemoHome({
             className="grid grid-cols-1 md:grid-cols-3 gap-4"
             style={{ gridAutoRows: "240px" }}
           >
-            {featuredEvents.slice(0, 5).map((event, i) => (
+            {mixedFeatured.map((event, i) => (
               <BentoCard
                 key={event.id}
                 event={event}
@@ -458,7 +479,7 @@ export function DemoHome({
           </motion.div>
 
           <motion.div variants={stagger} className="space-y-1">
-            {newEvents.slice(0, 6).map((event, i) => (
+            {mixedNew.map((event, i) => (
               <motion.div key={event.id} variants={fadeUp}>
                 <RankedRow event={event} rank={i + 1} />
               </motion.div>
