@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/lib/auth/actions";
+import { useTranslation } from "@/hooks/use-translation";
 import {
   CalendarDays,
   BarChart3,
@@ -34,6 +35,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { t: td } = useTranslation("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
@@ -116,7 +118,7 @@ export default function DashboardLayout({
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-zinc-500 hover:bg-zinc-800 hover:text-zinc-100 transition-all duration-200"
             >
               <Home className="w-5 h-5 text-zinc-600" />
-              Retour au site
+              {td("backToSite")}
             </Link>
           </div>
         </div>
@@ -137,7 +139,7 @@ export default function DashboardLayout({
 
             {/* Page title - hidden on mobile */}
             <div className="hidden lg:block">
-              <h1 className="text-lg font-semibold text-zinc-100">Dashboard</h1>
+              <h1 className="text-lg font-semibold text-zinc-100">{td("dashboard")}</h1>
             </div>
 
             {/* Right side */}
@@ -156,7 +158,7 @@ export default function DashboardLayout({
                 >
                   <Avatar size="sm" fallback="U" />
                   <span className="hidden sm:block text-sm font-medium text-zinc-300">
-                    Utilisateur
+                    {td("user")}
                   </span>
                   <ChevronDown
                     className={cn(
@@ -176,7 +178,7 @@ export default function DashboardLayout({
                     <div className="absolute right-0 z-50 mt-2 w-56 bg-zinc-900 rounded-xl shadow-lg border border-zinc-800 py-2">
                       <div className="px-4 py-3 border-b border-zinc-800">
                         <p className="text-sm font-medium text-zinc-100">
-                          Utilisateur
+                          {td("user")}
                         </p>
                         <p className="text-xs text-zinc-500 truncate">
                           user@example.com
@@ -189,7 +191,7 @@ export default function DashboardLayout({
                           onClick={() => setUserMenuOpen(false)}
                         >
                           <Settings className="w-4 h-4 text-zinc-400" />
-                          Paramètres
+                          {td("settings")}
                         </Link>
                       </div>
                       <div className="border-t border-zinc-800 py-1">
@@ -201,7 +203,7 @@ export default function DashboardLayout({
                           className="flex items-center gap-3 w-full px-4 py-2 text-sm text-primary-400 hover:bg-primary-500/10"
                         >
                           <LogOut className="w-4 h-4" />
-                          Déconnexion
+                          {td("signOut")}
                         </button>
                       </div>
                     </div>

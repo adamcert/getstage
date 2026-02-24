@@ -27,6 +27,7 @@ import {
   getResaleCategories,
   type ResaleTicket,
 } from "@/lib/data/mock-resale";
+import { useTranslation } from "@/hooks/use-translation";
 import type { EventCategory } from "@/types/database";
 
 // =============================================================================
@@ -114,6 +115,9 @@ interface ResaleTicketCardProps {
 }
 
 function ResaleTicketCard({ ticket }: ResaleTicketCardProps) {
+  const { t } = useTranslation("resale");
+  const { t: tcat } = useTranslation("categories");
+  const { t: tc } = useTranslation("common");
   const discount = calculateDiscount(ticket.originalPrice, ticket.resalePrice);
   const hasDiscount = discount > 0;
 
@@ -193,7 +197,7 @@ function ResaleTicketCard({ ticket }: ResaleTicketCardProps) {
           <div className="mt-auto">
             <div className="flex items-end justify-between mb-3">
               <div>
-                <p className="text-xs text-zinc-500 mb-0.5">Prix de revente</p>
+                <p className="text-xs text-zinc-500 mb-0.5">{t("resalePrice")}</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-bold text-zinc-100">
                     {formatPrice(ticket.resalePrice)}
@@ -211,7 +215,7 @@ function ResaleTicketCard({ ticket }: ResaleTicketCardProps) {
                 <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-zinc-700 shadow-sm">
                   <Image
                     src={ticket.seller.avatar_url || "/placeholder-avatar.jpg"}
-                    alt={ticket.seller.full_name || "Vendeur"}
+                    alt={ticket.seller.full_name || t("seller")}
                     fill
                     className="object-cover"
                     sizes="32px"
@@ -225,7 +229,7 @@ function ResaleTicketCard({ ticket }: ResaleTicketCardProps) {
             <Link href={`/checkout?resale=${ticket.id}`}>
               <Button className="w-full" size="md">
                 <Ticket className="w-4 h-4" />
-                Acheter
+                {tc("buy")}
               </Button>
             </Link>
           </div>
@@ -302,6 +306,7 @@ const howItWorksSteps = [
 ];
 
 function HowItWorksSection() {
+  const { t } = useTranslation("resale");
   return (
     <motion.section
       className="py-16 bg-zinc-900"
@@ -316,7 +321,7 @@ function HowItWorksSection() {
             className="text-3xl md:text-4xl font-bold font-display text-zinc-100 mb-4"
             variants={fadeInUp}
           >
-            Comment ça marche ?
+            {t("howItWorks")}
           </motion.h2>
           <motion.p
             className="text-zinc-500 max-w-2xl mx-auto"
@@ -363,6 +368,9 @@ function HowItWorksSection() {
 // =============================================================================
 
 export default function ResalePage() {
+  const { t } = useTranslation("resale");
+  const { t: tcat } = useTranslation("categories");
+  const { t: tc } = useTranslation("common");
   // Filter State
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -379,11 +387,11 @@ export default function ResalePage() {
 
   // Price options
   const priceOptions = [
-    { value: "25", label: "Jusqu'à 25 EUR" },
-    { value: "50", label: "Jusqu'à 50 EUR" },
-    { value: "75", label: "Jusqu'à 75 EUR" },
-    { value: "100", label: "Jusqu'à 100 EUR" },
-    { value: "150", label: "Jusqu'à 150 EUR" },
+    { value: "25", label: `${t("upTo")} 25 EUR` },
+    { value: "50", label: `${t("upTo")} 50 EUR` },
+    { value: "75", label: `${t("upTo")} 75 EUR` },
+    { value: "100", label: `${t("upTo")} 100 EUR` },
+    { value: "150", label: `${t("upTo")} 150 EUR` },
   ];
 
   // Filter tickets
@@ -461,15 +469,14 @@ export default function ResalePage() {
               transition={{ duration: 0.3, delay: 0.2 }}
             >
               <ShieldCheck className="w-4 h-4 text-primary-300" />
-              <span className="text-primary-300">100% sécurisé et garanti</span>
+              <span className="text-primary-300">{t("heroSubtitle")}</span>
             </motion.div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-zinc-100 mb-6">
-              Revente de billets
+              {t("title")}
             </h1>
             <p className="text-lg md:text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
-              Trouvez des billets pour des événements complets. Achetez en toute sécurité
-              auprès d'autres fans, à prix équitable.
+              {t("heroDesc")}
             </p>
 
             {/* Stats */}
@@ -481,7 +488,7 @@ export default function ResalePage() {
             >
               <div className="text-center">
                 <p className="text-3xl md:text-4xl font-bold text-zinc-100">{mockResaleTickets.length}</p>
-                <p className="text-zinc-500 text-sm">Billets disponibles</p>
+                <p className="text-zinc-500 text-sm">{t("availableTickets")}</p>
               </div>
               <div className="text-center">
                 <p className="text-3xl md:text-4xl font-bold text-zinc-100">
@@ -491,7 +498,7 @@ export default function ResalePage() {
               </div>
               <div className="text-center">
                 <p className="text-3xl md:text-4xl font-bold text-zinc-100">0%</p>
-                <p className="text-zinc-500 text-sm">Commission</p>
+                <p className="text-zinc-500 text-sm">{t("commission")}</p>
               </div>
             </motion.div>
           </motion.div>
@@ -516,7 +523,7 @@ export default function ResalePage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Rechercher un événement, un lieu, un type de billet..."
+                placeholder={t("searchPlaceholder")}
                 className="w-full pl-12 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-secondary-500/20 focus:border-secondary-500 transition-all"
               />
               {searchQuery && (
@@ -532,14 +539,14 @@ export default function ResalePage() {
             {/* Filter Selects */}
             <div className="flex flex-col sm:flex-row gap-3">
               <FilterSelect
-                label="Catégorie"
+                label={tcat("all")}
                 value={selectedCategory}
                 onChange={setSelectedCategory}
                 options={availableCategories}
                 icon={<Tag className="w-4 h-4" />}
               />
               <FilterSelect
-                label="Prix max"
+                label={t("maxPrice")}
                 value={maxPrice}
                 onChange={setMaxPrice}
                 options={priceOptions}
@@ -556,7 +563,7 @@ export default function ResalePage() {
                   className="flex items-center justify-center gap-2 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-zinc-300 font-medium transition-colors"
                 >
                   <X className="w-4 h-4" />
-                  Effacer ({activeFiltersCount})
+                  {t("clear")} ({activeFiltersCount})
                 </motion.button>
               )}
             </div>
@@ -571,11 +578,11 @@ export default function ResalePage() {
           >
             <p className="text-zinc-500">
               <span className="font-semibold text-zinc-100">{filteredTickets.length}</span>
-              {" "}billet{filteredTickets.length !== 1 ? "s" : ""} disponible{filteredTickets.length !== 1 ? "s" : ""}
+              {" "}{t("ticketsAvailable")}
             </p>
             {searchQuery && (
               <p className="text-zinc-500">
-                Résultats pour &quot;{searchQuery}&quot;
+                {t("resultsFor")} &quot;{searchQuery}&quot;
               </p>
             )}
           </motion.div>
@@ -618,7 +625,7 @@ export default function ResalePage() {
                 <Ticket className="w-12 h-12 text-zinc-500" />
               </motion.div>
               <h2 className="text-2xl font-bold text-zinc-100 mb-2 text-center">
-                Aucun billet trouvé
+                {t("noTicketsFound")}
               </h2>
               <p className="text-zinc-500 text-center max-w-md mb-6">
                 {searchQuery
@@ -627,7 +634,7 @@ export default function ResalePage() {
               </p>
               <Button onClick={clearFilters} variant="outline">
                 <SlidersHorizontal className="w-4 h-4" />
-                Réinitialiser les filtres
+                {tc("reset")}
               </Button>
             </motion.div>
           )}
@@ -653,7 +660,7 @@ export default function ResalePage() {
           <Card className="bg-gradient-to-br from-secondary-500 to-secondary-600 p-8 md:p-12 text-white text-center">
             <motion.div variants={fadeInUp}>
               <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                Vous avez des billets à revendre ?
+                {t("haveTickets")}
               </h2>
               <p className="text-white/90 max-w-xl mx-auto mb-6">
                 Mettez vos billets en vente en quelques clics. C'est gratuit, sécurisé
@@ -664,7 +671,7 @@ export default function ResalePage() {
                   variant="outline"
                   className="border-white text-white hover:bg-white hover:text-secondary-600"
                 >
-                  Revendre mes billets
+                  {t("resellMyTickets")}
                 </Button>
               </Link>
             </motion.div>

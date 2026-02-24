@@ -19,6 +19,7 @@ import {
 import { Button, Input } from "@/components/ui";
 import { useCartStore, selectCartItemCount } from "@/stores/cart-store";
 import { cn, formatPrice, formatDate } from "@/lib/utils";
+import { useTranslation } from "@/hooks/use-translation";
 
 // =============================================================================
 // TYPES
@@ -53,27 +54,29 @@ function validateEmail(email: string): boolean {
   return emailRegex.test(email);
 }
 
-function validateForm(data: FormData): FormErrors {
+// Note: validation errors are translated at the component level via the hook
+function validateForm(data: FormData, tco?: (key: string) => string): FormErrors {
   const errors: FormErrors = {};
+  const t = tco || ((k: string) => k);
 
   if (!data.email.trim()) {
-    errors.email = "L'email est requis";
+    errors.email = t("emailRequired");
   } else if (!validateEmail(data.email)) {
-    errors.email = "L'email n'est pas valide";
+    errors.email = t("emailInvalid");
   }
 
   if (!data.fullName.trim()) {
-    errors.fullName = "Le nom complet est requis";
+    errors.fullName = t("nameRequired");
   } else if (data.fullName.trim().length < 2) {
-    errors.fullName = "Le nom doit contenir au moins 2 caractères";
+    errors.fullName = t("nameMinLength");
   }
 
   if (data.phone && !/^[+\d\s()-]{6,}$/.test(data.phone)) {
-    errors.phone = "Le numéro de téléphone n'est pas valide";
+    errors.phone = t("phoneInvalid");
   }
 
   if (!data.acceptTerms) {
-    errors.acceptTerms = "Vous devez accepter les conditions générales";
+    errors.acceptTerms = t("mustAcceptTerms");
   }
 
   return errors;
@@ -117,6 +120,9 @@ function OrderSummary({
   total,
   totalTickets,
 }: OrderSummaryProps) {
+  const { t } = useTranslation("checkout");
+  const { t: tc } = useTranslation("common");
+
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       {/* Header */}
@@ -126,9 +132,9 @@ function OrderSummary({
             <ShoppingBag className="w-5 h-5 text-primary-600" />
           </div>
           <div>
-            <h2 className="font-bold text-gray-900">Résumé de commande</h2>
+            <h2 className="font-bold text-gray-900">{t("orderSummary")}</h2>
             <p className="text-sm text-gray-500">
-              {totalTickets} {totalTickets > 1 ? "billets" : "billet"}
+              {totalTickets} {totalTickets > 1 ? "tickets" : "ticket"}
             </p>
           </div>
         </div>
@@ -167,14 +173,14 @@ function OrderSummary({
       {/* Totals */}
       <div className="bg-gray-50 px-6 py-4 space-y-3">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">Sous-total</span>
+          <span className="text-gray-600">{tc("subtotal")}</span>
           <span className="font-medium text-gray-900">
             {formatPrice(subtotal)}
           </span>
         </div>
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">
-            Frais de service ({formatPrice(SERVICE_FEE_PER_TICKET)} x{" "}
+            {t("serviceFee")} ({formatPrice(SERVICE_FEE_PER_TICKET)} x{" "}
             {totalTickets})
           </span>
           <span className="font-medium text-gray-900">
@@ -183,7 +189,7 @@ function OrderSummary({
         </div>
         <div className="border-t border-gray-200 pt-3">
           <div className="flex items-center justify-between">
-            <span className="font-bold text-gray-900">Total</span>
+            <span className="font-bold text-gray-900">{tc("total")}</span>
             <span className="text-xl font-bold text-primary-600">
               {formatPrice(total)}
             </span>
@@ -195,7 +201,7 @@ function OrderSummary({
       <div className="px-6 py-4 border-t border-gray-100">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <Shield className="w-4 h-4 text-green-500" />
-          <span>Paiement sécurisé - Vos données sont protégées</span>
+          <span>{t("securePayment")}</span>
         </div>
       </div>
     </div>
@@ -207,6 +213,8 @@ function OrderSummary({
 // =============================================================================
 
 export default function CheckoutPage() {
+  const { t: tco } = useTranslation("checkout");
+  const { t: tc } = useTranslation("common");
   const router = useRouter();
   const items = useCartStore((state) => state.items);
   const subtotal = useCartStore((state) => state.total);
@@ -269,7 +277,7 @@ export default function CheckoutPage() {
     }));
 
     // Validate single field on blur
-    const fieldErrors = validateForm(formData);
+    const fieldErrors = validateForm(formData, tco as (key: string) => string);
     if (fieldErrors[name as keyof FormErrors]) {
       setErrors((prev) => ({
         ...prev,
@@ -280,16 +288,16 @@ export default function CheckoutPage() {
 
   // Check if form is valid
   const isFormValid = useMemo(() => {
-    const formErrors = validateForm(formData);
+    const formErrors = validateForm(formData, tco as (key: string) => string);
     return Object.keys(formErrors).length === 0;
-  }, [formData]);
+  }, [formData, tco]);
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate all fields
-    const formErrors = validateForm(formData);
+    const formErrors = validateForm(formData, tco as (key: string) => string);
     setErrors(formErrors);
 
     // Mark all fields as touched
@@ -320,7 +328,7 @@ export default function CheckoutPage() {
       clearCart();
       router.push("/");
     } catch {
-      alert("Une erreur est survenue lors du paiement. Veuillez réessayer.");
+      alert(tco("paymentError"));
     } finally {
       setIsProcessing(false);
     }
@@ -360,15 +368,15 @@ export default function CheckoutPage() {
             className="flex items-center gap-2 text-gray-600 hover:text-primary-500 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
-            <span>Retour</span>
+            <span>{tc("back")}</span>
           </button>
         </motion.div>
 
         {/* Page Title */}
         <motion.div variants={itemVariants} className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Finaliser ma commande</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{tco("completeOrder")}</h1>
           <p className="text-gray-500 mt-2">
-            Complétez vos informations pour recevoir vos billets
+            {tco("completeInfo")}
           </p>
         </motion.div>
 
@@ -385,10 +393,10 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <h2 className="font-bold text-gray-900">
-                      Informations personnelles
+                      {tco("personalInfo")}
                     </h2>
                     <p className="text-sm text-gray-500">
-                      Ces informations seront utilisées pour vos billets
+                      {tco("personalInfoDesc")}
                     </p>
                   </div>
                 </div>
@@ -396,7 +404,7 @@ export default function CheckoutPage() {
                 <div className="space-y-5">
                   {/* Email */}
                   <Input
-                    label="Email *"
+                    label={tco("email")}
                     type="email"
                     name="email"
                     value={formData.email}
@@ -409,7 +417,7 @@ export default function CheckoutPage() {
 
                   {/* Full Name */}
                   <Input
-                    label="Nom complet *"
+                    label={tco("fullName")}
                     type="text"
                     name="fullName"
                     value={formData.fullName}
@@ -422,7 +430,7 @@ export default function CheckoutPage() {
 
                   {/* Phone */}
                   <Input
-                    label="Téléphone (optionnel)"
+                    label={tco("phone")}
                     type="tel"
                     name="phone"
                     value={formData.phone}
@@ -494,7 +502,7 @@ export default function CheckoutPage() {
                     !isProcessing ? <CreditCard className="w-5 h-5" /> : undefined
                   }
                 >
-                  {isProcessing ? "Traitement en cours..." : `Payer ${formatPrice(total)}`}
+                  {isProcessing ? tco("processing") : `${tco("title")} ${formatPrice(total)}`}
                 </Button>
 
                 {/* Form validation summary */}
@@ -504,7 +512,7 @@ export default function CheckoutPage() {
                       <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                       <div className="text-sm text-amber-700">
                         <p className="font-medium">
-                          Veuillez compléter le formulaire
+                          {tco("completeForm")}
                         </p>
                         <ul className="mt-1 list-disc list-inside">
                           {!formData.email && <li>Email requis</li>}
@@ -528,7 +536,7 @@ export default function CheckoutPage() {
                     <div className="flex items-center gap-2">
                       <CheckCircle className="w-5 h-5 text-green-500" />
                       <span className="text-sm text-green-700 font-medium">
-                        Formulaire complet - Prêt à payer
+                        {tco("formReady")}
                       </span>
                     </div>
                   </div>

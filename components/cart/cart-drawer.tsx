@@ -8,6 +8,7 @@ import { Button } from "@/components/ui";
 import { CartItem } from "./cart-item";
 import { useCartStore, selectCartItemCount } from "@/stores/cart-store";
 import { formatPrice } from "@/lib/utils";
+import { useTranslation } from "@/hooks/use-translation";
 
 // =============================================================================
 // TYPES
@@ -48,6 +49,7 @@ const contentVariants = {
 // =============================================================================
 
 function EmptyCart({ onClose }: { onClose: () => void }) {
+  const { t: tCart } = useTranslation("cart");
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -58,14 +60,13 @@ function EmptyCart({ onClose }: { onClose: () => void }) {
         <ShoppingBag className="w-10 h-10 text-zinc-400" />
       </div>
       <h3 className="text-lg font-semibold text-zinc-100 mb-2">
-        Votre panier est vide
+        {tCart("emptyTitle")}
       </h3>
       <p className="text-zinc-500 mb-6 max-w-xs">
-        Explorez nos événements et ajoutez des billets à votre panier pour
-        continuer.
+        {tCart("emptyDesc")}
       </p>
       <Button variant="primary" onClick={onClose}>
-        Découvrir les événements
+        {tCart("discoverEvents")}
       </Button>
     </motion.div>
   );
@@ -76,6 +77,8 @@ function EmptyCart({ onClose }: { onClose: () => void }) {
 // =============================================================================
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
+  const { t: tCart } = useTranslation("cart");
+  const { t: tc } = useTranslation("common");
   const router = useRouter();
   const items = useCartStore((state) => state.items);
   const total = useCartStore((state) => state.total);
@@ -177,10 +180,10 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     id="cart-drawer-title"
                     className="text-lg font-bold text-zinc-100"
                   >
-                    Mon panier
+                    {tCart("myCart")}
                   </h2>
                   <p className="text-sm text-zinc-500">
-                    {itemCount} {itemCount > 1 ? "articles" : "article"}
+                    {itemCount} {itemCount > 1 ? tCart("items") : tCart("item")}
                   </p>
                 </div>
               </div>
@@ -189,7 +192,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 size="sm"
                 onClick={onClose}
                 className="text-zinc-500 hover:text-zinc-300"
-                aria-label="Fermer le panier"
+                aria-label={tCart("closeCart")}
               >
                 <X className="w-5 h-5" />
               </Button>
@@ -230,7 +233,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         className="flex items-center gap-2 text-sm text-zinc-500 hover:text-primary-400 transition-colors mx-auto"
                       >
                         <Trash2 className="w-4 h-4" />
-                        Vider le panier
+                        {tCart("clearCart")}
                       </button>
                     </motion.div>
                   )}
@@ -269,7 +272,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 {/* Total */}
                 <div className="flex items-center justify-between">
                   <span className="text-base font-semibold text-zinc-300">
-                    Total
+                    {tc("total")}
                   </span>
                   <span className="text-xl font-bold text-primary-400">
                     {formatPrice(total)}
@@ -284,7 +287,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   onClick={handleCheckout}
                   rightIcon={<ArrowRight className="w-5 h-5" />}
                 >
-                  Passer la commande
+                  {tCart("placeOrder")}
                 </Button>
 
                 {/* Continue Shopping Link */}
@@ -293,7 +296,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   onClick={onClose}
                   className="w-full text-center text-sm text-zinc-500 hover:text-primary-400 transition-colors"
                 >
-                  Continuer mes achats
+                  {tCart("continueShopping")}
                 </button>
               </motion.div>
             )}

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { mockEvents } from "@/lib/data/mock-events";
+import { useTranslation } from "@/hooks/use-translation";
 import type { Event, EventStatus } from "@/types/database";
 import {
   CalendarDays,
@@ -97,8 +98,58 @@ function formatDate(dateString: string): string {
 const userEvents = mockEvents.slice(0, 6);
 
 export default function DashboardPage() {
+  const { t: td } = useTranslation("dashboard");
+  const { t: tc } = useTranslation("common");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+
+  // Stats data (inside component for i18n)
+  const localStats = [
+    {
+      name: "Total Events",
+      value: "12",
+      change: `+2 ${td("thisMonth")}`,
+      icon: CalendarDays,
+      color: "text-primary-500",
+      bgColor: "bg-primary-50",
+    },
+    {
+      name: td("ticketsSold"),
+      value: "1,234",
+      change: `+15% ${td("vsLastMonth")}`,
+      icon: Ticket,
+      color: "text-secondary-500",
+      bgColor: "bg-secondary-50",
+    },
+    {
+      name: td("attendees"),
+      value: "890",
+      change: `+8% ${td("vsLastMonth")}`,
+      icon: Users,
+      color: "text-green-500",
+      bgColor: "bg-green-50",
+    },
+    {
+      name: td("revenue"),
+      value: "45,670 EUR",
+      change: `+23% ${td("vsLastMonth")}`,
+      icon: TrendingUp,
+      color: "text-orange-500",
+      bgColor: "bg-orange-50",
+    },
+  ];
+
+  // Status badge with translations
+  function getLocalStatusBadge(status: EventStatus) {
+    const statusConfig: Record<EventStatus, { label: string; variant: "default" | "new" | "hot" | "tonight" | "soldout" | "featured" }> = {
+      draft: { label: td("draft"), variant: "default" },
+      preview: { label: td("preview"), variant: "new" },
+      published: { label: td("published"), variant: "hot" },
+      cancelled: { label: td("cancelled"), variant: "soldout" },
+      past: { label: td("past"), variant: "default" },
+    };
+    return statusConfig[status] || statusConfig.draft;
+  }
 
   // Filter events based on search
   const filteredEvents = userEvents.filter((event) =>
@@ -113,22 +164,22 @@ export default function DashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Bienvenue sur votre Dashboard
+            {td("welcome")}
           </h1>
           <p className="mt-1 text-gray-500">
-            Gérez vos événements et suivez vos performances.
+            {td("manageEvents")}
           </p>
         </div>
         <Link href="/dashboard/events/new">
           <Button leftIcon={<Plus className="w-5 h-5" />}>
-            Créer un événement
+            {td("createEvent")}
           </Button>
         </Link>
       </div>
 
       {/* Stats grid */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => {
+        {localStats.map((stat) => {
           const Icon = stat.icon;
           return (
             <Card key={stat.name} className="p-6">
@@ -155,11 +206,11 @@ export default function DashboardPage() {
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <h2 className="text-lg font-semibold text-gray-900">
-            Mes Événements
+            {td("myEvents")}
           </h2>
           <div className="w-full sm:w-72">
             <Input
-              placeholder="Rechercher un événement..."
+              placeholder={td("searchEvent")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               leftIcon={<Search className="w-5 h-5" />}
@@ -175,7 +226,7 @@ export default function DashboardPage() {
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
                     <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                      Événement
+                      {td("event")}
                     </th>
                     <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
                       Date
@@ -184,17 +235,17 @@ export default function DashboardPage() {
                       Status
                     </th>
                     <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                      Tickets vendus
+                      {td("ticketsSold")}
                     </th>
                     <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                      Actions
+                      {td("actions")}
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {filteredEvents.map((event) => {
                     const tickets = getTicketsSold(event);
-                    const statusBadge = getStatusBadge(event.status);
+                    const statusBadge = getLocalStatusBadge(event.status);
                     const progress = tickets.total > 0 ? (tickets.sold / tickets.total) * 100 : 0;
 
                     return (
@@ -223,7 +274,7 @@ export default function DashboardPage() {
                                 {event.title}
                               </Link>
                               <p className="text-sm text-gray-500 truncate">
-                                {event.venue?.name || "Lieu non défini"}
+                                {event.venue?.name || td("venueNotSet")}
                               </p>
                             </div>
                           </div>
@@ -296,14 +347,14 @@ export default function DashboardPage() {
                                       }}
                                     >
                                       <Copy className="w-4 h-4" />
-                                      Copier le lien
+                                      {td("copyLink")}
                                     </button>
                                     <button
                                       className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                                       onClick={() => setActiveMenu(null)}
                                     >
                                       <Trash2 className="w-4 h-4" />
-                                      Supprimer
+                                      {tc("delete")}
                                     </button>
                                   </div>
                                 </>
@@ -322,7 +373,7 @@ export default function DashboardPage() {
             <div className="md:hidden divide-y divide-gray-100">
               {filteredEvents.map((event) => {
                 const tickets = getTicketsSold(event);
-                const statusBadge = getStatusBadge(event.status);
+                const statusBadge = getLocalStatusBadge(event.status);
                 const progress = tickets.total > 0 ? (tickets.sold / tickets.total) * 100 : 0;
 
                 return (
@@ -378,7 +429,7 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-2 mt-3">
                           <Link href={`/dashboard/events/${event.id}`} className="flex-1">
                             <Button variant="outline" size="sm" className="w-full">
-                              Modifier
+                              {tc("edit")}
                             </Button>
                           </Link>
                           <Link href={`/event/${event.slug}`} target="_blank">
@@ -398,16 +449,16 @@ export default function DashboardPage() {
           <Card className="p-6">
             <div className="text-center py-12 text-gray-500">
               <CalendarDays className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-              <p className="text-lg font-medium">Aucun événement</p>
+              <p className="text-lg font-medium">{td("noEvents")}</p>
               <p className="text-sm mt-1 mb-6">
                 {searchQuery
-                  ? "Aucun événement ne correspond à votre recherche."
-                  : "Commencez par créer votre premier événement."}
+                  ? td("noEventsSearch")
+                  : td("createFirst")}
               </p>
               {!searchQuery && (
                 <Link href="/dashboard/events/new">
                   <Button leftIcon={<Plus className="w-5 h-5" />}>
-                    Créer un événement
+                    {td("createEvent")}
                   </Button>
                 </Link>
               )}

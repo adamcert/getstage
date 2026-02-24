@@ -28,6 +28,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TicketSelector } from "@/components/features/ticket-selector";
 import { getEventBySlug, isTonight } from "@/lib/data/mock-events";
 import { cn, formatDate, formatTime, formatPrice } from "@/lib/utils";
+import { useTranslation } from "@/hooks/use-translation";
 import type { Event, Artist, EventArtist } from "@/types/database";
 
 // =============================================================================
@@ -52,6 +53,9 @@ interface EventHeaderProps {
 }
 
 function EventHeader({ event, minPrice }: EventHeaderProps) {
+  const { t: te } = useTranslation("event");
+  const { t: tb } = useTranslation("badges");
+  const { t: tc } = useTranslation("common");
   const tonight = isTonight(event);
   const isSoldOut = event.ticket_types?.every(
     (t) => t.quantity_sold >= t.quantity_total
@@ -80,7 +84,7 @@ function EventHeader({ event, minPrice }: EventHeaderProps) {
             className="bg-zinc-900/50 backdrop-blur-md hover:bg-zinc-800/70 text-zinc-100"
           >
             <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour
+            {tc("back")}
           </Button>
         </Link>
       </div>
@@ -105,10 +109,10 @@ function EventHeader({ event, minPrice }: EventHeaderProps) {
 
       {/* Badges */}
       <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
-        {event.is_new && <Badge variant="new">Nouveau</Badge>}
-        {event.is_featured && <Badge variant="featured">Coup de coeur</Badge>}
-        {tonight && <Badge variant="tonight">Ce soir</Badge>}
-        {isSoldOut && <Badge variant="soldout">Complet</Badge>}
+        {event.is_new && <Badge variant="new">{tb("new")}</Badge>}
+        {event.is_featured && <Badge variant="featured">{tb("featured")}</Badge>}
+        {tonight && <Badge variant="tonight">{tb("tonight")}</Badge>}
+        {isSoldOut && <Badge variant="soldout">{tb("soldOut")}</Badge>}
       </div>
 
       {/* Event Info Overlay */}
@@ -131,7 +135,7 @@ function EventHeader({ event, minPrice }: EventHeaderProps) {
             <span className="flex items-center gap-2">
               <Clock className="w-5 h-5 text-primary-400" />
               {event.doors_open
-                ? `Portes ${formatTime(event.doors_open)}`
+                ? `${te("doors")} ${formatTime(event.doors_open)}`
                 : formatTime(event.start_date)}
             </span>
             {event.venue && (
@@ -159,16 +163,19 @@ interface EventInfoSectionProps {
 }
 
 function EventInfoSection({ event }: EventInfoSectionProps) {
+  const { t: te } = useTranslation("event");
+  const { t: tcat } = useTranslation("categories");
+
   return (
     <Card>
       <CardContent className="space-y-6">
         {/* Description */}
         <div>
           <h2 className="text-xl font-bold text-zinc-100 mb-3 font-display">
-            À propos de l'événement
+            {te("about")}
           </h2>
           <p className="text-zinc-400 leading-relaxed whitespace-pre-line">
-            {event.description || event.short_description || "Aucune description disponible."}
+            {event.description || event.short_description || te("noDescription")}
           </p>
         </div>
 
@@ -177,7 +184,7 @@ function EventInfoSection({ event }: EventInfoSectionProps) {
           <div>
             <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2 flex items-center gap-2">
               <Music2 className="w-4 h-4" />
-              Genres musicaux
+              {te("musicGenres")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {event.music_genres.map((genre) => (
@@ -198,8 +205,8 @@ function EventInfoSection({ event }: EventInfoSectionProps) {
                 <Users className="w-5 h-5 text-primary-400" />
               </div>
               <div>
-                <p className="text-xs text-zinc-500">Age minimum</p>
-                <p className="font-semibold text-zinc-200">{event.min_age} ans</p>
+                <p className="text-xs text-zinc-500">{te("minimumAge")}</p>
+                <p className="font-semibold text-zinc-200">{event.min_age} {te("years")}</p>
               </div>
             </div>
           )}
@@ -211,7 +218,7 @@ function EventInfoSection({ event }: EventInfoSectionProps) {
                 <Shirt className="w-5 h-5 text-secondary-400" />
               </div>
               <div>
-                <p className="text-xs text-zinc-500">Dress code</p>
+                <p className="text-xs text-zinc-500">{te("dressCode")}</p>
                 <p className="font-semibold text-zinc-200">{event.dress_code}</p>
               </div>
             </div>
@@ -223,7 +230,7 @@ function EventInfoSection({ event }: EventInfoSectionProps) {
               <Info className="w-5 h-5 text-accent-400" />
             </div>
             <div>
-              <p className="text-xs text-zinc-500">Catégorie</p>
+              <p className="text-xs text-zinc-500">{tcat("all")}</p>
               <p className="font-semibold text-zinc-200">
                 {getCategoryLabel(event.category)}
               </p>
@@ -251,6 +258,7 @@ interface VenueSectionProps {
 }
 
 function VenueSection({ event }: VenueSectionProps) {
+  const { t: te } = useTranslation("event");
   if (!event.venue) return null;
 
   const venue = event.venue;
@@ -261,7 +269,7 @@ function VenueSection({ event }: VenueSectionProps) {
   return (
     <Card>
       <CardContent className="space-y-4">
-        <h2 className="text-xl font-bold text-zinc-100 font-display">Lieu</h2>
+        <h2 className="text-xl font-bold text-zinc-100 font-display">{te("venue")}</h2>
 
         <div className="flex items-start gap-4">
           {/* Venue Logo or Icon */}
@@ -306,7 +314,7 @@ function VenueSection({ event }: VenueSectionProps) {
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900">
             <div className="text-center">
               <MapPin className="w-12 h-12 text-zinc-600 mx-auto mb-2" />
-              <p className="text-sm text-zinc-500">Carte interactive</p>
+              <p className="text-sm text-zinc-500">{te("interactiveMap")}</p>
               <p className="text-xs text-zinc-600">Mapbox integration</p>
             </div>
           </div>
@@ -320,7 +328,7 @@ function VenueSection({ event }: VenueSectionProps) {
           className="flex items-center justify-center gap-2 w-full py-3 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-zinc-300 font-medium transition-colors"
         >
           <Navigation className="w-5 h-5" />
-          Voir l'itinéraire
+          {te("getDirections")}
           <ExternalLink className="w-4 h-4" />
         </a>
       </CardContent>
@@ -337,6 +345,7 @@ interface LineupSectionProps {
 }
 
 function LineupSection({ event }: LineupSectionProps) {
+  const { t: te } = useTranslation("event");
   const artists = event.event_artists;
 
   if (!artists || artists.length === 0) return null;
@@ -344,7 +353,7 @@ function LineupSection({ event }: LineupSectionProps) {
   return (
     <Card>
       <CardContent className="space-y-4">
-        <h2 className="text-xl font-bold text-zinc-100 font-display">Line-up</h2>
+        <h2 className="text-xl font-bold text-zinc-100 font-display">{te("lineup")}</h2>
 
         <div className="space-y-4">
           {artists.map((ea) => (
@@ -361,6 +370,7 @@ interface ArtistCardProps {
 }
 
 function ArtistCard({ eventArtist }: ArtistCardProps) {
+  const { t: te } = useTranslation("event");
   const { artist, is_headliner, set_time, stage } = eventArtist;
 
   return (
@@ -386,7 +396,7 @@ function ArtistCard({ eventArtist }: ArtistCardProps) {
           <h3 className="font-semibold text-zinc-100">{artist.name}</h3>
           {is_headliner && (
             <Badge variant="featured" className="text-[10px] px-2 py-0.5">
-              Tête d'affiche
+              {te("headliner")}
             </Badge>
           )}
         </div>
@@ -402,7 +412,7 @@ function ArtistCard({ eventArtist }: ArtistCardProps) {
               {formatTime(set_time)}
             </span>
           )}
-          {stage && <span>Scène: {stage}</span>}
+          {stage && <span>{te("stage")} {stage}</span>}
         </div>
       </div>
 
@@ -434,14 +444,16 @@ interface SidebarStickyProps {
 }
 
 function SidebarSticky({ event, minPrice }: SidebarStickyProps) {
+  const { t: tc } = useTranslation("common");
+
   return (
     <div className="sticky top-24">
       {/* Price Preview Card */}
       <Card className="mb-4 overflow-hidden">
         <div className="bg-gradient-to-r from-primary-500 to-secondary-500 p-4 text-white">
-          <p className="text-sm opacity-90">À partir de</p>
+          <p className="text-sm opacity-90">{tc("from")}</p>
           <p className="text-3xl font-bold font-display">
-            {minPrice === 0 ? "Gratuit" : formatPrice(minPrice)}
+            {minPrice === 0 ? tc("free") : formatPrice(minPrice)}
           </p>
         </div>
       </Card>
@@ -476,6 +488,7 @@ function MobileBottomSheet({
   isOpen,
   onClose,
 }: MobileBottomSheetProps) {
+  const { t: te } = useTranslation("event");
   // Prevent body scroll when sheet is open
   useEffect(() => {
     if (isOpen) {
@@ -525,7 +538,7 @@ function MobileBottomSheet({
             {/* Content */}
             <div className="p-4 pb-8">
               <h3 className="text-xl font-bold text-zinc-100 mb-4 font-display">
-                Choisir vos billets
+                {te("chooseTickets")}
               </h3>
               {event.ticket_types && event.ticket_types.length > 0 && (
                 <TicketSelector
@@ -553,6 +566,9 @@ interface MobileFloatingButtonProps {
 }
 
 function MobileFloatingButton({ minPrice, onClick }: MobileFloatingButtonProps) {
+  const { t: tc } = useTranslation("common");
+  const { t: tec } = useTranslation("eventCard");
+
   return (
     <motion.div
       initial={{ y: 100, opacity: 0 }}
@@ -561,13 +577,13 @@ function MobileFloatingButton({ minPrice, onClick }: MobileFloatingButtonProps) 
     >
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-xs text-zinc-500">À partir de</p>
+          <p className="text-xs text-zinc-500">{tc("from")}</p>
           <p className="text-xl font-bold text-zinc-100">
-            {minPrice === 0 ? "Gratuit" : formatPrice(minPrice)}
+            {minPrice === 0 ? tc("free") : formatPrice(minPrice)}
           </p>
         </div>
         <Button onClick={onClick} className="flex-1 max-w-[200px]">
-          Réserver
+          {tec("book")}
         </Button>
       </div>
     </motion.div>
@@ -627,6 +643,8 @@ function getCategoryLabel(category: string): string {
 // =============================================================================
 
 export default function EventDetailPage() {
+  const { t: te } = useTranslation("event");
+  const { t: tc } = useTranslation("common");
   const params = useParams();
   const slug = params.slug as string;
 
@@ -668,13 +686,13 @@ export default function EventDetailPage() {
       <div className="min-h-screen bg-[#09090B] flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-zinc-100 mb-2 font-display">
-            Événement introuvable
+            {te("notFound")}
           </h1>
           <p className="text-zinc-500 mb-6">
-            Cet événement n'existe pas ou a été supprimé.
+            {te("notFoundDesc")}
           </p>
           <Link href="/">
-            <Button>Retour à l'accueil</Button>
+            <Button>{tc("backToHome")}</Button>
           </Link>
         </div>
       </div>

@@ -4,8 +4,13 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Home, Search, Calendar, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/use-translation";
 
 export default function NotFound() {
+  const { t } = useTranslation("notFound");
+  const { t: tc } = useTranslation("common");
+  const { t: th } = useTranslation("header");
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 relative overflow-hidden">
       {/* Background Decorations */}
@@ -101,10 +106,10 @@ export default function NotFound() {
           transition={{ delay: 0.3, duration: 0.6 }}
         >
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-            Page non trouvée
+            {t("title")}
           </h2>
           <p className="text-gray-500 mb-8 text-lg leading-relaxed max-w-md mx-auto">
-            Désolée, la page que vous recherchez semble avoir disparu ou n'existe plus.
+            {t("desc")}
           </p>
         </motion.div>
 
@@ -116,7 +121,7 @@ export default function NotFound() {
           className="mb-10"
         >
           <p className="text-sm text-gray-400 uppercase tracking-wider mb-4">
-            Suggestions
+            {t("suggestions")}
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/">
@@ -126,7 +131,7 @@ export default function NotFound() {
                 className="flex items-center gap-2 px-5 py-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100"
               >
                 <Home className="w-5 h-5 text-primary-500" />
-                <span className="font-medium text-gray-700">Accueil</span>
+                <span className="font-medium text-gray-700">{th("home")}</span>
               </motion.div>
             </Link>
             <Link href="/search">
@@ -136,7 +141,7 @@ export default function NotFound() {
                 className="flex items-center gap-2 px-5 py-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100"
               >
                 <Search className="w-5 h-5 text-secondary-500" />
-                <span className="font-medium text-gray-700">Rechercher</span>
+                <span className="font-medium text-gray-700">{tc("search")}</span>
               </motion.div>
             </Link>
             <Link href="/search?category=concert">
@@ -146,7 +151,7 @@ export default function NotFound() {
                 className="flex items-center gap-2 px-5 py-3 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100"
               >
                 <Calendar className="w-5 h-5 text-accent-500" />
-                <span className="font-medium text-gray-700">Événements</span>
+                <span className="font-medium text-gray-700">{tc("events")}</span>
               </motion.div>
             </Link>
           </div>
@@ -164,7 +169,7 @@ export default function NotFound() {
             leftIcon={<ArrowLeft className="w-4 h-4" />}
             className="text-gray-500 hover:text-gray-700"
           >
-            Retour à la page précédente
+            {tc("backToPrevious")}
           </Button>
         </motion.div>
       </div>

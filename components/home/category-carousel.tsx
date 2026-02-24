@@ -16,68 +16,69 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/use-translation";
 
 interface Category {
   id: string;
-  label: string;
+  labelKey: "concert" | "dj" | "theatre" | "comedy" | "expo" | "festival" | "sport" | "cinema";
   icon: React.ComponentType<{ className?: string }>;
   gradient: string;
   hoverGradient: string;
 }
 
-const categories: Category[] = [
+const categoryDefs: Category[] = [
   {
     id: "concert",
-    label: "Concert",
+    labelKey: "concert",
     icon: Music,
     gradient: "from-primary-500/10 to-primary-500/5",
     hoverGradient: "from-primary-500 to-primary-600",
   },
   {
     id: "club",
-    label: "Club & DJ",
+    labelKey: "dj",
     icon: Disc3,
     gradient: "from-secondary-500/10 to-secondary-500/5",
     hoverGradient: "from-secondary-500 to-secondary-600",
   },
   {
     id: "theatre",
-    label: "Théâtre",
+    labelKey: "theatre",
     icon: Drama,
     gradient: "from-accent-500/10 to-accent-500/5",
     hoverGradient: "from-accent-500 to-accent-600",
   },
   {
     id: "comedie",
-    label: "Comédie",
+    labelKey: "comedy",
     icon: Laugh,
     gradient: "from-pink-500/10 to-pink-500/5",
     hoverGradient: "from-pink-500 to-pink-600",
   },
   {
     id: "exposition",
-    label: "Exposition",
+    labelKey: "expo",
     icon: Frame,
     gradient: "from-cyan-500/10 to-cyan-500/5",
     hoverGradient: "from-cyan-500 to-cyan-600",
   },
   {
     id: "festival",
-    label: "Festival",
+    labelKey: "festival",
     icon: Tent,
     gradient: "from-emerald-500/10 to-emerald-500/5",
     hoverGradient: "from-emerald-500 to-emerald-600",
   },
   {
     id: "sport",
-    label: "Sport",
+    labelKey: "sport",
     icon: Trophy,
     gradient: "from-orange-500/10 to-orange-500/5",
     hoverGradient: "from-orange-500 to-orange-600",
   },
   {
     id: "cinema",
-    label: "Cinéma",
+    labelKey: "cinema",
     icon: Film,
     gradient: "from-indigo-500/10 to-indigo-500/5",
     hoverGradient: "from-indigo-500 to-indigo-600",
@@ -108,6 +109,8 @@ const itemVariants: Variants = {
 };
 
 export function CategoryCarousel() {
+  const { t: tCarousel } = useTranslation("categoryCarousel");
+  const { t: tCat } = useTranslation("categories");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -154,10 +157,10 @@ export function CategoryCarousel() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              Explorer par catégorie
+              {tCarousel("title")}
             </h2>
             <p className="mt-2 text-gray-600">
-              Trouvez les événements qui vous passionnent
+              {tCarousel("subtitle")}
             </p>
           </div>
 
@@ -172,7 +175,7 @@ export function CategoryCarousel() {
                   ? "hover:border-primary-500 hover:text-primary-500 hover:shadow-md cursor-pointer"
                   : "opacity-40 cursor-not-allowed"
               )}
-              aria-label="Défiler vers la gauche"
+              aria-label={tCarousel("scrollLeft")}
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -185,7 +188,7 @@ export function CategoryCarousel() {
                   ? "hover:border-primary-500 hover:text-primary-500 hover:shadow-md cursor-pointer"
                   : "opacity-40 cursor-not-allowed"
               )}
-              aria-label="Défiler vers la droite"
+              aria-label={tCarousel("scrollRight")}
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -224,8 +227,8 @@ export function CategoryCarousel() {
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
           >
-            {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} />
+            {categoryDefs.map((category) => (
+              <CategoryCard key={category.id} category={category} label={tCat(category.labelKey)} />
             ))}
           </motion.div>
         </div>
@@ -236,9 +239,10 @@ export function CategoryCarousel() {
 
 interface CategoryCardProps {
   category: Category;
+  label: string;
 }
 
-function CategoryCard({ category }: CategoryCardProps) {
+function CategoryCard({ category, label }: CategoryCardProps) {
   const Icon = category.icon;
 
   return (
@@ -299,7 +303,7 @@ function CategoryCard({ category }: CategoryCardProps) {
                 "text-gray-800 group-hover:text-white"
               )}
             >
-              {category.label}
+              {label}
             </span>
           </div>
 

@@ -5,38 +5,7 @@ import { motion, type Variants } from "framer-motion";
 import { Search, MapPin, Tag, Sparkles, Calendar, Gift, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-const cities = [
-  { value: "", label: "Toutes les villes" },
-  { value: "paris", label: "Paris" },
-  { value: "lyon", label: "Lyon" },
-  { value: "marseille", label: "Marseille" },
-  { value: "bordeaux", label: "Bordeaux" },
-  { value: "toulouse", label: "Toulouse" },
-  { value: "lille", label: "Lille" },
-  { value: "nice", label: "Nice" },
-  { value: "nantes", label: "Nantes" },
-  { value: "strasbourg", label: "Strasbourg" },
-];
-
-const categories = [
-  { value: "", label: "Toutes catégories" },
-  { value: "concerts", label: "Concerts" },
-  { value: "clubs", label: "Clubs & Soirées" },
-  { value: "theatre", label: "Théâtre" },
-  { value: "spectacles", label: "Spectacles" },
-  { value: "festivals", label: "Festivals" },
-  { value: "sport", label: "Sport" },
-  { value: "expositions", label: "Expositions" },
-  { value: "comedie", label: "Comédie" },
-];
-
-const quickFilters = [
-  { id: "tonight", label: "Ce soir", icon: Flame },
-  { id: "weekend", label: "Ce week-end", icon: Calendar },
-  { id: "free", label: "Gratuit", icon: Gift },
-  { id: "new", label: "Nouveautés", icon: Sparkles },
-];
+import { useTranslation } from "@/hooks/use-translation";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -89,6 +58,43 @@ const quickFilterVariants: Variants = {
 };
 
 export function Hero() {
+  const { t: tHero } = useTranslation("hero");
+  const { t: tFilters } = useTranslation("filters");
+  const { t: tCat } = useTranslation("categories");
+  const { t: tc } = useTranslation("common");
+
+  const cities = [
+    { value: "", label: tHero("allCities") },
+    { value: "paris", label: "Paris" },
+    { value: "lyon", label: "Lyon" },
+    { value: "marseille", label: "Marseille" },
+    { value: "bordeaux", label: "Bordeaux" },
+    { value: "toulouse", label: "Toulouse" },
+    { value: "lille", label: "Lille" },
+    { value: "nice", label: "Nice" },
+    { value: "nantes", label: "Nantes" },
+    { value: "strasbourg", label: "Strasbourg" },
+  ];
+
+  const categories = [
+    { value: "", label: tCat("all") },
+    { value: "concerts", label: tCat("concerts") },
+    { value: "clubs", label: tCat("clubsParties") },
+    { value: "theatre", label: tCat("theatre") },
+    { value: "spectacles", label: tCat("shows") },
+    { value: "festivals", label: tCat("festivals") },
+    { value: "sport", label: tCat("sport") },
+    { value: "expositions", label: tCat("expos") },
+    { value: "comedie", label: tCat("comedy") },
+  ];
+
+  const quickFilters = [
+    { id: "tonight", label: tFilters("tonight"), icon: Flame },
+    { id: "weekend", label: tFilters("thisWeekend"), icon: Calendar },
+    { id: "free", label: tc("free"), icon: Gift },
+    { id: "new", label: tFilters("new"), icon: Sparkles },
+  ];
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -144,16 +150,16 @@ export function Hero() {
             className="text-5xl sm:text-6xl lg:text-8xl font-display font-bold text-white mb-4 tracking-tighter"
             variants={itemVariants}
           >
-            Découvrez les meilleurs{" "}
+            {tHero("title")}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-accent-400 to-secondary-400">
-              événements
+              {tHero("titleHighlight")}
             </span>
           </motion.h1>
           <motion.p
             className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto"
             variants={itemVariants}
           >
-            Concerts, clubs, théâtre et plus encore près de chez vous
+            {tHero("subtitle")}
           </motion.p>
         </div>
 
@@ -169,7 +175,7 @@ export function Hero() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
               <input
                 type="text"
-                placeholder="Rechercher un événement, artiste, lieu..."
+                placeholder={tHero("searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-zinc-700 bg-zinc-800/50 text-zinc-100 placeholder:text-zinc-500 focus:border-secondary-500 focus:ring-2 focus:ring-secondary-500/20 outline-none transition-all duration-200"
@@ -226,7 +232,7 @@ export function Hero() {
               className="lg:w-auto whitespace-nowrap"
               leftIcon={<Search className="w-5 h-5" />}
             >
-              Rechercher
+              {tc("search")}
             </Button>
           </div>
         </motion.form>
@@ -269,17 +275,17 @@ export function Hero() {
         >
           <div className="flex items-center gap-2">
             <span className="font-bold text-white text-lg">10K+</span>
-            <span>événements</span>
+            <span>{tc("events")}</span>
           </div>
           <div className="w-px h-4 bg-white/30" />
           <div className="flex items-center gap-2">
             <span className="font-bold text-white text-lg">50+</span>
-            <span>villes</span>
+            <span>{tc("cities")}</span>
           </div>
           <div className="w-px h-4 bg-white/30" />
           <div className="flex items-center gap-2">
             <span className="font-bold text-white text-lg">100K+</span>
-            <span>utilisateurs</span>
+            <span>{tc("users")}</span>
           </div>
         </motion.div>
       </motion.div>

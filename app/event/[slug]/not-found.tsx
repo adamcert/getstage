@@ -4,8 +4,13 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Search, Calendar, Ticket, ArrowLeft, Music, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/use-translation";
 
 export default function EventNotFound() {
+  const { t: te } = useTranslation("event");
+  const { t: tcat } = useTranslation("categories");
+  const { t: tc } = useTranslation("common");
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 relative overflow-hidden">
       {/* Background Pattern */}
@@ -117,12 +122,10 @@ export default function EventNotFound() {
           transition={{ delay: 0.4, duration: 0.5 }}
         >
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Événement introuvable
+            {te("notFound")}
           </h1>
           <p className="text-gray-500 mb-8 text-lg leading-relaxed">
-            Cet événement n'existe pas ou a été supprimé.
-            <br />
-            Il a peut-être eu lieu ou été annulé.
+            {te("notFoundLong")}
           </p>
         </motion.div>
 
@@ -139,7 +142,7 @@ export default function EventNotFound() {
               leftIcon={<Search className="w-4 h-4" />}
               className="w-full sm:w-auto"
             >
-              Rechercher un événement
+              {te("searchEvent")}
             </Button>
           </Link>
           <Link href="/">
@@ -148,7 +151,7 @@ export default function EventNotFound() {
               leftIcon={<Calendar className="w-4 h-4" />}
               className="w-full sm:w-auto"
             >
-              Voir tous les événements
+              {te("viewAllEvents")}
             </Button>
           </Link>
         </motion.div>
@@ -165,7 +168,7 @@ export default function EventNotFound() {
             leftIcon={<ArrowLeft className="w-4 h-4" />}
             className="text-gray-400 hover:text-gray-600"
           >
-            Retour
+            {tc("back")}
           </Button>
         </motion.div>
 
@@ -177,14 +180,14 @@ export default function EventNotFound() {
           className="mt-12 p-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-100"
         >
           <p className="text-sm text-gray-400 uppercase tracking-wider mb-4">
-            Explorez par catégorie
+            {te("browseByCategory")}
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {[
-              { label: "Concerts", href: "/search?category=concert" },
-              { label: "DJ / Club", href: "/search?category=dj" },
-              { label: "Théâtre", href: "/search?category=theatre" },
-              { label: "Festivals", href: "/search?category=festival" },
+              { label: tcat("concerts"), href: "/search?category=concert" },
+              { label: tcat("dj"), href: "/search?category=dj" },
+              { label: tcat("theatre"), href: "/search?category=theatre" },
+              { label: tcat("festivals"), href: "/search?category=festival" },
             ].map((cat) => (
               <Link key={cat.label} href={cat.href}>
                 <motion.span

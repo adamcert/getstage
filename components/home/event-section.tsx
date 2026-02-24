@@ -5,6 +5,7 @@ import { ChevronRight } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 import { EventCard } from "@/components/features";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/use-translation";
 import type { Event } from "@/types/database";
 
 interface EventSectionProps {
@@ -83,6 +84,8 @@ export function EventSection({
   viewAllLink,
   className,
 }: EventSectionProps) {
+  const { t: tc } = useTranslation("common");
+
   if (events.length === 0) {
     return null;
   }
@@ -116,7 +119,7 @@ export function EventSection({
               href={viewAllLink}
               className="hidden sm:flex items-center gap-1 text-accent-400 hover:text-accent-300 font-medium transition-colors group"
             >
-              Voir tout
+              {tc("seeAll")}
               <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </Link>
           )}
@@ -152,7 +155,7 @@ export function EventSection({
               href={viewAllLink}
               className="inline-flex items-center gap-1 text-accent-400 hover:text-accent-300 font-medium transition-colors"
             >
-              Voir tout
+              {tc("seeAll")}
               <ChevronRight className="w-5 h-5" />
             </Link>
           </div>

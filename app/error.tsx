@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { AlertTriangle, RefreshCw, Home, Bug } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/use-translation";
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -12,6 +13,9 @@ interface ErrorProps {
 }
 
 export default function Error({ error, reset }: ErrorProps) {
+  const { t } = useTranslation("error");
+  const { t: tc } = useTranslation("common");
+
   useEffect(() => {
     // Log the error to an error reporting service
     console.error("Application error:", error);
@@ -55,12 +59,12 @@ export default function Error({ error, reset }: ErrorProps) {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Oups ! Une erreur est survenue
+            {t("title")}
           </h1>
           <p className="text-gray-500 mb-8 leading-relaxed">
-            Nous sommes desoles, quelque chose s'est mal passe.
+            {t("desc")}
             <br />
-            Ne vous inquietez pas, notre equipe a ete informee.
+            {t("teamNotified")}
           </p>
         </motion.div>
 
@@ -74,7 +78,7 @@ export default function Error({ error, reset }: ErrorProps) {
           >
             <div className="flex items-center gap-2 text-red-700 font-medium mb-2">
               <Bug className="w-4 h-4" />
-              <span>Details de l'erreur</span>
+              <span>{t("errorDetails")}</span>
             </div>
             <p className="text-sm text-red-600 font-mono break-all">
               {error.message}
@@ -99,14 +103,14 @@ export default function Error({ error, reset }: ErrorProps) {
             variant="primary"
             leftIcon={<RefreshCw className="w-4 h-4" />}
           >
-            Reessayer
+            {tc("tryAgain")}
           </Button>
           <Link href="/">
             <Button
               variant="outline"
               leftIcon={<Home className="w-4 h-4" />}
             >
-              Retour a l'accueil
+              {tc("backToHome")}
             </Button>
           </Link>
         </motion.div>

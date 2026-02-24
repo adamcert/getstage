@@ -20,6 +20,7 @@ import {
   Crown,
 } from "lucide-react";
 import { cn, formatPrice } from "@/lib/utils";
+import { useTranslation } from "@/hooks/use-translation";
 
 // =============================================================================
 // TYPES
@@ -232,6 +233,8 @@ function GiftCard3D({
 
   const isLightDesign = design.id === "celebration" || design.id === "love";
 
+  const { t: tg } = useTranslation("giftCards");
+
   return (
     <div className="perspective-1000" style={{ perspective: "1000px" }}>
       <motion.div
@@ -303,7 +306,7 @@ function GiftCard3D({
                     className="text-[10px] font-semibold uppercase tracking-[0.2em]"
                     style={{ color: isLightDesign ? design.accent : `${design.accent}CC` }}
                   >
-                    Carte Cadeau
+                    {tg("giftCard")}
                   </p>
                   <p
                     className={cn(
@@ -366,7 +369,7 @@ function GiftCard3D({
                       isLightDesign ? "text-slate-600" : "text-white/80"
                     )}
                   >
-                    Pour{" "}
+                    {tg("for")}{" "}
                     <span className={cn("font-semibold", isLightDesign ? "text-slate-800" : "text-white")}>
                       {recipientName}
                     </span>
@@ -379,7 +382,7 @@ function GiftCard3D({
                       isLightDesign ? "text-slate-500" : "text-white/60"
                     )}
                   >
-                    De la part de {senderName}
+                    {tg("fromPerson")} {senderName}
                   </p>
                 )}
               </div>
@@ -539,6 +542,7 @@ function StepIndicator({
 }) {
   const isActive = currentStep >= step;
   const isCurrent = currentStep === step;
+  const { t: tg } = useTranslation("giftCards");
 
   return (
     <div className="flex items-center gap-3">
@@ -556,7 +560,7 @@ function StepIndicator({
       </motion.div>
       <div>
         <p className={cn("text-sm font-medium", isActive ? "text-zinc-100" : "text-zinc-600")}>
-          &#201;tape {step}
+          {tg("step")} {step}
         </p>
         <p className={cn("text-xs", isActive ? "text-zinc-500" : "text-zinc-600")}>{label}</p>
       </div>
@@ -569,6 +573,8 @@ function StepIndicator({
 // =============================================================================
 
 export default function GiftCardsPage() {
+  const { t } = useTranslation("giftCards");
+  const { t: tc } = useTranslation("common");
   const [step, setStep] = useState(1);
   const [amount, setAmount] = useState(100);
   const [customAmount, setCustomAmount] = useState("");
@@ -658,32 +664,28 @@ export default function GiftCardsPage() {
             >
               <Star className="w-4 h-4 text-primary-400" />
               <span className="text-sm text-primary-300 font-medium">
-                Le cadeau parfait pour les amateurs de sorties
+                {t("heroTitle")}
               </span>
             </motion.div>
 
             <h1
               className="text-5xl md:text-7xl font-bold font-display mb-6"
             >
-              <span className="text-white">Offrez des</span>
-              <br />
               <span className="bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 bg-clip-text text-transparent">
-                moments inoubliables
+                {t("heroSubtitle")}
               </span>
             </h1>
 
             <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-12">
-              Nos cartes cadeaux ouvrent les portes de milliers d&apos;événements.
-              <br className="hidden md:block" />
-              Concerts, théâtre, festivals &mdash; le choix leur appartient.
+              {t("heroDesc")}
             </p>
 
             {/* Stats */}
             <div className="flex items-center justify-center gap-12 md:gap-20">
               {[
-                { value: "10K+", label: "Événements" },
-                { value: "12", label: "Mois de validité" },
-                { value: "100%", label: "Sécurisé" },
+                { value: "10K+", label: tc("events") },
+                { value: "12", label: t("monthsValidity") },
+                { value: "100%", label: t("secure") },
               ].map((stat, i) => (
                 <motion.div
                   key={stat.label}
@@ -718,11 +720,11 @@ export default function GiftCardsPage() {
           <div className="lg:col-span-7 space-y-8">
             {/* Step Progress */}
             <div className="hidden md:flex items-center justify-between mb-12">
-              <StepIndicator step={1} currentStep={step} label="Montant" icon={Zap} />
+              <StepIndicator step={1} currentStep={step} label={t("stepAmount")} icon={Zap} />
               <div className="flex-1 h-0.5 bg-zinc-800 mx-4" />
-              <StepIndicator step={2} currentStep={step} label="Design" icon={Sparkles} />
+              <StepIndicator step={2} currentStep={step} label={t("stepDesign")} icon={Sparkles} />
               <div className="flex-1 h-0.5 bg-zinc-800 mx-4" />
-              <StepIndicator step={3} currentStep={step} label="Destinataire" icon={Gift} />
+              <StepIndicator step={3} currentStep={step} label={t("stepRecipient")} icon={Gift} />
             </div>
 
             {/* Step 1: Amount */}
@@ -736,8 +738,8 @@ export default function GiftCardsPage() {
                   <Zap className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-zinc-100">Choisissez le montant</h2>
-                  <p className="text-zinc-500">Sélectionnez ou personnalisez</p>
+                  <h2 className="text-xl font-bold text-zinc-100">{t("chooseAmount")}</h2>
+                  <p className="text-zinc-500">{t("selectOrCustomize")}</p>
                 </div>
               </div>
 
@@ -760,7 +762,7 @@ export default function GiftCardsPage() {
                 )}
               >
                 <label className="flex items-center gap-4">
-                  <span className="text-sm font-medium text-zinc-400">Montant libre</span>
+                  <span className="text-sm font-medium text-zinc-400">{t("customAmount")}</span>
                   <div className="flex-1 relative">
                     <input
                       type="number"
@@ -796,7 +798,7 @@ export default function GiftCardsPage() {
                 onClick={() => setStep(2)}
                 className="mt-6 w-full py-4 rounded-xl bg-zinc-100 text-zinc-900 font-semibold flex items-center justify-center gap-2 hover:bg-white transition-colors"
               >
-                Continuer <ArrowRight className="w-5 h-5" />
+                {tc("continue")} <ArrowRight className="w-5 h-5" />
               </button>
             </motion.div>
 
@@ -815,8 +817,8 @@ export default function GiftCardsPage() {
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-zinc-100">Choisissez le design</h2>
-                  <p className="text-zinc-500">6 styles exclusifs</p>
+                  <h2 className="text-xl font-bold text-zinc-100">{t("chooseDesign")}</h2>
+                  <p className="text-zinc-500">{t("exclusiveStyles")}</p>
                 </div>
               </div>
 
@@ -850,8 +852,8 @@ export default function GiftCardsPage() {
                   <Gift className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-zinc-100">Informations du destinataire</h2>
-                  <p className="text-zinc-500">À qui offrez-vous cette carte ?</p>
+                  <h2 className="text-xl font-bold text-zinc-100">{t("recipientInfo")}</h2>
+                  <p className="text-zinc-500">{t("whoGiving")}</p>
                 </div>
               </div>
 
@@ -859,7 +861,7 @@ export default function GiftCardsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-medium text-zinc-300 mb-2">
-                      Email du destinataire *
+                      {t("recipientEmail")}
                     </label>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
@@ -874,7 +876,7 @@ export default function GiftCardsPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-zinc-300 mb-2">
-                      Nom du destinataire *
+                      {t("recipientName")}
                     </label>
                     <div className="relative">
                       <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
@@ -891,7 +893,7 @@ export default function GiftCardsPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-zinc-300 mb-2">
-                    Votre nom *
+                    {t("yourName")}
                   </label>
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
@@ -907,8 +909,7 @@ export default function GiftCardsPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-zinc-300 mb-2">
-                    Message personnel{" "}
-                    <span className="text-zinc-600 font-normal">(optionnel)</span>
+                    {t("personalMessage")}
                   </label>
                   <div className="relative">
                     <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-zinc-500" />
@@ -943,8 +944,8 @@ export default function GiftCardsPage() {
                       className="w-4 h-4 text-secondary-500"
                     />
                     <div>
-                      <p className="font-medium text-zinc-100">Maintenant</p>
-                      <p className="text-xs text-zinc-500">Envoi immédiat</p>
+                      <p className="font-medium text-zinc-100">{t("sendNow")}</p>
+                      <p className="text-xs text-zinc-500">{t("sendImmediate")}</p>
                     </div>
                   </label>
 
@@ -963,8 +964,8 @@ export default function GiftCardsPage() {
                       className="w-4 h-4 text-secondary-500"
                     />
                     <div>
-                      <p className="font-medium text-zinc-100">Programmer</p>
-                      <p className="text-xs text-zinc-500">Choisir une date</p>
+                      <p className="font-medium text-zinc-100">{t("schedule")}</p>
+                      <p className="text-xs text-zinc-500">{t("chooseDate")}</p>
                     </div>
                   </label>
                 </div>
@@ -996,7 +997,7 @@ export default function GiftCardsPage() {
               {/* Card Preview */}
               <div className="bg-zinc-900 rounded-3xl shadow-xl shadow-black/20 p-8 border border-zinc-800">
                 <p className="text-sm font-medium text-zinc-500 mb-6 text-center">
-                  Aperçu de votre carte
+                  {t("previewCard")}
                 </p>
                 <AnimatePresence mode="wait">
                   <GiftCard3D
@@ -1022,26 +1023,26 @@ export default function GiftCardsPage() {
 
               {/* Purchase Summary */}
               <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-3xl p-8 text-white">
-                <h3 className="font-bold text-lg mb-6">Récapitulatif</h3>
+                <h3 className="font-bold text-lg mb-6">{t("summary")}</h3>
 
                 <div className="space-y-4 mb-8">
                   <div className="flex justify-between">
-                    <span className="text-zinc-400">Montant</span>
+                    <span className="text-zinc-400">{t("stepAmount")}</span>
                     <span className="font-semibold">{formatPrice(finalAmount)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-400">Design</span>
+                    <span className="text-zinc-400">{t("stepDesign")}</span>
                     <span className="font-semibold">{design.name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-400">Envoi</span>
+                    <span className="text-zinc-400">{t("delivery")}</span>
                     <span className="font-semibold">
-                      {formData.sendDate === "now" ? "Immédiat" : formData.scheduledDate || "À définir"}
+                      {formData.sendDate === "now" ? t("immediate") : formData.scheduledDate || t("toBeDefined")}
                     </span>
                   </div>
                   <div className="h-px bg-zinc-700" />
                   <div className="flex justify-between items-center">
-                    <span className="text-zinc-300">Total</span>
+                    <span className="text-zinc-300">{tc("total")}</span>
                     <span className="text-3xl font-bold text-primary-400">
                       {formatPrice(finalAmount)}
                     </span>
@@ -1070,7 +1071,7 @@ export default function GiftCardsPage() {
                   ) : (
                     <>
                       <Gift className="w-5 h-5" />
-                      Acheter la carte
+                      {t("buyCard")}
                     </>
                   )}
                 </motion.button>
@@ -1078,7 +1079,7 @@ export default function GiftCardsPage() {
                 {/* Trust */}
                 <div className="mt-6 flex items-center justify-center gap-2 text-zinc-500 text-xs">
                   <Check className="w-4 h-4 text-emerald-400" />
-                  Paiement sécurisé &bull; Envoi instantané
+                  {t("securePayment")}
                 </div>
               </div>
             </div>

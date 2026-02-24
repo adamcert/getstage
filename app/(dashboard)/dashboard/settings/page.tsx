@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar } from "@/components/ui/avatar";
+import { useTranslation } from "@/hooks/use-translation";
 import {
   User,
   Building2,
@@ -26,7 +27,19 @@ const tabs = [
 ];
 
 export default function SettingsPage() {
+  const { t: ts } = useTranslation("settings");
+  const { t: tc } = useTranslation("common");
+  const { t: td } = useTranslation("dashboard");
   const [activeTab, setActiveTab] = useState("profile");
+
+  // Tabs with translations
+  const localTabs = [
+    { id: "profile", label: ts("profile"), icon: User },
+    { id: "organization", label: ts("organization"), icon: Building2 },
+    { id: "billing", label: ts("billing"), icon: CreditCard },
+    { id: "notifications", label: ts("notifications"), icon: Bell },
+    { id: "security", label: ts("security"), icon: Shield },
+  ];
   const [formData, setFormData] = useState({
     fullName: "Jean Dupont",
     email: "jean@eventplatform.com",
@@ -44,9 +57,9 @@ export default function SettingsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Paramètres</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{td("settings")}</h1>
         <p className="mt-1 text-gray-500">
-          Gérez votre compte et vos préférences.
+          {ts("managePrefs")}
         </p>
       </div>
 
@@ -55,7 +68,7 @@ export default function SettingsPage() {
         <div className="lg:w-64 flex-shrink-0">
           <Card className="p-2">
             <nav className="space-y-1">
-              {tabs.map((tab) => {
+              {localTabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
                   <button
@@ -85,7 +98,7 @@ export default function SettingsPage() {
           {activeTab === "profile" && (
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
-                Informations personnelles
+                {ts("personalInfo")}
               </h2>
 
               {/* Avatar */}
@@ -93,10 +106,10 @@ export default function SettingsPage() {
                 <Avatar size="xl" fallback="JD" />
                 <div>
                   <Button variant="outline" size="sm" leftIcon={<Upload className="w-4 h-4" />}>
-                    Changer la photo
+                    {ts("changePhoto")}
                   </Button>
                   <p className="text-sm text-gray-500 mt-2">
-                    JPG, PNG ou GIF. Max 2MB.
+                    {ts("photoFormat")}
                   </p>
                 </div>
               </div>
@@ -105,26 +118,26 @@ export default function SettingsPage() {
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Input
-                    label="Nom complet"
+                    label={ts("fullName")}
                     value={formData.fullName}
                     onChange={(e) => handleChange("fullName", e.target.value)}
                   />
                   <Input
-                    label="Email"
+                    label={ts("email")}
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleChange("email", e.target.value)}
                   />
                 </div>
                 <Input
-                  label="Téléphone"
+                  label={ts("phone")}
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => handleChange("phone", e.target.value)}
                 />
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Bio
+                    {ts("bio")}
                   </label>
                   <textarea
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-200 resize-none"
@@ -135,7 +148,7 @@ export default function SettingsPage() {
                 </div>
                 <div className="flex justify-end">
                   <Button leftIcon={<Save className="w-4 h-4" />}>
-                    Enregistrer
+                    {tc("save")}
                   </Button>
                 </div>
               </div>
@@ -145,29 +158,29 @@ export default function SettingsPage() {
           {activeTab === "organization" && (
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
-                Organisation
+                {ts("organization")}
               </h2>
               <div className="space-y-6">
                 <Input
-                  label="Nom de l'organisation"
+                  label={ts("orgName")}
                   value={formData.orgName}
                   onChange={(e) => handleChange("orgName", e.target.value)}
                   leftIcon={<Building2 className="w-5 h-5" />}
                 />
                 <Input
-                  label="Site web"
+                  label={ts("website")}
                   value={formData.orgWebsite}
                   onChange={(e) => handleChange("orgWebsite", e.target.value)}
                   leftIcon={<Globe className="w-5 h-5" />}
                 />
                 <Input
-                  label="Adresse"
+                  label={ts("address")}
                   value={formData.orgAddress}
                   onChange={(e) => handleChange("orgAddress", e.target.value)}
                 />
                 <div className="flex justify-end">
                   <Button leftIcon={<Save className="w-4 h-4" />}>
-                    Enregistrer
+                    {tc("save")}
                   </Button>
                 </div>
               </div>
@@ -177,15 +190,15 @@ export default function SettingsPage() {
           {activeTab === "billing" && (
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
-                Facturation
+                {ts("billing")}
               </h2>
               <div className="text-center py-12 text-gray-500">
                 <CreditCard className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                <p className="text-lg font-medium">Aucun moyen de paiement</p>
+                <p className="text-lg font-medium">{ts("noPayment")}</p>
                 <p className="text-sm mt-1 mb-6">
-                  Ajoutez un moyen de paiement pour recevoir vos revenus.
+                  {ts("addPaymentDesc")}
                 </p>
-                <Button>Ajouter un moyen de paiement</Button>
+                <Button>{ts("addPayment")}</Button>
               </div>
             </Card>
           )}
@@ -193,14 +206,14 @@ export default function SettingsPage() {
           {activeTab === "notifications" && (
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
-                Préférences de notifications
+                {ts("notifPrefs")}
               </h2>
               <div className="space-y-6">
                 {[
-                  { id: "sales", label: "Nouvelles ventes", description: "Recevoir un email pour chaque vente" },
-                  { id: "reviews", label: "Avis clients", description: "Être notifié des nouveaux avis" },
-                  { id: "marketing", label: "Marketing", description: "Conseils et actualités Events" },
-                  { id: "security", label: "Sécurité", description: "Alertes de connexion et sécurité" },
+                  { id: "sales", label: ts("newSales"), description: ts("newSalesDesc") },
+                  { id: "reviews", label: ts("customerReviews"), description: ts("customerReviewsDesc") },
+                  { id: "marketing", label: ts("marketing"), description: ts("marketingDesc") },
+                  { id: "security", label: ts("securityNotif"), description: ts("securityNotifDesc") },
                 ].map((item) => (
                   <div
                     key={item.id}
@@ -223,19 +236,19 @@ export default function SettingsPage() {
           {activeTab === "security" && (
             <Card className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-6">
-                Sécurité
+                {ts("security")}
               </h2>
               <div className="space-y-6">
                 <div className="p-4 bg-gray-50 rounded-xl">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-900">Mot de passe</p>
+                      <p className="font-medium text-gray-900">{ts("password")}</p>
                       <p className="text-sm text-gray-500">
-                        Dernière modification il y a 3 mois
+                        {ts("lastChanged")}
                       </p>
                     </div>
                     <Button variant="outline" size="sm">
-                      Modifier
+                      {tc("edit")}
                     </Button>
                   </div>
                 </div>
@@ -243,27 +256,27 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium text-gray-900">
-                        Authentification à deux facteurs
+                        {ts("twoFactor")}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Ajoutez une couche de sécurité supplémentaire
+                        {ts("twoFactorDesc")}
                       </p>
                     </div>
                     <Button variant="outline" size="sm">
-                      Activer
+                      {tc("enable")}
                     </Button>
                   </div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-900">Sessions actives</p>
+                      <p className="font-medium text-gray-900">{ts("activeSessions")}</p>
                       <p className="text-sm text-gray-500">
-                        Gérez vos appareils connectés
+                        {ts("manageDevices")}
                       </p>
                     </div>
                     <Button variant="outline" size="sm">
-                      Voir
+                      {tc("view")}
                     </Button>
                   </div>
                 </div>

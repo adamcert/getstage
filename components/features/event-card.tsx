@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, formatTime, formatPrice } from "@/lib/utils";
+import { useTranslation } from "@/hooks/use-translation";
 import type { Event } from "@/types/database";
 
 interface EventCardProps {
@@ -74,8 +75,8 @@ function isHot(event: Event): boolean {
 /**
  * Formats the price display text
  */
-function formatPriceDisplay(price: number): string {
-  return price === 0 ? "Gratuit" : `${formatPrice(price)}`;
+function formatPriceDisplay(price: number, freeLabel: string): string {
+  return price === 0 ? freeLabel : `${formatPrice(price)}`;
 }
 
 /**
@@ -83,6 +84,8 @@ function formatPriceDisplay(price: number): string {
  * A smaller card for lists and sidebars
  */
 function EventCardCompact({ event }: { event: Event }) {
+  const { t: tc } = useTranslation("common");
+  const { t: tb } = useTranslation("badges");
   const minPrice = getMinPrice(event);
 
   return (
@@ -104,7 +107,7 @@ function EventCardCompact({ event }: { event: Event }) {
             />
             {isSoldOut(event) && (
               <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                <span className="text-white text-xs font-semibold">Complet</span>
+                <span className="text-white text-xs font-semibold">{tb("soldOut")}</span>
               </div>
             )}
           </div>
@@ -117,7 +120,7 @@ function EventCardCompact({ event }: { event: Event }) {
               {formatDate(event.start_date)}
             </p>
             <p className="text-sm font-semibold text-primary-400 mt-1">
-              {minPrice === 0 ? "Gratuit" : `Des ${formatPrice(minPrice)}`}
+              {minPrice === 0 ? tc("free") : `${tc("from")} ${formatPrice(minPrice)}`}
             </p>
           </div>
         </Card>
@@ -131,6 +134,9 @@ function EventCardCompact({ event }: { event: Event }) {
  * Large card with overlay gradient for hero sections
  */
 function EventCardFeatured({ event }: { event: Event }) {
+  const { t: tc } = useTranslation("common");
+  const { t: tb } = useTranslation("badges");
+  const { t: te } = useTranslation("eventCard");
   const minPrice = getMinPrice(event);
   const soldOut = isSoldOut(event);
   const tonight = isTonight(event.start_date);
@@ -158,11 +164,11 @@ function EventCardFeatured({ event }: { event: Event }) {
 
           {/* Badges - Top Left */}
           <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-            {event.is_featured && <Badge variant="featured">Coup de coeur</Badge>}
-            {event.is_new && <Badge variant="new">Nouveau</Badge>}
-            {hot && !soldOut && <Badge variant="hot">Populaire</Badge>}
-            {tonight && <Badge variant="tonight">Ce soir</Badge>}
-            {soldOut && <Badge variant="soldout">Complet</Badge>}
+            {event.is_featured && <Badge variant="featured">{tb("featured")}</Badge>}
+            {event.is_new && <Badge variant="new">{tb("new")}</Badge>}
+            {hot && !soldOut && <Badge variant="hot">{tb("popular")}</Badge>}
+            {tonight && <Badge variant="tonight">{tb("tonight")}</Badge>}
+            {soldOut && <Badge variant="soldout">{tb("soldOut")}</Badge>}
           </div>
 
           {/* Content - Bottom */}
@@ -190,10 +196,10 @@ function EventCardFeatured({ event }: { event: Event }) {
             {/* Price and CTA */}
             <div className="flex items-center justify-between">
               <span className="text-lg font-bold">
-                {minPrice === 0 ? "Gratuit" : `Des ${formatPrice(minPrice)}`}
+                {minPrice === 0 ? tc("free") : `${tc("from")} ${formatPrice(minPrice)}`}
               </span>
               <span className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold hover:bg-white/30 transition-colors">
-                Réserver
+                {te("book")}
               </span>
             </div>
           </div>
@@ -208,6 +214,8 @@ function EventCardFeatured({ event }: { event: Event }) {
  * Standard card with image, badges, price, and event info
  */
 function EventCardDefault({ event }: { event: Event }) {
+  const { t: tc } = useTranslation("common");
+  const { t: tb } = useTranslation("badges");
   const minPrice = getMinPrice(event);
   const soldOut = isSoldOut(event);
   const tonight = isTonight(event.start_date);
@@ -236,17 +244,17 @@ function EventCardDefault({ event }: { event: Event }) {
 
             {/* Badges - Top Left */}
             <div className="absolute top-3 left-3 flex flex-wrap gap-2">
-              {event.is_featured && <Badge variant="featured">Coup de coeur</Badge>}
-              {event.is_new && <Badge variant="new">Nouveau</Badge>}
-              {hot && !soldOut && <Badge variant="hot">Populaire</Badge>}
-              {tonight && <Badge variant="tonight">Ce soir</Badge>}
-              {soldOut && <Badge variant="soldout">Complet</Badge>}
+              {event.is_featured && <Badge variant="featured">{tb("featured")}</Badge>}
+              {event.is_new && <Badge variant="new">{tb("new")}</Badge>}
+              {hot && !soldOut && <Badge variant="hot">{tb("popular")}</Badge>}
+              {tonight && <Badge variant="tonight">{tb("tonight")}</Badge>}
+              {soldOut && <Badge variant="soldout">{tb("soldOut")}</Badge>}
             </div>
 
             {/* Price Tag - Bottom Right */}
             <div className="absolute bottom-3 right-3">
               <span className="bg-zinc-900/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-zinc-100 border border-zinc-700/50 shadow-lg">
-                {formatPriceDisplay(minPrice)}
+                {formatPriceDisplay(minPrice, tc("free"))}
               </span>
             </div>
 
@@ -254,7 +262,7 @@ function EventCardDefault({ event }: { event: Event }) {
             {soldOut && (
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                 <span className="bg-zinc-900 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                  Complet
+                  {tb("soldOut")}
                 </span>
               </div>
             )}

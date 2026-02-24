@@ -4,29 +4,39 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Menu, X, User, ShoppingBag, Heart, PartyPopper } from "lucide-react";
+import { Search, Menu, X, User, ShoppingBag, Heart, PartyPopper, Globe } from "lucide-react";
 import { Button, Avatar } from "@/components/ui";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { useCartStore, selectCartItemCount } from "@/stores/cart-store";
+import { useTranslation, useLocale } from "@/hooks/use-translation";
 import { cn } from "@/lib/utils";
-
-const navLinks = [
-  { href: "/", label: "Accueil" },
-  { href: "/search", label: "Explorer" },
-  { href: "/resale", label: "Revente" },
-  { href: "/gift-cards", label: "Cartes cadeaux" },
-];
 
 export function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   const [user, setUser] = useState<any>(null); // TODO: Get from auth
+
+  const { t } = useTranslation("header");
+  const { locale, toggleLocale } = useLocale();
+
+  const navLinks = [
+    { href: "/", label: t("home") },
+    { href: "/search", label: t("explore") },
+    { href: "/resale", label: t("resale") },
+    { href: "/gift-cards", label: t("giftCards") },
+  ];
 
   // Cart store
   const itemCount = useCartStore(selectCartItemCount);
   const prevItemCountRef = useRef(itemCount);
+
+  // Fix hydration mismatch - only show cart count after client mount
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   // Animate cart button when item count increases
   useEffect(() => {
@@ -94,11 +104,11 @@ export function Header() {
                 isAnimating && "animate-bounce"
               )}
               onClick={() => setIsCartOpen(true)}
-              aria-label="Ouvrir le panier"
+              aria-label={t("openCart")}
             >
               <ShoppingBag className="w-5 h-5" />
               <AnimatePresence>
-                {itemCount > 0 && (
+                {isHydrated && itemCount > 0 && (
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -126,10 +136,20 @@ export function Header() {
             ) : (
               <Link href="/login">
                 <Button variant="primary" size="sm">
-                  Connexion
+                  {t("signIn")}
                 </Button>
               </Link>
             )}
+
+            {/* Language toggle */}
+            <button
+              onClick={toggleLocale}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors border border-zinc-800 hover:border-zinc-700"
+              aria-label={locale === "fr" ? "Switch to English" : "Passer en Français"}
+            >
+              <Globe className="w-3.5 h-3.5" />
+              {locale === "fr" ? "EN" : "FR"}
+            </button>
 
             {/* Mobile menu button */}
             <Button

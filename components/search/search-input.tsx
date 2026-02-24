@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { Search, X, Clock, TrendingUp, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/use-translation";
 
 // =============================================================================
 // TYPES
@@ -135,11 +136,14 @@ export function SearchInput({
   value,
   onChange,
   onSubmit,
-  placeholder = "Rechercher un événement, un artiste, un lieu...",
+  placeholder,
   className,
   autoFocus = false,
   showSuggestions = true,
 }: SearchInputProps) {
+  const { t: ts } = useTranslation("search");
+  const { t: tc } = useTranslation("common");
+  const resolvedPlaceholder = placeholder || ts("placeholder");
   const [isFocused, setIsFocused] = useState(false);
   const [history, setHistory] = useState<Suggestion[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -293,7 +297,7 @@ export function SearchInput({
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onKeyDown={handleKeyDown}
-          placeholder={placeholder}
+          placeholder={resolvedPlaceholder}
           autoFocus={autoFocus}
           className={cn(
             "w-full py-4 pl-12 pr-12 bg-transparent outline-none",
@@ -315,7 +319,7 @@ export function SearchInput({
               exit={{ opacity: 0, scale: 0.8 }}
               onClick={handleClear}
               className="absolute right-4 top-1/2 -translate-y-1/2 p-1.5 rounded-full text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
-              aria-label="Effacer la recherche"
+              aria-label={ts("clearSearch")}
             >
               <X className="w-4 h-4" />
             </motion.button>
@@ -338,13 +342,13 @@ export function SearchInput({
               <div className="px-4 py-2">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-semibold text-zinc-600 uppercase tracking-wide">
-                    Recherches récentes
+                    {ts("recentSearches")}
                   </span>
                   <button
                     onClick={handleClearHistory}
                     className="text-xs text-zinc-500 hover:text-primary-400 transition-colors"
                   >
-                    Effacer tout
+                    {tc("clearAll")}
                   </button>
                 </div>
               </div>
@@ -354,7 +358,7 @@ export function SearchInput({
             {!value && history.length === 0 && (
               <div className="px-4 py-2">
                 <span className="text-xs font-semibold text-zinc-600 uppercase tracking-wide">
-                  Recherches populaires
+                  {ts("popularSearches")}
                 </span>
               </div>
             )}
@@ -449,6 +453,7 @@ interface CompactSearchInputProps {
 }
 
 export function CompactSearchInput({ onExpand, className }: CompactSearchInputProps) {
+  const { t: ts } = useTranslation("search");
   return (
     <button
       onClick={onExpand}
@@ -460,7 +465,7 @@ export function CompactSearchInput({ onExpand, className }: CompactSearchInputPr
       )}
     >
       <Search className="w-4 h-4" />
-      <span className="hidden sm:inline">Rechercher...</span>
+      <span className="hidden sm:inline">{ts("searchCompact")}</span>
     </button>
   );
 }

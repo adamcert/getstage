@@ -1,31 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Instagram, Twitter, Facebook, Youtube, PartyPopper } from "lucide-react";
-
-const footerLinks = {
-  discover: [
-    { href: "/search", label: "Explorer" },
-    { href: "/search?category=concert", label: "Concerts" },
-    { href: "/search?category=dj", label: "Clubs & DJ" },
-    { href: "/search?category=theatre", label: "Théâtre" },
-    { href: "/search?category=expo", label: "Expositions" },
-  ],
-  services: [
-    { href: "/resale", label: "Revente de billets" },
-    { href: "/gift-cards", label: "Cartes cadeaux" },
-    { href: "/for-organizers", label: "Pour les organisateurs" },
-    { href: "/pricing", label: "Tarifs" },
-  ],
-  support: [
-    { href: "/help", label: "Centre d'aide" },
-    { href: "/contact", label: "Contact" },
-    { href: "/faq", label: "FAQ" },
-  ],
-  legal: [
-    { href: "/terms", label: "CGU" },
-    { href: "/privacy", label: "Confidentialité" },
-    { href: "/cookies", label: "Cookies" },
-  ],
-};
+import { useTranslation } from "@/hooks/use-translation";
 
 const socialLinks = [
   { href: "https://instagram.com", icon: Instagram, label: "Instagram" },
@@ -35,6 +12,36 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const { t } = useTranslation("footer");
+  const { t: tCat } = useTranslation("categories");
+  const { t: tHeader } = useTranslation("header");
+
+  const footerLinks = {
+    discover: [
+      { href: "/search", label: tHeader("explore") },
+      { href: "/search?category=concert", label: tCat("concerts") },
+      { href: "/search?category=dj", label: tCat("dj") },
+      { href: "/search?category=theatre", label: tCat("theatre") },
+      { href: "/search?category=expo", label: tCat("expos") },
+    ],
+    services: [
+      { href: "/resale", label: t("ticketResale") },
+      { href: "/gift-cards", label: tHeader("giftCards") },
+      { href: "/for-organizers", label: t("forOrganizers") },
+      { href: "/pricing", label: t("pricing") },
+    ],
+    support: [
+      { href: "/help", label: t("helpCenter") },
+      { href: "/contact", label: t("contact") },
+      { href: "/faq", label: "FAQ" },
+    ],
+    legal: [
+      { href: "/terms", label: t("terms") },
+      { href: "/privacy", label: t("privacy") },
+      { href: "/cookies", label: t("cookies") },
+    ],
+  };
+
   return (
     <footer className="bg-zinc-950 text-white">
       {/* Gradient line at top */}
@@ -54,7 +61,7 @@ export function Footer() {
               </div>
             </div>
             <p className="text-zinc-500 text-sm mb-4">
-              Découvrez les meilleurs événements près de chez vous.
+              {t("tagline")}
             </p>
             <div className="flex gap-3">
               {socialLinks.map((social) => (
@@ -74,7 +81,7 @@ export function Footer() {
 
           {/* Discover */}
           <div>
-            <h4 className="font-display font-semibold mb-4">Découvrir</h4>
+            <h4 className="font-display font-semibold mb-4">{t("discover")}</h4>
             <ul className="space-y-2">
               {footerLinks.discover.map((link) => (
                 <li key={link.href}>
@@ -88,7 +95,7 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="font-display font-semibold mb-4">Services</h4>
+            <h4 className="font-display font-semibold mb-4">{t("services")}</h4>
             <ul className="space-y-2">
               {footerLinks.services.map((link) => (
                 <li key={link.href}>
@@ -102,7 +109,7 @@ export function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className="font-display font-semibold mb-4">Support</h4>
+            <h4 className="font-display font-semibold mb-4">{t("support")}</h4>
             <ul className="space-y-2">
               {footerLinks.support.map((link) => (
                 <li key={link.href}>
@@ -116,7 +123,7 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="font-display font-semibold mb-4">Legal</h4>
+            <h4 className="font-display font-semibold mb-4">{t("legal")}</h4>
             <ul className="space-y-2">
               {footerLinks.legal.map((link) => (
                 <li key={link.href}>
@@ -130,7 +137,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-zinc-800 mt-12 pt-8 text-center text-zinc-500 text-sm">
-          <p>&copy; {new Date().getFullYear()} GetStage <span className="text-zinc-600">by SNAPSS</span>. Tous droits réservés.</p>
+          <p>&copy; {new Date().getFullYear()} GetStage <span className="text-zinc-600">by SNAPSS</span>. {t("allRights")}</p>
         </div>
       </div>
     </footer>

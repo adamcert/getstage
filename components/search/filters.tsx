@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/use-translation";
 import type { EventCategory, EventFilters } from "@/types/database";
 
 // =============================================================================
@@ -37,16 +38,16 @@ interface FilterOption {
 // CONSTANTS
 // =============================================================================
 
-const CATEGORIES: FilterOption[] = [
-  { value: "concert", label: "Concert" },
-  { value: "dj", label: "DJ & Club" },
-  { value: "theatre", label: "Théâtre" },
-  { value: "comedy", label: "Comédie" },
-  { value: "expo", label: "Exposition" },
-  { value: "film", label: "Cinéma" },
-  { value: "party", label: "Soirée" },
-  { value: "festival", label: "Festival" },
-  { value: "other", label: "Autre" },
+const CATEGORY_KEYS: { value: string; labelKey: "concert" | "dj" | "theatre" | "comedy" | "expo" | "cinema" | "party" | "festival" | "other" }[] = [
+  { value: "concert", labelKey: "concert" },
+  { value: "dj", labelKey: "dj" },
+  { value: "theatre", labelKey: "theatre" },
+  { value: "comedy", labelKey: "comedy" },
+  { value: "expo", labelKey: "expo" },
+  { value: "film", labelKey: "cinema" },
+  { value: "party", labelKey: "party" },
+  { value: "festival", labelKey: "festival" },
+  { value: "other", labelKey: "other" },
 ];
 
 const CITIES: FilterOption[] = [
@@ -60,13 +61,6 @@ const CITIES: FilterOption[] = [
   { value: "nantes", label: "Nantes" },
   { value: "strasbourg", label: "Strasbourg" },
   { value: "montpellier", label: "Montpellier" },
-];
-
-const PRICE_RANGES: FilterOption[] = [
-  { value: "free", label: "Gratuit" },
-  { value: "0-20", label: "0 - 20 EUR" },
-  { value: "20-50", label: "20 - 50 EUR" },
-  { value: "50+", label: "50 EUR+" },
 ];
 
 type DatePreset = "tonight" | "tomorrow" | "weekend" | "custom";
@@ -272,7 +266,22 @@ function FilterButton({ icon, label, value, isActive, onClick, className }: Filt
 // =============================================================================
 
 export function FilterBar({ filters, onFiltersChange, className }: FiltersProps) {
+  const { t: tf } = useTranslation("filters");
+  const { t: tCat } = useTranslation("categories");
+  const { t: tc } = useTranslation("common");
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
+  const CATEGORIES: FilterOption[] = CATEGORY_KEYS.map((c) => ({
+    value: c.value,
+    label: tCat(c.labelKey),
+  }));
+
+  const PRICE_RANGES: FilterOption[] = [
+    { value: "free", label: tc("free") },
+    { value: "0-20", label: "0 - 20 EUR" },
+    { value: "20-50", label: "20 - 50 EUR" },
+    { value: "50+", label: "50 EUR+" },
+  ];
 
   const activeFiltersCount = useMemo(() => {
     let count = 0;
@@ -359,19 +368,19 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
   };
 
   const getSelectedDateLabel = () => {
-    if (filters.isTonight) return "Ce soir";
+    if (filters.isTonight) return tf("tonight");
     if (filters.dateFrom) {
       const date = new Date(filters.dateFrom);
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      if (date.toDateString() === tomorrow.toDateString()) return "Demain";
-      return "Ce week-end";
+      if (date.toDateString() === tomorrow.toDateString()) return tf("tomorrow");
+      return tf("thisWeekend");
     }
     return undefined;
   };
 
   const getSelectedPriceLabel = () => {
-    if (filters.isFree) return "Gratuit";
+    if (filters.isFree) return tc("free");
     if (filters.priceMin !== undefined && filters.priceMax !== undefined) {
       return `${filters.priceMin} - ${filters.priceMax} EUR`;
     }
@@ -386,7 +395,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
         trigger={
           <FilterButton
             icon={<Tag className="w-4 h-4" />}
-            label="Catégorie"
+            label={tf("category")}
             value={getSelectedCategoryLabel()}
             isActive={!!filters.category}
           />
@@ -402,7 +411,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
               !filters.category ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Toutes les catégories</span>
+            <span className="flex-1">{tf("allCategories")}</span>
             {!filters.category && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           {CATEGORIES.map((category) => (
@@ -428,7 +437,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
         trigger={
           <FilterButton
             icon={<MapPin className="w-4 h-4" />}
-            label="Ville"
+            label={tf("city")}
             value={getSelectedCityLabel()}
             isActive={!!filters.city}
           />
@@ -444,7 +453,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
               !filters.city ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Toutes les villes</span>
+            <span className="flex-1">{tf("allCities")}</span>
             {!filters.city && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           {CITIES.map((city) => (
@@ -470,7 +479,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
         trigger={
           <FilterButton
             icon={<Calendar className="w-4 h-4" />}
-            label="Date"
+            label={tf("date")}
             value={getSelectedDateLabel()}
             isActive={!!(filters.dateFrom || filters.isTonight)}
           />
@@ -495,7 +504,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
                 : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Toutes les dates</span>
+            <span className="flex-1">{tf("allDates")}</span>
             {!filters.dateFrom && !filters.isTonight && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           <button
@@ -505,30 +514,30 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
               filters.isTonight ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Ce soir</span>
+            <span className="flex-1">{tf("tonight")}</span>
             {filters.isTonight && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           <button
             onClick={() => handleDateChange("tomorrow")}
             className={cn(
               "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
-              getSelectedDateLabel() === "Demain" ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
+              getSelectedDateLabel() === tf("tomorrow") ? "bg-secondary-500/10 text-secondary-300" : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Demain</span>
-            {getSelectedDateLabel() === "Demain" && <Check className="w-4 h-4 text-secondary-400" />}
+            <span className="flex-1">{tf("tomorrow")}</span>
+            {getSelectedDateLabel() === tf("tomorrow") && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
           <button
             onClick={() => handleDateChange("weekend")}
             className={cn(
               "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors",
-              getSelectedDateLabel() === "Ce week-end"
+              getSelectedDateLabel() === tf("thisWeekend")
                 ? "bg-secondary-500/10 text-secondary-300"
                 : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Ce week-end</span>
-            {getSelectedDateLabel() === "Ce week-end" && <Check className="w-4 h-4 text-secondary-400" />}
+            <span className="flex-1">{tf("thisWeekend")}</span>
+            {getSelectedDateLabel() === tf("thisWeekend") && <Check className="w-4 h-4 text-secondary-400" />}
           </button>
         </div>
       </Dropdown>
@@ -538,7 +547,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
         trigger={
           <FilterButton
             icon={<Euro className="w-4 h-4" />}
-            label="Prix"
+            label={tf("price")}
             value={getSelectedPriceLabel()}
             isActive={!!(filters.priceMin !== undefined || filters.priceMax !== undefined || filters.isFree)}
           />
@@ -556,7 +565,7 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
                 : "hover:bg-zinc-800"
             )}
           >
-            <span className="flex-1">Tous les prix</span>
+            <span className="flex-1">{tf("allPrices")}</span>
             {!filters.priceMin && !filters.priceMax && !filters.isFree && (
               <Check className="w-4 h-4 text-secondary-400" />
             )}
@@ -595,14 +604,14 @@ export function FilterBar({ filters, onFiltersChange, className }: FiltersProps)
             className="flex items-center gap-2"
           >
             <Badge variant="hot" className="px-3 py-1">
-              {activeFiltersCount} filtre{activeFiltersCount > 1 ? "s" : ""}
+              {activeFiltersCount} {activeFiltersCount > 1 ? tf("filtersCount") : tf("filterCount")}
             </Badge>
             <button
               onClick={resetFilters}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              Réinitialiser
+              {tc("reset")}
             </button>
           </motion.div>
         )}
@@ -621,7 +630,22 @@ interface FilterSheetProps extends FiltersProps {
 }
 
 export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: FilterSheetProps) {
+  const { t: tf } = useTranslation("filters");
+  const { t: tCat } = useTranslation("categories");
+  const { t: tc } = useTranslation("common");
   const [localFilters, setLocalFilters] = useState<EventFilters>(filters);
+
+  const CATEGORIES: FilterOption[] = CATEGORY_KEYS.map((c) => ({
+    value: c.value,
+    label: tCat(c.labelKey),
+  }));
+
+  const PRICE_RANGES: FilterOption[] = [
+    { value: "free", label: tc("free") },
+    { value: "0-20", label: "0 - 20 EUR" },
+    { value: "20-50", label: "20 - 50 EUR" },
+    { value: "50+", label: "50 EUR+" },
+  ];
 
   const activeFiltersCount = useMemo(() => {
     let count = 0;
@@ -709,7 +733,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
             <div className="flex items-center justify-between px-4 pb-4 border-b border-zinc-800">
               <div className="flex items-center gap-2">
                 <Filter className="w-5 h-5 text-zinc-400" />
-                <h2 className="text-lg font-semibold text-zinc-100">Filtres</h2>
+                <h2 className="text-lg font-semibold text-zinc-100">{tf("filters")}</h2>
                 {activeFiltersCount > 0 && (
                   <Badge variant="hot" className="px-2 py-0.5 text-xs">
                     {activeFiltersCount}
@@ -730,7 +754,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
               <div>
                 <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-100 mb-3">
                   <Tag className="w-4 h-4 text-zinc-500" />
-                  Catégorie
+                  {tf("category")}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -742,7 +766,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Toutes
+                    {tCat("allFem")}
                   </button>
                   {CATEGORIES.map((category) => (
                     <button
@@ -770,7 +794,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
               <div>
                 <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-100 mb-3">
                   <MapPin className="w-4 h-4 text-zinc-500" />
-                  Ville
+                  {tf("city")}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -782,7 +806,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Toutes
+                    {tCat("allFem")}
                   </button>
                   {CITIES.map((city) => (
                     <button
@@ -805,7 +829,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
               <div>
                 <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-100 mb-3">
                   <Calendar className="w-4 h-4 text-zinc-500" />
-                  Date
+                  {tf("date")}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -824,7 +848,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Toutes
+                    {tCat("allFem")}
                   </button>
                   <button
                     onClick={() => handleDatePreset("tonight")}
@@ -835,7 +859,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Ce soir
+                    {tf("tonight")}
                   </button>
                   <button
                     onClick={() => handleDatePreset("tomorrow")}
@@ -846,7 +870,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Demain
+                    {tf("tomorrow")}
                   </button>
                   <button
                     onClick={() => handleDatePreset("weekend")}
@@ -855,7 +879,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                       "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Ce week-end
+                    {tf("thisWeekend")}
                   </button>
                 </div>
               </div>
@@ -864,7 +888,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
               <div>
                 <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-100 mb-3">
                   <Euro className="w-4 h-4 text-zinc-500" />
-                  Prix
+                  {tf("price")}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -883,7 +907,7 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
                         : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                     )}
                   >
-                    Tous
+                    {tCat("allMasc")}
                   </button>
                   {PRICE_RANGES.map((range) => {
                     const isSelected =
@@ -915,10 +939,10 @@ export function FilterSheet({ filters, onFiltersChange, isOpen, onClose }: Filte
             <div className="sticky bottom-0 bg-zinc-900 border-t border-zinc-800 px-4 py-4 flex gap-3">
               <Button variant="outline" className="flex-1" onClick={handleReset}>
                 <RotateCcw className="w-4 h-4 mr-2" />
-                Réinitialiser
+                {tc("reset")}
               </Button>
               <Button variant="primary" className="flex-1" onClick={handleApply}>
-                Appliquer{activeFiltersCount > 0 && ` (${activeFiltersCount})`}
+                {tc("apply")}{activeFiltersCount > 0 && ` (${activeFiltersCount})`}
               </Button>
             </div>
           </motion.div>
@@ -939,6 +963,7 @@ interface FilterTriggerProps {
 }
 
 export function FilterTrigger({ activeCount, onClick, className }: FilterTriggerProps) {
+  const { t: tf } = useTranslation("filters");
   return (
     <button
       onClick={onClick}
@@ -952,7 +977,7 @@ export function FilterTrigger({ activeCount, onClick, className }: FilterTrigger
       )}
     >
       <Filter className={cn("w-4 h-4", activeCount > 0 ? "text-secondary-400" : "text-zinc-500")} />
-      <span>Filtres</span>
+      <span>{tf("filters")}</span>
       {activeCount > 0 && (
         <Badge variant="hot" className="px-2 py-0.5 text-xs ml-1">
           {activeCount}

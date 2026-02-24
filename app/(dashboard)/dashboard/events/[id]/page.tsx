@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { mockEvents } from "@/lib/data/mock-events";
+import { useTranslation } from "@/hooks/use-translation";
 import type { Event, EventCategory, EventStatus } from "@/types/database";
 import {
   ArrowLeft,
@@ -87,6 +88,35 @@ export default function EditEventPage() {
   const router = useRouter();
   const params = useParams();
   const eventId = params.id as string;
+  const { t: tf } = useTranslation("eventForm");
+  const { t: td } = useTranslation("dashboard");
+  const { t: tcat } = useTranslation("categories");
+  const { t: tc } = useTranslation("common");
+
+  // Categories with translations
+  const localCategories: { value: EventCategory; label: string }[] = [
+    { value: "concert", label: tcat("concert") },
+    { value: "dj", label: tcat("djParty") },
+    { value: "theatre", label: tcat("theatre") },
+    { value: "comedy", label: tcat("comedyHumor") },
+    { value: "expo", label: tcat("expo") },
+    { value: "film", label: tcat("cinema") },
+    { value: "party", label: tcat("fete") },
+    { value: "festival", label: tcat("festival") },
+    { value: "other", label: tcat("other") },
+  ];
+
+  // Status badge with translations
+  function getLocalStatusBadge(status: EventStatus) {
+    const statusConfig: Record<EventStatus, { label: string; variant: "default" | "new" | "hot" | "tonight" | "soldout" | "featured" }> = {
+      draft: { label: td("draft"), variant: "default" },
+      preview: { label: td("preview"), variant: "new" },
+      published: { label: td("published"), variant: "hot" },
+      cancelled: { label: td("cancelled"), variant: "soldout" },
+      past: { label: td("past"), variant: "default" },
+    };
+    return statusConfig[status] || statusConfig.draft;
+  }
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -170,7 +200,7 @@ export default function EditEventPage() {
   const removeTicketType = (id: string) => {
     const ticket = ticketTypes.find((t) => t.id === id);
     if (ticket && ticket.sold > 0) {
-      alert("Impossible de supprimer un type de billet avec des ventes.");
+      alert(tf("cantDeleteSales"));
       return;
     }
     if (ticketTypes.length > 1) {
@@ -248,20 +278,20 @@ export default function EditEventPage() {
         <Card className="p-6 text-center">
           <CalendarDays className="w-12 h-12 mx-auto mb-4 text-gray-300" />
           <h2 className="text-lg font-medium text-gray-900">
-            Événement non trouvé
+            {tf("eventNotFound")}
           </h2>
           <p className="text-gray-500 mt-1 mb-6">
-            Cet événement n'existe pas ou a été supprimé.
+            {tf("eventNotFoundDesc")}
           </p>
           <Link href="/dashboard">
-            <Button>Retour au dashboard</Button>
+            <Button>{tf("backToDashboard")}</Button>
           </Link>
         </Card>
       </div>
     );
   }
 
-  const statusBadge = getStatusBadge(event.status);
+  const statusBadge = getLocalStatusBadge(event.status);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -276,7 +306,7 @@ export default function EditEventPage() {
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-2xl font-bold text-gray-900">
-                Modifier l'événement
+                {tf("editEvent")}
               </h1>
               <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
             </div>
@@ -285,7 +315,7 @@ export default function EditEventPage() {
         </div>
         <Link href={`/event/${event.slug}`} target="_blank">
           <Button variant="outline" size="sm" leftIcon={<Eye className="w-4 h-4" />}>
-            Voir
+            {tc("view")}
           </Button>
         </Link>
       </div>
@@ -298,7 +328,7 @@ export default function EditEventPage() {
               <Ticket className="w-5 h-5 text-primary-500" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Tickets vendus</p>
+              <p className="text-sm text-gray-500">{td("ticketsSold")}</p>
               <p className="text-xl font-bold text-gray-900">
                 {totalSold} / {totalTickets}
               </p>
@@ -312,7 +342,7 @@ export default function EditEventPage() {
               />
             </div>
             <p className="text-xs text-gray-400 mt-1">
-              {Math.round(salesProgress)}% des places vendues
+              {Math.round(salesProgress)}{tf("seatsSold")}
             </p>
           </div>
         </Card>
@@ -323,7 +353,7 @@ export default function EditEventPage() {
               <TrendingUp className="w-5 h-5 text-green-500" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Revenus</p>
+              <p className="text-sm text-gray-500">{td("revenue")}</p>
               <p className="text-xl font-bold text-gray-900">
                 {totalRevenue.toLocaleString("fr-FR")} EUR
               </p>
@@ -337,7 +367,7 @@ export default function EditEventPage() {
               <Users className="w-5 h-5 text-secondary-500" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Participants</p>
+              <p className="text-sm text-gray-500">{td("attendees")}</p>
               <p className="text-xl font-bold text-gray-900">{totalSold}</p>
             </div>
           </div>
@@ -350,24 +380,24 @@ export default function EditEventPage() {
         <Card>
           <CardHeader>
             <h2 className="text-lg font-semibold text-gray-900">
-              Informations générales
+              {tf("generalInfo")}
             </h2>
           </CardHeader>
           <CardContent className="space-y-4">
             <Input
-              label="Titre de l'événement *"
-              placeholder="Ex: Concert de Jazz au Sunset"
+              label={tf("eventTitle")}
+              placeholder={tf("eventPlaceholder")}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
+                {tf("description")}
               </label>
               <textarea
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all duration-200 placeholder:text-gray-400 min-h-[120px] resize-y"
-                placeholder="Décrivez votre événement..."
+                placeholder={tf("descPlaceholder")}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -375,14 +405,14 @@ export default function EditEventPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Catégorie *
+                {tf("categoryLabel")}
               </label>
               <select
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all duration-200"
                 value={category}
                 onChange={(e) => setCategory(e.target.value as EventCategory)}
               >
-                {categories.map((cat) => (
+                {localCategories.map((cat) => (
                   <option key={cat.value} value={cat.value}>
                     {cat.label}
                   </option>
@@ -396,20 +426,20 @@ export default function EditEventPage() {
         <Card>
           <CardHeader>
             <h2 className="text-lg font-semibold text-gray-900">
-              Date et heure
+              {tf("dateAndTime")}
             </h2>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="Date de début *"
+                label={tf("startDate")}
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 leftIcon={<CalendarDays className="w-5 h-5" />}
               />
               <Input
-                label="Heure de début *"
+                label={tf("startTime")}
                 type="time"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
@@ -418,14 +448,14 @@ export default function EditEventPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="Date de fin"
+                label={tf("endDate")}
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 leftIcon={<CalendarDays className="w-5 h-5" />}
               />
               <Input
-                label="Heure de fin"
+                label={tf("endTime")}
                 type="time"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
@@ -438,12 +468,12 @@ export default function EditEventPage() {
         {/* Location */}
         <Card>
           <CardHeader>
-            <h2 className="text-lg font-semibold text-gray-900">Lieu</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{tf("location")}</h2>
           </CardHeader>
           <CardContent>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Sélectionner un lieu *
+                {tf("selectVenue")}
               </label>
               <div className="relative">
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -452,7 +482,7 @@ export default function EditEventPage() {
                   value={venueId}
                   onChange={(e) => setVenueId(e.target.value)}
                 >
-                  <option value="">Choisir un lieu...</option>
+                  <option value="">{tf("chooseVenue")}</option>
                   {mockVenues.map((venue) => (
                     <option key={venue.id} value={venue.id}>
                       {venue.name}
@@ -468,7 +498,7 @@ export default function EditEventPage() {
         <Card>
           <CardHeader>
             <h2 className="text-lg font-semibold text-gray-900">
-              Image de couverture
+              {tf("coverImage")}
             </h2>
           </CardHeader>
           <CardContent>
@@ -492,10 +522,10 @@ export default function EditEventPage() {
               >
                 <ImageIcon className="w-12 h-12 mb-2" />
                 <span className="text-sm font-medium">
-                  Cliquez pour ajouter une image
+                  {tf("clickToAdd")}
                 </span>
                 <span className="text-xs mt-1">
-                  PNG, JPG jusqu'à 10MB
+                  {tf("imageFormat")}
                 </span>
               </button>
             )}
@@ -507,7 +537,7 @@ export default function EditEventPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
-                Types de billets
+                {tf("ticketTypes")}
               </h2>
               <Button
                 variant="outline"
@@ -515,7 +545,7 @@ export default function EditEventPage() {
                 onClick={addTicketType}
                 leftIcon={<Plus className="w-4 h-4" />}
               >
-                Ajouter
+                {tf("add")}
               </Button>
             </div>
           </CardHeader>
@@ -528,14 +558,14 @@ export default function EditEventPage() {
                 <div className="flex items-start gap-4">
                   <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <Input
-                      placeholder="Nom du billet"
+                      placeholder={tf("ticketName")}
                       value={ticket.name}
                       onChange={(e) =>
                         updateTicketType(ticket.id, "name", e.target.value)
                       }
                     />
                     <Input
-                      placeholder="Prix"
+                      placeholder={tf("price")}
                       type="number"
                       min="0"
                       step="0.01"
@@ -546,7 +576,7 @@ export default function EditEventPage() {
                       leftIcon={<Euro className="w-5 h-5" />}
                     />
                     <Input
-                      placeholder="Quantité"
+                      placeholder={tf("quantity")}
                       type="number"
                       min={ticket.sold}
                       value={ticket.quantity}
@@ -568,7 +598,7 @@ export default function EditEventPage() {
                 {ticket.sold > 0 && (
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <Ticket className="w-4 h-4" />
-                    <span>{ticket.sold} billets vendus</span>
+                    <span>{ticket.sold} {tf("ticketsSoldCount")}</span>
                   </div>
                 )}
               </div>
@@ -579,16 +609,16 @@ export default function EditEventPage() {
         {/* Danger Zone */}
         <Card className="border-red-200">
           <CardHeader>
-            <h2 className="text-lg font-semibold text-red-600">Zone de danger</h2>
+            <h2 className="text-lg font-semibold text-red-600">{tf("dangerZone")}</h2>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-gray-900">
-                  Supprimer cet événement
+                  {tf("deleteEvent")}
                 </p>
                 <p className="text-sm text-gray-500">
-                  Cette action est irréversible. Toutes les données seront perdues.
+                  {tf("deleteWarning")}
                 </p>
               </div>
               <Button
@@ -597,7 +627,7 @@ export default function EditEventPage() {
                 onClick={() => setShowDeleteModal(true)}
                 leftIcon={<Trash2 className="w-4 h-4" />}
               >
-                Supprimer
+                {tc("delete")}
               </Button>
             </div>
           </CardContent>
@@ -607,7 +637,7 @@ export default function EditEventPage() {
         <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pb-8">
           <Link href="/dashboard" className="w-full sm:w-auto">
             <Button variant="ghost" className="w-full sm:w-auto">
-              Annuler
+              {tc("cancel")}
             </Button>
           </Link>
           {event.status === "draft" && (
@@ -618,7 +648,7 @@ export default function EditEventPage() {
               isLoading={isSubmitting}
               leftIcon={<Save className="w-5 h-5" />}
             >
-              Enregistrer brouillon
+              {tf("saveDraft")}
             </Button>
           )}
           <Button
@@ -627,7 +657,7 @@ export default function EditEventPage() {
             isLoading={isSubmitting}
             leftIcon={event.status === "draft" ? <Send className="w-5 h-5" /> : <Save className="w-5 h-5" />}
           >
-            {event.status === "draft" ? "Publier" : "Sauvegarder"}
+            {event.status === "draft" ? tc("publish") : tc("save")}
           </Button>
         </div>
       </div>
@@ -646,16 +676,15 @@ export default function EditEventPage() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">
-                  Supprimer l'événement
+                  {tf("confirmDelete")}
                 </h3>
                 <p className="text-sm text-gray-500">
-                  Cette action est irréversible
+                  {tf("deleteWarning").split(".")[0]}
                 </p>
               </div>
             </div>
             <p className="text-gray-600 mb-6">
-              Êtes-vous sûr de vouloir supprimer "{title}" ? Toutes les données
-              associées (billets, commandes, etc.) seront perdues.
+              {tf("confirmDeleteMsg")} &quot;{title}&quot; ? {tf("confirmDeleteAllData")}
             </p>
             <div className="flex items-center justify-end gap-3">
               <Button
@@ -663,14 +692,14 @@ export default function EditEventPage() {
                 onClick={() => setShowDeleteModal(false)}
                 disabled={isSubmitting}
               >
-                Annuler
+                {tc("cancel")}
               </Button>
               <Button
                 variant="danger"
                 onClick={handleDelete}
                 isLoading={isSubmitting}
               >
-                Supprimer
+                {tc("delete")}
               </Button>
             </div>
           </div>

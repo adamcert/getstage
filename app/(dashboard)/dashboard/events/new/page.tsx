@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useTranslation } from "@/hooks/use-translation";
 import type { EventCategory } from "@/types/database";
 import {
   ArrowLeft,
@@ -53,7 +54,23 @@ interface TicketTypeForm {
 
 export default function NewEventPage() {
   const router = useRouter();
+  const { t: tf } = useTranslation("eventForm");
+  const { t: tcat } = useTranslation("categories");
+  const { t: tc } = useTranslation("common");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Categories with translations
+  const localCategories: { value: EventCategory; label: string }[] = [
+    { value: "concert", label: tcat("concert") },
+    { value: "dj", label: tcat("djParty") },
+    { value: "theatre", label: tcat("theatre") },
+    { value: "comedy", label: tcat("comedyHumor") },
+    { value: "expo", label: tcat("expo") },
+    { value: "film", label: tcat("cinema") },
+    { value: "party", label: tcat("fete") },
+    { value: "festival", label: tcat("festival") },
+    { value: "other", label: tcat("other") },
+  ];
 
   // Form state
   const [title, setTitle] = useState("");
@@ -138,10 +155,10 @@ export default function NewEventPage() {
         </Link>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Créer un événement
+            {tf("createEvent")}
           </h1>
           <p className="text-gray-500 mt-1">
-            Remplissez les informations de votre événement
+            {tf("fillInfo")}
           </p>
         </div>
       </div>
@@ -152,24 +169,24 @@ export default function NewEventPage() {
         <Card>
           <CardHeader>
             <h2 className="text-lg font-semibold text-gray-900">
-              Informations générales
+              {tf("generalInfo")}
             </h2>
           </CardHeader>
           <CardContent className="space-y-4">
             <Input
-              label="Titre de l'événement *"
-              placeholder="Ex: Concert de Jazz au Sunset"
+              label={tf("eventTitle")}
+              placeholder={tf("eventPlaceholder")}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
+                {tf("description")}
               </label>
               <textarea
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all duration-200 placeholder:text-gray-400 min-h-[120px] resize-y"
-                placeholder="Décrivez votre événement..."
+                placeholder={tf("descPlaceholder")}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -177,14 +194,14 @@ export default function NewEventPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Catégorie *
+                {tf("categoryLabel")}
               </label>
               <select
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all duration-200"
                 value={category}
                 onChange={(e) => setCategory(e.target.value as EventCategory)}
               >
-                {categories.map((cat) => (
+                {localCategories.map((cat) => (
                   <option key={cat.value} value={cat.value}>
                     {cat.label}
                   </option>
@@ -198,20 +215,20 @@ export default function NewEventPage() {
         <Card>
           <CardHeader>
             <h2 className="text-lg font-semibold text-gray-900">
-              Date et heure
+              {tf("dateAndTime")}
             </h2>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="Date de début *"
+                label={tf("startDate")}
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 leftIcon={<CalendarDays className="w-5 h-5" />}
               />
               <Input
-                label="Heure de début *"
+                label={tf("startTime")}
                 type="time"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
@@ -220,14 +237,14 @@ export default function NewEventPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="Date de fin"
+                label={tf("endDate")}
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 leftIcon={<CalendarDays className="w-5 h-5" />}
               />
               <Input
-                label="Heure de fin"
+                label={tf("endTime")}
                 type="time"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
@@ -240,12 +257,12 @@ export default function NewEventPage() {
         {/* Location */}
         <Card>
           <CardHeader>
-            <h2 className="text-lg font-semibold text-gray-900">Lieu</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{tf("location")}</h2>
           </CardHeader>
           <CardContent>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Sélectionner un lieu *
+                {tf("selectVenue")}
               </label>
               <div className="relative">
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -254,7 +271,7 @@ export default function NewEventPage() {
                   value={venueId}
                   onChange={(e) => setVenueId(e.target.value)}
                 >
-                  <option value="">Choisir un lieu...</option>
+                  <option value="">{tf("chooseVenue")}</option>
                   {mockVenues.map((venue) => (
                     <option key={venue.id} value={venue.id}>
                       {venue.name}
@@ -270,7 +287,7 @@ export default function NewEventPage() {
         <Card>
           <CardHeader>
             <h2 className="text-lg font-semibold text-gray-900">
-              Image de couverture
+              {tf("coverImage")}
             </h2>
           </CardHeader>
           <CardContent>
@@ -294,10 +311,10 @@ export default function NewEventPage() {
               >
                 <ImageIcon className="w-12 h-12 mb-2" />
                 <span className="text-sm font-medium">
-                  Cliquez pour ajouter une image
+                  {tf("clickToAdd")}
                 </span>
                 <span className="text-xs mt-1">
-                  PNG, JPG jusqu'à 10MB
+                  {tf("imageFormat")}
                 </span>
               </button>
             )}
@@ -309,7 +326,7 @@ export default function NewEventPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
-                Types de billets
+                {tf("ticketTypes")}
               </h2>
               <Button
                 variant="outline"
@@ -317,7 +334,7 @@ export default function NewEventPage() {
                 onClick={addTicketType}
                 leftIcon={<Plus className="w-4 h-4" />}
               >
-                Ajouter
+                {tf("add")}
               </Button>
             </div>
           </CardHeader>
@@ -329,14 +346,14 @@ export default function NewEventPage() {
               >
                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <Input
-                    placeholder="Nom du billet"
+                    placeholder={tf("ticketName")}
                     value={ticket.name}
                     onChange={(e) =>
                       updateTicketType(ticket.id, "name", e.target.value)
                     }
                   />
                   <Input
-                    placeholder="Prix"
+                    placeholder={tf("price")}
                     type="number"
                     min="0"
                     step="0.01"
@@ -347,7 +364,7 @@ export default function NewEventPage() {
                     leftIcon={<Euro className="w-5 h-5" />}
                   />
                   <Input
-                    placeholder="Quantité"
+                    placeholder={tf("quantity")}
                     type="number"
                     min="1"
                     value={ticket.quantity}
@@ -373,7 +390,7 @@ export default function NewEventPage() {
         <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pb-8">
           <Link href="/dashboard" className="w-full sm:w-auto">
             <Button variant="ghost" className="w-full sm:w-auto">
-              Annuler
+              {tc("cancel")}
             </Button>
           </Link>
           <Button
@@ -383,7 +400,7 @@ export default function NewEventPage() {
             isLoading={isSubmitting}
             leftIcon={<Save className="w-5 h-5" />}
           >
-            Enregistrer brouillon
+            {tf("saveDraft")}
           </Button>
           <Button
             className="w-full sm:w-auto"
@@ -391,7 +408,7 @@ export default function NewEventPage() {
             isLoading={isSubmitting}
             leftIcon={<Send className="w-5 h-5" />}
           >
-            Publier
+            {tc("publish")}
           </Button>
         </div>
       </div>
