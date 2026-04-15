@@ -24,11 +24,8 @@ import {
 } from "lucide-react";
 
 const navigation = [
-  { name: "Events", href: "/dashboard", icon: CalendarDays },
-  { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
+  { name: "Tableau de bord", href: "/dashboard", icon: CalendarDays },
   { name: "Scanner", href: "/scan", icon: ScanLine },
-  { name: "Team", href: "/dashboard/team", icon: Users },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 export default function DashboardLayout({
