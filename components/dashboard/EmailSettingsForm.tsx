@@ -1,7 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import {
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  Zap,
+  Key,
+  Server,
+  Send,
+  ChevronRight,
+} from "lucide-react";
 
 type Provider = "getstage_default" | "resend_custom" | "smtp";
 
@@ -25,16 +34,91 @@ interface Props {
   eventId: string;
 }
 
+/* ─── Provider card ──────────────────────────────────────── */
+const PROVIDERS: Array<{
+  id: Provider;
+  label: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badge?: string;
+}> = [
+  {
+    id: "getstage_default",
+    label: "GetStage",
+    description: "Envoi via l'infrastructure GetStage. Zéro configuration.",
+    icon: Zap,
+    badge: "Recommandé",
+  },
+  {
+    id: "resend_custom",
+    label: "Resend",
+    description: "Utilisez votre propre clé API Resend pour un domaine personnalisé.",
+    icon: Key,
+  },
+  {
+    id: "smtp",
+    label: "SMTP",
+    description: "Connectez n'importe quel serveur SMTP existant.",
+    icon: Server,
+  },
+];
+
+/* ─── Input field ────────────────────────────────────────── */
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1.5">
+        {label}
+      </label>
+      {children}
+      {hint && <p className="mt-1 text-xs text-zinc-600">{hint}</p>}
+    </div>
+  );
+}
+
+function TextInput({
+  type = "text",
+  value,
+  onChange,
+  placeholder,
+  mono,
+}: {
+  type?: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  mono?: boolean;
+}) {
+  return (
+    <input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      className={`w-full px-4 py-2.5 rounded-xl bg-white/[0.04] ring-1 ring-white/[0.08] text-sm text-zinc-200 placeholder:text-zinc-600 focus:ring-secondary-500/50 focus:outline-none transition-all duration-200 ${mono ? "font-mono" : ""}`}
+    />
+  );
+}
+
+/* ─── Main component ─────────────────────────────────────── */
 export function EmailSettingsForm({ eventId }: Props) {
   const [settings, setSettings] = useState<Settings>({ provider: "getstage_default" });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
-  const [saveMsg, setSaveMsg] = useState<string | null>(null);
+  const [saveMsg, setSaveMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [testMsg, setTestMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [testRecipient, setTestRecipient] = useState("");
+  const [isDirty, setIsDirty] = useState(false);
 
-  // Form fields (secrets are write-only in the UI)
   const [provider, setProvider] = useState<Provider>("getstage_default");
   const [fromEmail, setFromEmail] = useState("");
   const [fromName, setFromName] = useState("");
@@ -63,6 +147,16 @@ export function EmailSettingsForm({ eventId }: Props) {
       .finally(() => setLoading(false));
   }, [eventId]);
 
+  function markDirty() {
+    setIsDirty(true);
+    setSaveMsg(null);
+  }
+
+  function handleProviderChange(p: Provider) {
+    setProvider(p);
+    markDirty();
+  }
+
   const handleSave = async () => {
     setSaving(true);
     setSaveMsg(null);
@@ -90,18 +184,21 @@ export function EmailSettingsForm({ eventId }: Props) {
       });
       const data = await res.json();
       if (res.ok) {
-        setSaveMsg("Paramètres enregistrés.");
-        // Clear secrets from local state after save
+        setSaveMsg({ ok: true, text: "Paramètres enregistrés avec succès." });
         setSmtpPassword("");
         setResendApiKey("");
-        // Update has_* flags
+        setIsDirty(false);
         setSettings((prev) => ({
           ...prev,
-          has_smtp_password: provider === "smtp" ? (smtpPassword ? true : prev.has_smtp_password) : false,
-          has_resend_key: provider === "resend_custom" ? (resendApiKey ? true : prev.has_resend_key) : false,
+          has_smtp_password:
+            provider === "smtp" ? (smtpPassword ? true : prev.has_smtp_password) : false,
+          has_resend_key:
+            provider === "resend_custom"
+              ? (resendApiKey ? true : prev.has_resend_key)
+              : false,
         }));
       } else {
-        setSaveMsg(`Erreur : ${data.error}`);
+        setSaveMsg({ ok: false, text: `Erreur : ${data.error}` });
       }
     } finally {
       setSaving(false);
@@ -146,190 +243,316 @@ export function EmailSettingsForm({ eventId }: Props) {
     }
   };
 
+  const handleCancel = () => {
+    // Reset to saved state
+    setProvider(settings.provider);
+    setFromEmail(settings.from_email ?? "");
+    setFromName(settings.from_name ?? "");
+    setReplyTo(settings.reply_to ?? "");
+    setSmtpHost(settings.smtp_host ?? "");
+    setSmtpPort(settings.smtp_port?.toString() ?? "587");
+    setSmtpSecure(settings.smtp_secure ?? false);
+    setSmtpUser(settings.smtp_user ?? "");
+    setSmtpPassword("");
+    setResendApiKey("");
+    setIsDirty(false);
+    setSaveMsg(null);
+  };
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-40 text-gray-400 text-sm gap-2">
+      <div className="flex items-center justify-center h-40 gap-2 text-zinc-600">
         <Loader2 className="w-4 h-4 animate-spin" />
-        Chargement…
+        <span className="text-sm">Chargement…</span>
       </div>
     );
   }
 
+  const showCommonFields = provider !== "getstage_default";
+
   return (
-    <div className="space-y-8 max-w-2xl">
+    <div className="space-y-8">
+
+      {/* ── Provider selector ─── */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-1">Paramètres e-mail</h2>
-        <p className="text-sm text-gray-500">
-          Configurez le fournisseur d'envoi d'e-mails pour cet événement.
+        <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">
+          Fournisseur d'envoi
         </p>
-      </div>
-
-      {/* Provider select */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Fournisseur</label>
-        <select
-          value={provider}
-          onChange={(e) => setProvider(e.target.value as Provider)}
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all"
-        >
-          <option value="getstage_default">GetStage (défaut)</option>
-          <option value="resend_custom">Resend (ma clé API)</option>
-          <option value="smtp">SMTP personnalisé</option>
-        </select>
-      </div>
-
-      {/* Common fields (hidden for getstage_default) */}
-      {provider !== "getstage_default" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email expéditeur</label>
-              <input
-                type="email"
-                value={fromEmail}
-                onChange={(e) => setFromEmail(e.target.value)}
-                placeholder="tickets@mondomaine.fr"
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nom expéditeur</label>
-              <input
-                type="text"
-                value={fromName}
-                onChange={(e) => setFromName(e.target.value)}
-                placeholder="Mon Organisation"
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-sm"
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Reply-To</label>
-            <input
-              type="email"
-              value={replyTo}
-              onChange={(e) => setReplyTo(e.target.value)}
-              placeholder="contact@mondomaine.fr"
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-sm"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Resend fields */}
-      {provider === "resend_custom" && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Clé API Resend
-            {settings.has_resend_key && (
-              <span className="ml-2 text-xs text-emerald-600 font-normal">(clé enregistrée)</span>
-            )}
-          </label>
-          <input
-            type="password"
-            value={resendApiKey}
-            onChange={(e) => setResendApiKey(e.target.value)}
-            placeholder={settings.has_resend_key ? "Laisser vide pour conserver" : "re_xxxxxxxxxxxxxxxx"}
-            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-sm font-mono"
-          />
-        </div>
-      )}
-
-      {/* SMTP fields */}
-      {provider === "smtp" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Hôte SMTP</label>
-              <input
-                type="text"
-                value={smtpHost}
-                onChange={(e) => setSmtpHost(e.target.value)}
-                placeholder="smtp.example.com"
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Port</label>
-              <input
-                type="number"
-                value={smtpPort}
-                onChange={(e) => setSmtpPort(e.target.value)}
-                placeholder="587"
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-sm"
-              />
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <input
-              id="smtp-secure"
-              type="checkbox"
-              checked={smtpSecure}
-              onChange={(e) => setSmtpSecure(e.target.checked)}
-              className="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-500"
-            />
-            <label htmlFor="smtp-secure" className="text-sm text-gray-700">
-              Connexion sécurisée (SSL/TLS port 465)
-            </label>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Utilisateur SMTP</label>
-              <input
-                type="text"
-                value={smtpUser}
-                onChange={(e) => setSmtpUser(e.target.value)}
-                placeholder="user@example.com"
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Mot de passe SMTP
-                {settings.has_smtp_password && (
-                  <span className="ml-2 text-xs text-emerald-600 font-normal">(enregistré)</span>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {PROVIDERS.map((p) => {
+            const Icon = p.icon;
+            const isActive = provider === p.id;
+            return (
+              <button
+                key={p.id}
+                onClick={() => handleProviderChange(p.id)}
+                className={`relative text-left p-4 rounded-2xl ring-1 transition-all duration-200 ${
+                  isActive
+                    ? "bg-gradient-to-br from-primary-600/10 to-secondary-600/10 ring-secondary-500/40"
+                    : "bg-white/[0.03] ring-white/[0.06] hover:bg-white/[0.06] hover:ring-white/[0.12]"
+                }`}
+              >
+                {p.badge && (
+                  <span className="absolute top-3 right-3 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20">
+                    {p.badge}
+                  </span>
                 )}
-              </label>
-              <input
-                type="password"
-                value={smtpPassword}
-                onChange={(e) => setSmtpPassword(e.target.value)}
-                placeholder={settings.has_smtp_password ? "Laisser vide pour conserver" : "••••••••"}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-sm"
-              />
+                <Icon
+                  className={`w-5 h-5 mb-3 ${
+                    isActive ? "text-secondary-400" : "text-zinc-600"
+                  }`}
+                />
+                <p
+                  className={`text-sm font-semibold mb-1 ${
+                    isActive ? "text-zinc-100" : "text-zinc-300"
+                  }`}
+                >
+                  {p.label}
+                </p>
+                <p className="text-xs text-zinc-500 leading-relaxed">{p.description}</p>
+                {isActive && (
+                  <div className="absolute bottom-3 right-3">
+                    <div className="w-2 h-2 rounded-full bg-secondary-500" />
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Common fields (animated) ─── */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateRows: showCommonFields ? "1fr" : "0fr",
+          transition: "grid-template-rows 0.28s cubic-bezier(0.22,1,0.36,1)",
+        }}
+      >
+        <div className="overflow-hidden">
+          <div className="space-y-4 pt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field label="Email expéditeur">
+                <TextInput
+                  type="email"
+                  value={fromEmail}
+                  onChange={(v) => { setFromEmail(v); markDirty(); }}
+                  placeholder="tickets@mondomaine.fr"
+                />
+              </Field>
+              <Field label="Nom expéditeur">
+                <TextInput
+                  value={fromName}
+                  onChange={(v) => { setFromName(v); markDirty(); }}
+                  placeholder="Mon Organisation"
+                />
+              </Field>
             </div>
+            <Field label="Reply-To" hint="Adresse de réponse pour vos destinataires">
+              <TextInput
+                type="email"
+                value={replyTo}
+                onChange={(v) => { setReplyTo(v); markDirty(); }}
+                placeholder="contact@mondomaine.fr"
+              />
+            </Field>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Resend key (animated) ─── */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateRows: provider === "resend_custom" ? "1fr" : "0fr",
+          transition: "grid-template-rows 0.28s cubic-bezier(0.22,1,0.36,1)",
+        }}
+      >
+        <div className="overflow-hidden">
+          <div className="pt-1">
+            <Field
+              label="Clé API Resend"
+              hint={
+                settings.has_resend_key
+                  ? "Une clé est déjà configurée. Laissez vide pour la conserver."
+                  : undefined
+              }
+            >
+              <div className="relative">
+                <TextInput
+                  type="password"
+                  value={resendApiKey}
+                  onChange={(v) => { setResendApiKey(v); markDirty(); }}
+                  placeholder={settings.has_resend_key ? "••••••••••••••••" : "re_xxxxxxxxxxxxxxxx"}
+                  mono
+                />
+                {settings.has_resend_key && !resendApiKey && (
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs text-emerald-400 font-medium">
+                    <CheckCircle2 className="w-3 h-3" />
+                    Enregistrée
+                  </span>
+                )}
+              </div>
+            </Field>
+          </div>
+        </div>
+      </div>
+
+      {/* ── SMTP fields (animated) ─── */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateRows: provider === "smtp" ? "1fr" : "0fr",
+          transition: "grid-template-rows 0.28s cubic-bezier(0.22,1,0.36,1)",
+        }}
+      >
+        <div className="overflow-hidden">
+          <div className="space-y-4 pt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="sm:col-span-2">
+                <Field label="Hôte SMTP">
+                  <TextInput
+                    value={smtpHost}
+                    onChange={(v) => { setSmtpHost(v); markDirty(); }}
+                    placeholder="smtp.example.com"
+                  />
+                </Field>
+              </div>
+              <Field label="Port">
+                <TextInput
+                  type="number"
+                  value={smtpPort}
+                  onChange={(v) => { setSmtpPort(v); markDirty(); }}
+                  placeholder="587"
+                />
+              </Field>
+            </div>
+
+            {/* SSL toggle */}
+            <div className="flex items-center gap-3">
+              <button
+                role="switch"
+                aria-checked={smtpSecure}
+                onClick={() => { setSmtpSecure((v) => !v); markDirty(); }}
+                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-200 focus:outline-none ${
+                  smtpSecure
+                    ? "bg-gradient-to-r from-primary-500 to-secondary-500"
+                    : "bg-white/[0.12]"
+                }`}
+              >
+                <span
+                  className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform duration-200 ${
+                    smtpSecure ? "translate-x-4.5" : "translate-x-0.5"
+                  }`}
+                />
+              </button>
+              <span className="text-sm text-zinc-400">
+                Connexion sécurisée SSL/TLS (port 465)
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field label="Utilisateur SMTP">
+                <TextInput
+                  value={smtpUser}
+                  onChange={(v) => { setSmtpUser(v); markDirty(); }}
+                  placeholder="user@example.com"
+                />
+              </Field>
+              <Field
+                label="Mot de passe SMTP"
+                hint={
+                  settings.has_smtp_password
+                    ? "Laissez vide pour conserver le mot de passe actuel."
+                    : undefined
+                }
+              >
+                <div className="relative">
+                  <TextInput
+                    type="password"
+                    value={smtpPassword}
+                    onChange={(v) => { setSmtpPassword(v); markDirty(); }}
+                    placeholder={settings.has_smtp_password ? "••••••••" : "Mot de passe"}
+                    mono
+                  />
+                  {settings.has_smtp_password && !smtpPassword && (
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs text-emerald-400 font-medium">
+                      <CheckCircle2 className="w-3 h-3" />
+                      Enregistré
+                    </span>
+                  )}
+                </div>
+              </Field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Save feedback ─── */}
+      {saveMsg && (
+        <div
+          className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium ring-1 ${
+            saveMsg.ok
+              ? "bg-emerald-500/10 text-emerald-400 ring-emerald-500/20"
+              : "bg-red-500/10 text-red-400 ring-red-500/20"
+          }`}
+        >
+          {saveMsg.ok ? (
+            <CheckCircle2 className="w-4 h-4 shrink-0" />
+          ) : (
+            <XCircle className="w-4 h-4 shrink-0" />
+          )}
+          {saveMsg.text}
+        </div>
+      )}
+
+      {/* ── Sticky footer save bar ─── */}
+      {isDirty && (
+        <div
+          className="flex items-center justify-between gap-4 px-5 py-3.5 rounded-2xl bg-[#27272a] ring-1 ring-white/[0.08]"
+          style={{ animation: "slideUpFade 0.25s cubic-bezier(0.22,1,0.36,1) both" }}
+        >
+          <p className="text-xs text-zinc-500">Modifications non enregistrées</p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleCancel}
+              disabled={saving}
+              className="px-4 py-2 rounded-xl text-sm text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06] transition-all duration-200 disabled:opacity-40"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-sm font-semibold hover:opacity-90 transition-opacity duration-200 disabled:opacity-60"
+            >
+              {saving ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <ChevronRight className="w-3.5 h-3.5" />
+              )}
+              Enregistrer
+            </button>
           </div>
         </div>
       )}
 
-      {/* Save button */}
-      <div className="flex items-center gap-4">
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors disabled:opacity-60"
-        >
-          {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-          Enregistrer
-        </button>
-        {saveMsg && (
-          <p className={`text-sm ${saveMsg.startsWith("Erreur") ? "text-red-600" : "text-emerald-600"}`}>
-            {saveMsg}
-          </p>
-        )}
-      </div>
+      {/* ── Divider ─── */}
+      <div className="border-t border-white/[0.06]" />
 
-      {/* Divider */}
-      <div className="border-t border-gray-100 pt-6">
-        <h3 className="text-sm font-semibold text-gray-700 mb-4">Tester la configuration</h3>
+      {/* ── Test section ─── */}
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-4">
+          Tester la configuration
+        </p>
 
         {/* Last test result */}
         {settings.last_test_at && (
           <div
-            className={`flex items-start gap-3 p-4 rounded-xl mb-4 text-sm ${
+            className={`flex items-start gap-3 p-4 rounded-xl mb-5 ring-1 ${
               settings.last_test_ok
-                ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
-                : "bg-red-50 text-red-700 border border-red-100"
+                ? "bg-emerald-500/10 text-emerald-400 ring-emerald-500/20"
+                : "bg-red-500/10 text-red-400 ring-red-500/20"
             }`}
           >
             {settings.last_test_ok ? (
@@ -338,42 +561,51 @@ export function EmailSettingsForm({ eventId }: Props) {
               <XCircle className="w-4 h-4 mt-0.5 shrink-0" />
             )}
             <div>
-              <p className="font-medium">
+              <p className="text-sm font-semibold">
                 {settings.last_test_ok ? "Dernier test réussi" : "Dernier test échoué"}
               </p>
               <p className="text-xs opacity-70 mt-0.5">
                 {new Date(settings.last_test_at).toLocaleString("fr-FR")}
               </p>
               {settings.last_test_error && (
-                <p className="text-xs mt-1 font-mono">{settings.last_test_error}</p>
+                <p className="text-xs mt-1 font-mono opacity-80">{settings.last_test_error}</p>
               )}
             </div>
           </div>
         )}
 
-        <div className="flex items-start gap-3">
+        {/* Test input + button */}
+        <div className="flex gap-3">
           <input
             type="email"
             value={testRecipient}
             onChange={(e) => setTestRecipient(e.target.value)}
             placeholder="destinataire@exemple.fr"
-            className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all text-sm"
+            className="flex-1 px-4 py-2.5 rounded-xl bg-white/[0.04] ring-1 ring-white/[0.08] text-sm text-zinc-200 placeholder:text-zinc-600 focus:ring-secondary-500/50 focus:outline-none transition-all duration-200"
           />
           <button
             onClick={handleTest}
             disabled={testing || !testRecipient}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 whitespace-nowrap"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.06] ring-1 ring-white/[0.10] text-sm font-semibold text-zinc-200 hover:bg-white/[0.10] transition-all duration-200 disabled:opacity-40 whitespace-nowrap"
           >
-            {testing && <Loader2 className="w-4 h-4 animate-spin" />}
+            {testing ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Send className="w-4 h-4" />
+            )}
             Envoyer test
           </button>
         </div>
 
+        {/* Test result */}
         {testMsg && (
           <div
-            className={`mt-3 flex items-center gap-2 text-sm ${
-              testMsg.ok ? "text-emerald-600" : "text-red-600"
+            className={`mt-3 flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium ring-1 ${
+              testMsg.ok
+                ? "bg-emerald-500/10 text-emerald-400 ring-emerald-500/20"
+                : "bg-red-500/10 text-red-400 ring-red-500/20"
             }`}
+            style={{ animation: "slideUpFade 0.25s cubic-bezier(0.22,1,0.36,1) both" }}
           >
             {testMsg.ok ? (
               <CheckCircle2 className="w-4 h-4 shrink-0" />
@@ -384,6 +616,13 @@ export function EmailSettingsForm({ eventId }: Props) {
           </div>
         )}
       </div>
+
+      <style>{`
+        @keyframes slideUpFade {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }
