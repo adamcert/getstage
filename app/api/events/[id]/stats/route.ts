@@ -59,9 +59,9 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
     0
   );
 
-  const tierMap = new Map<string, { id: string; name: string; issued: number; checkedIn: number; revenueCents: number; capacity: number }>();
+  const tierMap = new Map<string, { id: string; name: string; price_cents: number; issued: number; checkedIn: number; revenueCents: number; capacity: number }>();
   for (const t of allTiers) {
-    tierMap.set(t.id, { id: t.id, name: t.name, issued: 0, checkedIn: 0, revenueCents: 0, capacity: t.quantity_total });
+    tierMap.set(t.id, { id: t.id, name: t.name, price_cents: t.price_cents, issued: 0, checkedIn: 0, revenueCents: 0, capacity: t.quantity_total });
   }
   for (const tk of allTickets) {
     const e = tierMap.get(tk.tier_id);

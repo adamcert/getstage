@@ -45,3 +45,4 @@ next-env.d.ts
 # Playwright MCP artifacts + debug screenshots
 .playwright-mcp/
 diag-*.png
+final-*.png
