@@ -16,7 +16,7 @@ async function resolveOwner(eventId: string, userId: string) {
     .select("role")
     .eq("event_id", eventId)
     .eq("user_id", userId)
-    .in("role", ["owner", "admin"])
+    .eq("role", "owner")
     .maybeSingle();
   return { ok: !!data && !error, error };
 }

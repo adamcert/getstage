@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Instagram, Twitter, Facebook, Youtube, PartyPopper } from "lucide-react";
 import { useTranslation } from "@/hooks/use-translation";
 
@@ -12,9 +13,16 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const pathname = usePathname();
   const { t } = useTranslation("footer");
   const { t: tCat } = useTranslation("categories");
   const { t: tHeader } = useTranslation("header");
+
+  if (
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/scan") ||
+    pathname.startsWith("/t/")
+  ) return null;
 
   const footerLinks = {
     discover: [

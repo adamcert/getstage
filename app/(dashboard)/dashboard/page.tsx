@@ -1,471 +1,149 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { mockEvents } from "@/lib/data/mock-events";
-import { useTranslation } from "@/hooks/use-translation";
-import type { Event, EventStatus } from "@/types/database";
-import {
-  CalendarDays,
-  Users,
-  TrendingUp,
-  Ticket,
-  Plus,
-  Search,
-  MoreVertical,
-  Edit,
-  Trash2,
-  Eye,
-  Copy,
-} from "lucide-react";
+import { redirect } from "next/navigation";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import { CalendarDays, Users, Ticket, UserCheck, ArrowRight, Plus, EyeOff } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
-// Stats data
-const stats = [
-  {
-    name: "Total Events",
-    value: "12",
-    change: "+2 ce mois",
-    icon: CalendarDays,
-    color: "text-primary-500",
-    bgColor: "bg-primary-50",
-  },
-  {
-    name: "Tickets Vendus",
-    value: "1,234",
-    change: "+15% vs dernier mois",
-    icon: Ticket,
-    color: "text-secondary-500",
-    bgColor: "bg-secondary-50",
-  },
-  {
-    name: "Participants",
-    value: "890",
-    change: "+8% vs dernier mois",
-    icon: Users,
-    color: "text-green-500",
-    bgColor: "bg-green-50",
-  },
-  {
-    name: "Revenus",
-    value: "45,670 EUR",
-    change: "+23% vs dernier mois",
-    icon: TrendingUp,
-    color: "text-orange-500",
-    bgColor: "bg-orange-50",
-  },
-];
+export const dynamic = "force-dynamic";
 
-// Helper to get status badge variant
-function getStatusBadge(status: EventStatus) {
-  const statusConfig: Record<EventStatus, { label: string; variant: "default" | "new" | "hot" | "tonight" | "soldout" | "featured" }> = {
-    draft: { label: "Brouillon", variant: "default" },
-    preview: { label: "Aperçu", variant: "new" },
-    published: { label: "Publié", variant: "hot" },
-    cancelled: { label: "Annulé", variant: "soldout" },
-    past: { label: "Terminé", variant: "default" },
-  };
-  return statusConfig[status] || statusConfig.draft;
-}
+export default async function DashboardPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
 
-// Calculate tickets sold for an event
-function getTicketsSold(event: Event): { sold: number; total: number } {
-  if (!event.ticket_types || event.ticket_types.length === 0) {
-    return { sold: 0, total: 0 };
+  const admin = supabaseAdmin();
+
+  const { data: ownedRows } = await admin
+    .from("organizers")
+    .select("event_id, events(id, name, slug, starts_at, venue_name, venue_city, capacity, visibility, cover_image_url)")
+    .eq("user_id", user.id)
+    .eq("role", "owner");
+
+  const events = (ownedRows ?? [])
+    .map(r => (r as any).events)
+    .filter(Boolean) as Array<{
+      id: string; name: string; slug: string; starts_at: string;
+      venue_name: string; venue_city: string; capacity: number;
+      visibility: "public" | "private"; cover_image_url: string | null;
+    }>;
+
+  const eventIds = events.map(e => e.id);
+  let counts = new Map<string, { issued: number; sent: number; checkedIn: number }>();
+  if (eventIds.length) {
+    const { data: tix } = await admin
+      .from("tickets")
+      .select("event_id, status, sent_at")
+      .in("event_id", eventIds);
+    for (const t of tix ?? []) {
+      const c = counts.get(t.event_id) ?? { issued: 0, sent: 0, checkedIn: 0 };
+      c.issued++;
+      if (t.sent_at) c.sent++;
+      if (t.status === "checked_in") c.checkedIn++;
+      counts.set(t.event_id, c);
+    }
   }
-  const sold = event.ticket_types.reduce((acc, t) => acc + t.quantity_sold, 0);
-  const total = event.ticket_types.reduce((acc, t) => acc + t.quantity_total, 0);
-  return { sold, total };
-}
 
-// Format date
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+  const totalIssued = Array.from(counts.values()).reduce((s, c) => s + c.issued, 0);
+  const totalCheckedIn = Array.from(counts.values()).reduce((s, c) => s + c.checkedIn, 0);
+  const totalSent = Array.from(counts.values()).reduce((s, c) => s + c.sent, 0);
 
-// Use some mock events as "user events"
-const userEvents = mockEvents.slice(0, 6);
-
-export default function DashboardPage() {
-  const { t: td } = useTranslation("dashboard");
-  const { t: tc } = useTranslation("common");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
-
-  // Stats data (inside component for i18n)
-  const localStats = [
-    {
-      name: "Total Events",
-      value: "12",
-      change: `+2 ${td("thisMonth")}`,
-      icon: CalendarDays,
-      color: "text-primary-500",
-      bgColor: "bg-primary-50",
-    },
-    {
-      name: td("ticketsSold"),
-      value: "1,234",
-      change: `+15% ${td("vsLastMonth")}`,
-      icon: Ticket,
-      color: "text-secondary-500",
-      bgColor: "bg-secondary-50",
-    },
-    {
-      name: td("attendees"),
-      value: "890",
-      change: `+8% ${td("vsLastMonth")}`,
-      icon: Users,
-      color: "text-green-500",
-      bgColor: "bg-green-50",
-    },
-    {
-      name: td("revenue"),
-      value: "45,670 EUR",
-      change: `+23% ${td("vsLastMonth")}`,
-      icon: TrendingUp,
-      color: "text-orange-500",
-      bgColor: "bg-orange-50",
-    },
+  const kpis = [
+    { label: "Événements", value: events.length, icon: CalendarDays },
+    { label: "Billets émis", value: totalIssued, icon: Ticket },
+    { label: "Emails envoyés", value: totalSent, icon: Users },
+    { label: "Entrées scannées", value: totalCheckedIn, icon: UserCheck },
   ];
 
-  // Status badge with translations
-  function getLocalStatusBadge(status: EventStatus) {
-    const statusConfig: Record<EventStatus, { label: string; variant: "default" | "new" | "hot" | "tonight" | "soldout" | "featured" }> = {
-      draft: { label: td("draft"), variant: "default" },
-      preview: { label: td("preview"), variant: "new" },
-      published: { label: td("published"), variant: "hot" },
-      cancelled: { label: td("cancelled"), variant: "soldout" },
-      past: { label: td("past"), variant: "default" },
-    };
-    return statusConfig[status] || statusConfig.draft;
-  }
-
-  // Filter events based on search
-  const filteredEvents = userEvents.filter((event) =>
-    event.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const hasEvents = filteredEvents.length > 0;
-
   return (
-    <div className="space-y-8">
-      {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            {td("welcome")}
-          </h1>
-          <p className="mt-1 text-gray-500">
-            {td("manageEvents")}
+    <div className="max-w-6xl mx-auto space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold text-zinc-100">Bienvenue sur votre Dashboard</h1>
+        <p className="mt-1 text-zinc-500">Gérez vos événements et suivez vos ventes en temps réel.</p>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {kpis.map(k => (
+          <div key={k.label} className="p-4 rounded-xl bg-zinc-900 border border-zinc-800">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-zinc-500">{k.label}</span>
+              <k.icon className="w-4 h-4 text-zinc-600" />
+            </div>
+            <div className="mt-2 text-3xl font-bold text-zinc-100 tabular-nums">{k.value}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-zinc-100">Mes événements</h2>
+      </div>
+
+      {events.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-zinc-800 bg-zinc-950 p-12 text-center">
+          <CalendarDays className="w-10 h-10 text-zinc-700 mx-auto" />
+          <h3 className="mt-4 text-lg font-semibold text-zinc-300">Aucun événement pour l'instant</h3>
+          <p className="mt-1 text-sm text-zinc-500 max-w-md mx-auto">
+            Contactez votre administrateur GetStage pour qu'il vous crée un événement, ou utilisez le script de seed en dev.
           </p>
         </div>
-        <Link href="/dashboard/events/new">
-          <Button leftIcon={<Plus className="w-5 h-5" />}>
-            {td("createEvent")}
-          </Button>
-        </Link>
-      </div>
+      ) : (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {events.map(ev => {
+            const c = counts.get(ev.id) ?? { issued: 0, sent: 0, checkedIn: 0 };
+            const pct = ev.capacity > 0 ? Math.round((c.issued / ev.capacity) * 100) : 0;
+            return (
+              <Link
+                key={ev.id}
+                href={`/dashboard/events/${ev.id}`}
+                className="group rounded-2xl border border-zinc-800 bg-zinc-950 hover:bg-zinc-900 hover:border-zinc-700 transition-all overflow-hidden"
+              >
+                {ev.cover_image_url ? (
+                  <div className="aspect-[16/9] bg-zinc-900 overflow-hidden">
+                    <img src={ev.cover_image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                  </div>
+                ) : (
+                  <div className="aspect-[16/9] bg-gradient-to-br from-red-500/20 to-violet-500/20" />
+                )}
+                <div className="p-4 space-y-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-zinc-100 truncate">{ev.name}</h3>
+                      {ev.visibility === "private" && (
+                        <EyeOff className="w-3.5 h-3.5 text-zinc-500 shrink-0" aria-label="privé" />
+                      )}
+                    </div>
+                    <p className="text-xs text-zinc-500 mt-0.5">
+                      {format(new Date(ev.starts_at), "EEEE d MMMM yyyy · HH'h'mm", { locale: fr })}
+                    </p>
+                    <p className="text-xs text-zinc-600 mt-0.5">{ev.venue_name} · {ev.venue_city}</p>
+                  </div>
 
-      {/* Stats grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {localStats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={stat.name} className="p-6">
-              <div className="flex items-center gap-4">
-                <div className={`p-3 rounded-xl ${stat.bgColor}`}>
-                  <Icon className={`w-6 h-6 ${stat.color}`} />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">
-                    {stat.name}
-                  </p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {stat.value}
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1">{stat.change}</p>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Events section */}
-      <div>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900">
-            {td("myEvents")}
-          </h2>
-          <div className="w-full sm:w-72">
-            <Input
-              placeholder={td("searchEvent")}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              leftIcon={<Search className="w-5 h-5" />}
-            />
-          </div>
-        </div>
-
-        {hasEvents ? (
-          <Card className="overflow-hidden">
-            {/* Desktop table */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                      {td("event")}
-                    </th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                      Date
-                    </th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                      Status
-                    </th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                      {td("ticketsSold")}
-                    </th>
-                    <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-4">
-                      {td("actions")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {filteredEvents.map((event) => {
-                    const tickets = getTicketsSold(event);
-                    const statusBadge = getLocalStatusBadge(event.status);
-                    const progress = tickets.total > 0 ? (tickets.sold / tickets.total) * 100 : 0;
-
-                    return (
-                      <tr key={event.id} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-4">
-                            <div className="relative w-16 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                              {event.cover_image ? (
-                                <Image
-                                  src={event.cover_image}
-                                  alt={event.title}
-                                  fill
-                                  className="object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center">
-                                  <CalendarDays className="w-6 h-6 text-gray-400" />
-                                </div>
-                              )}
-                            </div>
-                            <div className="min-w-0">
-                              <Link
-                                href={`/dashboard/events/${event.id}`}
-                                className="font-medium text-gray-900 hover:text-primary-500 truncate block"
-                              >
-                                {event.title}
-                              </Link>
-                              <p className="text-sm text-gray-500 truncate">
-                                {event.venue?.name || td("venueNotSet")}
-                              </p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="text-sm text-gray-600">
-                            {formatDate(event.start_date)}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <Badge variant={statusBadge.variant}>
-                            {statusBadge.label}
-                          </Badge>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="space-y-1">
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-gray-600">
-                                {tickets.sold} / {tickets.total}
-                              </span>
-                              <span className="text-gray-400">
-                                {Math.round(progress)}%
-                              </span>
-                            </div>
-                            <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                              <div
-                                className="h-full bg-primary-500 rounded-full transition-all duration-300"
-                                style={{ width: `${progress}%` }}
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center justify-end gap-2">
-                            <Link href={`/event/${event.slug}`} target="_blank">
-                              <Button variant="ghost" size="sm" className="p-2">
-                                <Eye className="w-4 h-4" />
-                              </Button>
-                            </Link>
-                            <Link href={`/dashboard/events/${event.id}`}>
-                              <Button variant="ghost" size="sm" className="p-2">
-                                <Edit className="w-4 h-4" />
-                              </Button>
-                            </Link>
-                            <div className="relative">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="p-2"
-                                onClick={() =>
-                                  setActiveMenu(activeMenu === event.id ? null : event.id)
-                                }
-                              >
-                                <MoreVertical className="w-4 h-4" />
-                              </Button>
-                              {activeMenu === event.id && (
-                                <>
-                                  <div
-                                    className="fixed inset-0 z-40"
-                                    onClick={() => setActiveMenu(null)}
-                                  />
-                                  <div className="absolute right-0 z-50 mt-1 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-1">
-                                    <button
-                                      className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                                      onClick={() => {
-                                        navigator.clipboard.writeText(
-                                          `${window.location.origin}/event/${event.slug}`
-                                        );
-                                        setActiveMenu(null);
-                                      }}
-                                    >
-                                      <Copy className="w-4 h-4" />
-                                      {td("copyLink")}
-                                    </button>
-                                    <button
-                                      className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                                      onClick={() => setActiveMenu(null)}
-                                    >
-                                      <Trash2 className="w-4 h-4" />
-                                      {tc("delete")}
-                                    </button>
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Mobile card list */}
-            <div className="md:hidden divide-y divide-gray-100">
-              {filteredEvents.map((event) => {
-                const tickets = getTicketsSold(event);
-                const statusBadge = getLocalStatusBadge(event.status);
-                const progress = tickets.total > 0 ? (tickets.sold / tickets.total) * 100 : 0;
-
-                return (
-                  <div key={event.id} className="p-4">
-                    <div className="flex items-start gap-4">
-                      <div className="relative w-20 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                        {event.cover_image ? (
-                          <Image
-                            src={event.cover_image}
-                            alt={event.title}
-                            fill
-                            className="object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <CalendarDays className="w-6 h-6 text-gray-400" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <Link
-                              href={`/dashboard/events/${event.id}`}
-                              className="font-medium text-gray-900 hover:text-primary-500"
-                            >
-                              {event.title}
-                            </Link>
-                            <p className="text-sm text-gray-500 mt-0.5">
-                              {formatDate(event.start_date)}
-                            </p>
-                          </div>
-                          <Badge variant={statusBadge.variant} className="flex-shrink-0">
-                            {statusBadge.label}
-                          </Badge>
-                        </div>
-                        <div className="mt-3 space-y-1">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">
-                              {tickets.sold} / {tickets.total} tickets
-                            </span>
-                            <span className="text-gray-400">
-                              {Math.round(progress)}%
-                            </span>
-                          </div>
-                          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-primary-500 rounded-full transition-all duration-300"
-                              style={{ width: `${progress}%` }}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 mt-3">
-                          <Link href={`/dashboard/events/${event.id}`} className="flex-1">
-                            <Button variant="outline" size="sm" className="w-full">
-                              {tc("edit")}
-                            </Button>
-                          </Link>
-                          <Link href={`/event/${event.slug}`} target="_blank">
-                            <Button variant="ghost" size="sm" className="p-2">
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                          </Link>
-                        </div>
-                      </div>
+                  <div>
+                    <div className="flex justify-between text-xs text-zinc-500 mb-1">
+                      <span>{c.issued} / {ev.capacity} billets</span>
+                      <span className="tabular-nums">{pct}%</span>
+                    </div>
+                    <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-red-500 to-violet-500"
+                        style={{ width: `${Math.min(pct, 100)}%` }}
+                      />
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          </Card>
-        ) : (
-          <Card className="p-6">
-            <div className="text-center py-12 text-gray-500">
-              <CalendarDays className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-              <p className="text-lg font-medium">{td("noEvents")}</p>
-              <p className="text-sm mt-1 mb-6">
-                {searchQuery
-                  ? td("noEventsSearch")
-                  : td("createFirst")}
-              </p>
-              {!searchQuery && (
-                <Link href="/dashboard/events/new">
-                  <Button leftIcon={<Plus className="w-5 h-5" />}>
-                    {td("createEvent")}
-                  </Button>
-                </Link>
-              )}
-            </div>
-          </Card>
-        )}
-      </div>
+
+                  <div className="flex items-center justify-between pt-1 text-xs">
+                    <span className="text-zinc-500">{c.checkedIn} entrées scannées</span>
+                    <span className="flex items-center gap-1 text-zinc-400 group-hover:text-zinc-100 transition-colors">
+                      Ouvrir <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

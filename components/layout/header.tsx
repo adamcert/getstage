@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Menu, X, User, ShoppingBag, Heart, PartyPopper, ChevronDown, Check } from "lucide-react";
+import { Menu, X, ShoppingBag, PartyPopper, ChevronDown, Check, Briefcase } from "lucide-react";
 import { Button, Avatar } from "@/components/ui";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { useCartStore, selectCartItemCount } from "@/stores/cart-store";
@@ -47,7 +47,6 @@ export function Header() {
   const navLinks = [
     { href: "/", label: t("home") },
     { href: "/search", label: t("explore") },
-    { href: "/corporate", label: t("corporate") },
     { href: "/gift-cards", label: t("giftCards") },
   ];
 
@@ -69,6 +68,13 @@ export function Header() {
     }
     prevItemCountRef.current = itemCount;
   }, [itemCount]);
+
+  // Hide on routes that have their own chrome
+  if (
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/scan") ||
+    pathname.startsWith("/t/")
+  ) return null;
 
   return (
     <header className="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/50">
@@ -104,19 +110,7 @@ export function Header() {
           </nav>
 
           {/* Right side */}
-          <div className="flex items-center gap-3">
-            {/* Search button */}
-            <Link href="/search">
-              <Button variant="ghost" size="sm" className="hidden sm:flex">
-                <Search className="w-5 h-5" />
-              </Button>
-            </Link>
-
-            {/* Favorites */}
-            <Button variant="ghost" size="sm" className="relative">
-              <Heart className="w-5 h-5" />
-            </Button>
-
+          <div className="flex items-center gap-2">
             {/* Cart */}
             <Button
               variant="ghost"
@@ -145,6 +139,18 @@ export function Header() {
                 )}
               </AnimatePresence>
             </Button>
+
+            {/* Je suis professionnel */}
+            <Link href="/pro" className="hidden sm:block">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-secondary-500/30 text-secondary-400 hover:bg-secondary-500/10 hover:border-secondary-500/50 gap-1.5"
+              >
+                <Briefcase className="w-3.5 h-3.5" />
+                {t("imPro")}
+              </Button>
+            </Link>
 
             {/* User menu */}
             {user ? (
@@ -248,6 +254,19 @@ export function Header() {
                   {link.label}
                 </Link>
               ))}
+              <Link
+                href="/pro"
+                onClick={() => setMobileMenuOpen(false)}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-3 rounded-xl text-base font-medium transition-colors border border-secondary-500/30",
+                  pathname === "/pro"
+                    ? "text-secondary-400 bg-secondary-500/10"
+                    : "text-secondary-400 hover:bg-secondary-500/10"
+                )}
+              >
+                <Briefcase className="w-4 h-4" />
+                {t("imPro")}
+              </Link>
             </nav>
           </motion.div>
         )}

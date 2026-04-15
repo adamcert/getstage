@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { TicketsImport } from "@/components/dashboard/TicketsImport";
@@ -10,19 +12,12 @@ interface Props {
 export default async function TicketsPage({ params }: Props) {
   const { id: eventId } = await params;
 
-  // 1. Auth — SSR client
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/auth/login");
-  }
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
 
   const admin = supabaseAdmin();
 
-  // 2. Verify organizer ownership
   const { data: orgData } = await admin
     .from("organizers")
     .select("id")
@@ -30,42 +25,39 @@ export default async function TicketsPage({ params }: Props) {
     .eq("user_id", user.id)
     .eq("role", "owner")
     .maybeSingle();
+  if (!orgData) redirect("/dashboard");
 
-  if (!orgData) {
-    redirect("/dashboard");
-  }
-
-  // 3. Load event
   const { data: event } = await admin
     .from("events")
-    .select("id, title")
+    .select("id, name")
     .eq("id", eventId)
-    .single();
+    .maybeSingle();
+  if (!event) redirect("/dashboard");
 
-  if (!event) {
-    redirect("/dashboard");
-  }
-
-  // 4. Load tiers
   const { data: tiers } = await admin
     .from("ticket_tiers")
     .select("id, name, price_cents")
     .eq("event_id", eventId)
-    .order("price_cents", { ascending: true });
+    .order("sort_order");
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6">
+      <Link
+        href={`/dashboard/events/${eventId}`}
+        className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-zinc-100 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" /> Retour au tableau de bord
+      </Link>
+
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">
-          Billets — {event.title}
-        </h1>
-        <p className="mt-1 text-gray-500">
-          Importez des participants en CSV, émettez les billets, puis envoyez
-          les emails avec QR code.
+        <h1 className="text-3xl font-bold text-zinc-100">Émission & envoi des billets</h1>
+        <p className="mt-1 text-zinc-500">
+          Collez la liste des acheteurs, émettez les billets, puis envoyez les emails avec QR.
         </p>
+        <p className="mt-1 text-sm text-zinc-600">Event : <span className="text-zinc-300 font-medium">{event.name}</span></p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-200 p-6">
+      <div className="bg-zinc-900 rounded-2xl border border-zinc-800 p-6">
         <TicketsImport eventId={eventId} tiers={tiers ?? []} />
       </div>
     </div>

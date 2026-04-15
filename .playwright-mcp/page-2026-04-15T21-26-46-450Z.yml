@@ -1,0 +1,262 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - complementary [ref=e4]:
+        - generic [ref=e5]:
+          - link "GetStage by SNAPSS" [ref=e7] [cursor=pointer]:
+            - /url: /
+            - img [ref=e9]
+            - generic [ref=e15]:
+              - generic [ref=e16]: GetStage
+              - generic [ref=e17]: by SNAPSS
+          - navigation [ref=e18]:
+            - link "Events" [ref=e19] [cursor=pointer]:
+              - /url: /dashboard
+              - img [ref=e20]
+              - text: Events
+            - link "Analytics" [ref=e22] [cursor=pointer]:
+              - /url: /dashboard/analytics
+              - img [ref=e23]
+              - text: Analytics
+            - link "Scanner" [ref=e25] [cursor=pointer]:
+              - /url: /scan
+              - img [ref=e26]
+              - text: Scanner
+            - link "Team" [ref=e31] [cursor=pointer]:
+              - /url: /dashboard/team
+              - img [ref=e32]
+              - text: Team
+            - link "Settings" [ref=e37] [cursor=pointer]:
+              - /url: /dashboard/settings
+              - img [ref=e38]
+              - text: Settings
+          - link "Retour au site" [ref=e42] [cursor=pointer]:
+            - /url: /
+            - img [ref=e43]
+            - text: Retour au site
+      - generic [ref=e46]:
+        - generic [ref=e48]:
+          - heading "Dashboard" [level=1] [ref=e50]
+          - generic [ref=e51]:
+            - button [ref=e52]:
+              - img [ref=e53]
+            - button "U Utilisateur" [ref=e58]:
+              - generic [ref=e60]: U
+              - generic [ref=e61]: Utilisateur
+              - img [ref=e62]
+        - main [ref=e64]:
+          - generic [ref=e65]:
+            - generic [ref=e66]:
+              - generic [ref=e67]:
+                - heading "Bienvenue sur votre Dashboard" [level=1] [ref=e68]
+                - paragraph [ref=e69]: Gérez vos événements et suivez vos performances.
+              - link "Créer un événement" [ref=e70] [cursor=pointer]:
+                - /url: /dashboard/events/new
+                - button "Créer un événement" [ref=e71]:
+                  - img [ref=e72]
+                  - text: Créer un événement
+            - generic [ref=e73]:
+              - generic [ref=e75]:
+                - img [ref=e77]
+                - generic [ref=e79]:
+                  - paragraph [ref=e80]: Total Events
+                  - paragraph [ref=e81]: "12"
+                  - paragraph [ref=e82]: +2 ce mois
+              - generic [ref=e84]:
+                - img [ref=e86]
+                - generic [ref=e88]:
+                  - paragraph [ref=e89]: Tickets Vendus
+                  - paragraph [ref=e90]: 1,234
+                  - paragraph [ref=e91]: +15% vs dernier mois
+              - generic [ref=e93]:
+                - img [ref=e95]
+                - generic [ref=e100]:
+                  - paragraph [ref=e101]: Participants
+                  - paragraph [ref=e102]: "890"
+                  - paragraph [ref=e103]: +8% vs dernier mois
+              - generic [ref=e105]:
+                - img [ref=e107]
+                - generic [ref=e110]:
+                  - paragraph [ref=e111]: Revenus
+                  - paragraph [ref=e112]: 45,670 EUR
+                  - paragraph [ref=e113]: +23% vs dernier mois
+            - generic [ref=e114]:
+              - generic [ref=e115]:
+                - heading "Mes Événements" [level=2] [ref=e116]
+                - generic [ref=e119]:
+                  - img [ref=e121]
+                  - textbox "Rechercher un événement..." [ref=e124]
+              - table [ref=e127]:
+                - rowgroup [ref=e128]:
+                  - row "Événement Date Status Tickets Vendus Actions" [ref=e129]:
+                    - columnheader "Événement" [ref=e130]
+                    - columnheader "Date" [ref=e131]
+                    - columnheader "Status" [ref=e132]
+                    - columnheader "Tickets Vendus" [ref=e133]
+                    - columnheader "Actions" [ref=e134]
+                - rowgroup [ref=e135]:
+                  - row "Techno Night w/ Amelie Lens Techno Night w/ Amelie Lens Le Rex Club 16 avr. 2026, 23:00 Publié 380 / 450 84%" [ref=e136]:
+                    - cell "Techno Night w/ Amelie Lens Techno Night w/ Amelie Lens Le Rex Club" [ref=e137]:
+                      - generic [ref=e138]:
+                        - img "Techno Night w/ Amelie Lens" [ref=e140]
+                        - generic [ref=e141]:
+                          - link "Techno Night w/ Amelie Lens" [ref=e142] [cursor=pointer]:
+                            - /url: /dashboard/events/event-1
+                          - paragraph [ref=e143]: Le Rex Club
+                    - cell "16 avr. 2026, 23:00" [ref=e144]
+                    - cell "Publié" [ref=e145]:
+                      - generic [ref=e146]: Publié
+                    - cell "380 / 450 84%" [ref=e147]:
+                      - generic [ref=e149]:
+                        - generic [ref=e150]: 380 / 450
+                        - generic [ref=e151]: 84%
+                    - cell [ref=e154]:
+                      - generic [ref=e155]:
+                        - link [ref=e156] [cursor=pointer]:
+                          - /url: /event/techno-night-amelie-lens
+                          - button [ref=e157]:
+                            - img [ref=e158]
+                        - link [ref=e161] [cursor=pointer]:
+                          - /url: /dashboard/events/event-1
+                          - button [ref=e162]:
+                            - img [ref=e163]
+                        - button [ref=e167]:
+                          - img [ref=e168]
+                  - row "Phoenix en Concert Phoenix en Concert Le Bataclan 16 avr. 2026, 20:30 Publié 1000 / 1000 100%" [ref=e172]:
+                    - cell "Phoenix en Concert Phoenix en Concert Le Bataclan" [ref=e173]:
+                      - generic [ref=e174]:
+                        - img "Phoenix en Concert" [ref=e176]
+                        - generic [ref=e177]:
+                          - link "Phoenix en Concert" [ref=e178] [cursor=pointer]:
+                            - /url: /dashboard/events/event-2
+                          - paragraph [ref=e179]: Le Bataclan
+                    - cell "16 avr. 2026, 20:30" [ref=e180]
+                    - cell "Publié" [ref=e181]:
+                      - generic [ref=e182]: Publié
+                    - cell "1000 / 1000 100%" [ref=e183]:
+                      - generic [ref=e185]:
+                        - generic [ref=e186]: 1000 / 1000
+                        - generic [ref=e187]: 100%
+                    - cell [ref=e190]:
+                      - generic [ref=e191]:
+                        - link [ref=e192] [cursor=pointer]:
+                          - /url: /event/phoenix-concert
+                          - button [ref=e193]:
+                            - img [ref=e194]
+                        - link [ref=e197] [cursor=pointer]:
+                          - /url: /dashboard/events/event-2
+                          - button [ref=e198]:
+                            - img [ref=e199]
+                        - button [ref=e203]:
+                          - img [ref=e204]
+                  - row "Stand-Up Comedy Night Stand-Up Comedy Night Le Comedy Club 16 avr. 2026, 21:00 Publié 80 / 150 53%" [ref=e208]:
+                    - cell "Stand-Up Comedy Night Stand-Up Comedy Night Le Comedy Club" [ref=e209]:
+                      - generic [ref=e210]:
+                        - img "Stand-Up Comedy Night" [ref=e212]
+                        - generic [ref=e213]:
+                          - link "Stand-Up Comedy Night" [ref=e214] [cursor=pointer]:
+                            - /url: /dashboard/events/event-3
+                          - paragraph [ref=e215]: Le Comedy Club
+                    - cell "16 avr. 2026, 21:00" [ref=e216]
+                    - cell "Publié" [ref=e217]:
+                      - generic [ref=e218]: Publié
+                    - cell "80 / 150 53%" [ref=e219]:
+                      - generic [ref=e221]:
+                        - generic [ref=e222]: 80 / 150
+                        - generic [ref=e223]: 53%
+                    - cell [ref=e226]:
+                      - generic [ref=e227]:
+                        - link [ref=e228] [cursor=pointer]:
+                          - /url: /event/stand-up-comedy-night
+                          - button [ref=e229]:
+                            - img [ref=e230]
+                        - link [ref=e233] [cursor=pointer]:
+                          - /url: /dashboard/events/event-3
+                          - button [ref=e234]:
+                            - img [ref=e235]
+                        - button [ref=e239]:
+                          - img [ref=e240]
+                  - row "House Music Marathon House Music Marathon Concrete 18 avr. 2026, 18:00 Publié 500 / 600 83%" [ref=e244]:
+                    - cell "House Music Marathon House Music Marathon Concrete" [ref=e245]:
+                      - generic [ref=e246]:
+                        - img "House Music Marathon" [ref=e248]
+                        - generic [ref=e249]:
+                          - link "House Music Marathon" [ref=e250] [cursor=pointer]:
+                            - /url: /dashboard/events/event-4
+                          - paragraph [ref=e251]: Concrete
+                    - cell "18 avr. 2026, 18:00" [ref=e252]
+                    - cell "Publié" [ref=e253]:
+                      - generic [ref=e254]: Publié
+                    - cell "500 / 600 83%" [ref=e255]:
+                      - generic [ref=e257]:
+                        - generic [ref=e258]: 500 / 600
+                        - generic [ref=e259]: 83%
+                    - cell [ref=e262]:
+                      - generic [ref=e263]:
+                        - link [ref=e264] [cursor=pointer]:
+                          - /url: /event/house-music-marathon
+                          - button [ref=e265]:
+                            - img [ref=e266]
+                        - link [ref=e269] [cursor=pointer]:
+                          - /url: /dashboard/events/event-4
+                          - button [ref=e270]:
+                            - img [ref=e271]
+                        - button [ref=e275]:
+                          - img [ref=e276]
+                  - row "Le Roi Lion - La Comedie Musicale Le Roi Lion - La Comedie Musicale Theatre Mogador 19 avr. 2026, 20:00 Publié 495 / 650 76%" [ref=e280]:
+                    - cell "Le Roi Lion - La Comedie Musicale Le Roi Lion - La Comedie Musicale Theatre Mogador" [ref=e281]:
+                      - generic [ref=e282]:
+                        - img "Le Roi Lion - La Comedie Musicale" [ref=e284]
+                        - generic [ref=e285]:
+                          - link "Le Roi Lion - La Comedie Musicale" [ref=e286] [cursor=pointer]:
+                            - /url: /dashboard/events/event-5
+                          - paragraph [ref=e287]: Theatre Mogador
+                    - cell "19 avr. 2026, 20:00" [ref=e288]
+                    - cell "Publié" [ref=e289]:
+                      - generic [ref=e290]: Publié
+                    - cell "495 / 650 76%" [ref=e291]:
+                      - generic [ref=e293]:
+                        - generic [ref=e294]: 495 / 650
+                        - generic [ref=e295]: 76%
+                    - cell [ref=e298]:
+                      - generic [ref=e299]:
+                        - link [ref=e300] [cursor=pointer]:
+                          - /url: /event/roi-lion-comedie-musicale
+                          - button [ref=e301]:
+                            - img [ref=e302]
+                        - link [ref=e305] [cursor=pointer]:
+                          - /url: /dashboard/events/event-5
+                          - button [ref=e306]:
+                            - img [ref=e307]
+                        - button [ref=e311]:
+                          - img [ref=e312]
+                  - row "Stromae - Multitude Tour Stromae - Multitude Tour Zenith Paris 21 avr. 2026, 20:00 Publié 5800 / 6000 97%" [ref=e316]:
+                    - cell "Stromae - Multitude Tour Stromae - Multitude Tour Zenith Paris" [ref=e317]:
+                      - generic [ref=e318]:
+                        - img "Stromae - Multitude Tour" [ref=e320]
+                        - generic [ref=e321]:
+                          - link "Stromae - Multitude Tour" [ref=e322] [cursor=pointer]:
+                            - /url: /dashboard/events/event-6
+                          - paragraph [ref=e323]: Zenith Paris
+                    - cell "21 avr. 2026, 20:00" [ref=e324]
+                    - cell "Publié" [ref=e325]:
+                      - generic [ref=e326]: Publié
+                    - cell "5800 / 6000 97%" [ref=e327]:
+                      - generic [ref=e329]:
+                        - generic [ref=e330]: 5800 / 6000
+                        - generic [ref=e331]: 97%
+                    - cell [ref=e334]:
+                      - generic [ref=e335]:
+                        - link [ref=e336] [cursor=pointer]:
+                          - /url: /event/stromae-multitude-tour
+                          - button [ref=e337]:
+                            - img [ref=e338]
+                        - link [ref=e341] [cursor=pointer]:
+                          - /url: /dashboard/events/event-6
+                          - button [ref=e342]:
+                            - img [ref=e343]
+                        - button [ref=e347]:
+                          - img [ref=e348]
+  - button "Open Next.js Dev Tools" [ref=e357] [cursor=pointer]:
+    - img [ref=e358]
+  - alert [ref=e361]
