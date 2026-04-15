@@ -10,7 +10,6 @@ import { signOut } from "@/lib/auth/actions";
 import { useTranslation } from "@/hooks/use-translation";
 import {
   CalendarDays,
-  BarChart3,
   Users,
   Settings,
   Menu,
@@ -21,10 +20,12 @@ import {
   Bell,
   Home,
   ScanLine,
+  Ticket,
 } from "lucide-react";
 
 const navigation = [
   { name: "Tableau de bord", href: "/dashboard", icon: CalendarDays },
+  { name: "Billets", href: "/dashboard/tickets", icon: Ticket },
   { name: "Scanner", href: "/scan", icon: ScanLine },
 ];
 

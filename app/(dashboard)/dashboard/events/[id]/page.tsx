@@ -274,13 +274,8 @@ export default function EventStatsPage() {
           style={{ animation: "slideUpFade 0.35s cubic-bezier(0.22,1,0.36,1) both" }}
         >
           <div className="flex flex-wrap items-start justify-between gap-4">
-            {/* Left: back + title */}
+            {/* Left: title */}
             <div className="flex items-start gap-3">
-              <Link href="/dashboard">
-                <button className="mt-1 p-2 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.06] transition-all duration-200">
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-              </Link>
               <div>
                 {/* Eyebrow */}
                 <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500 mb-1">
