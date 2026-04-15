@@ -7,6 +7,10 @@ const protectedRoutes = ["/dashboard"];
 // Routes only accessible when NOT authenticated
 const authRoutes = ["/login", "/register"];
 
+// Scanner routes — require auth (except /scan/login)
+const scannerRoot = "/scan";
+const scannerLoginPath = "/scan/login";
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -67,6 +71,16 @@ export async function updateSession(request: NextRequest) {
   // Redirect authenticated users from auth routes to dashboard
   if (isAuthRoute && user) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  // Scanner: protect all /scan/* except /scan/login
+  const isScannerRoute =
+    pathname === scannerRoot ||
+    pathname.startsWith(`${scannerRoot}/`);
+  const isScannerLogin = pathname === scannerLoginPath;
+
+  if (isScannerRoute && !isScannerLogin && !user) {
+    return NextResponse.redirect(new URL(scannerLoginPath, request.url));
   }
 
   return supabaseResponse;
