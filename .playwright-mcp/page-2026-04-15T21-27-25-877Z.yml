@@ -1,6 +1,0 @@
-- generic [active] [ref=e1]:
-  - main [ref=e2]:
-    - paragraph [ref=e7]: Loading event data…
-  - button "Open Next.js Dev Tools" [ref=e13] [cursor=pointer]:
-    - img [ref=e14]
-  - alert [ref=e17]
