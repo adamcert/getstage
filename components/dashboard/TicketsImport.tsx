@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import Papa from "papaparse";
-import { Eye, Send, Mail, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Eye, Send, AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
 
 interface Tier { id: string; name: string; price_cents: number; }
 
@@ -95,33 +95,45 @@ export function TicketsImport({ eventId, tiers }: Props) {
 
   const totalTickets = preview.reduce((acc, r) => acc + r.qty, 0);
 
-  const handleIssue = async () => {
+  const [step, setStep] = useState<string>("");
+
+  const handleIssueAndSend = async () => {
     if (preview.length === 0) return;
-    setLoading("issue");
     setIssueResult(null);
     setSendResult(null);
+    setLoading("issue");
+
+    // Step 1: Issue tickets
+    setStep(`Émission de ${totalTickets} billet${totalTickets > 1 ? "s" : ""}…`);
     try {
-      const res = await fetch("/api/tickets/issue", {
+      const issueRes = await fetch("/api/tickets/issue", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ event_id: eventId, rows: preview }),
       });
-      setIssueResult(await res.json());
+      const issueData = await issueRes.json();
+      setIssueResult(issueData);
+
+      if (issueData.issued === 0) {
+        setLoading(null);
+        setStep("");
+        return;
+      }
     } catch (err) {
       setIssueResult({ issued: 0, errors: [String(err)] });
-    } finally {
       setLoading(null);
+      setStep("");
+      return;
     }
-  };
 
-  const handleSend = async () => {
+    // Step 2: Send emails
     setLoading("send");
-    setSendResult(null);
     let totalSent = 0, totalFailed = 0;
     const allErrors: string[] = [];
-    let remaining = 1; // start loop
+    let remaining = 1;
     try {
       while (remaining > 0) {
+        setStep(`Envoi des emails… ${totalSent > 0 ? `(${totalSent} envoyé${totalSent > 1 ? "s" : ""})` : ""}`);
         const res = await fetch("/api/tickets/send", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -139,6 +151,7 @@ export function TicketsImport({ eventId, tiers }: Props) {
       setSendResult({ sent: totalSent, failed: totalFailed, errors: allErrors });
     } finally {
       setLoading(null);
+      setStep("");
     }
   };
 
@@ -179,27 +192,28 @@ export function TicketsImport({ eventId, tiers }: Props) {
         <button
           type="button"
           onClick={handlePreview}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-zinc-800 bg-zinc-900 text-sm font-medium text-zinc-200 hover:bg-zinc-800 hover:border-zinc-700 transition-colors"
+          disabled={loading !== null}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-zinc-800 bg-zinc-900 text-sm font-medium text-zinc-200 hover:bg-zinc-800 hover:border-zinc-700 disabled:opacity-40 transition-colors"
         >
           <Eye className="w-4 h-4" /> Prévisualiser
         </button>
         <button
           type="button"
-          onClick={handleIssue}
+          onClick={handleIssueAndSend}
           disabled={preview.length === 0 || loading !== null}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-red-500 to-violet-500 text-white text-sm font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition"
         >
-          <Send className="w-4 h-4" />
-          {loading === "issue" ? "Émission…" : totalTickets > 0 ? `Émettre ${totalTickets} billet${totalTickets > 1 ? "s" : ""}` : "Émettre les billets"}
-        </button>
-        <button
-          type="button"
-          onClick={handleSend}
-          disabled={loading !== null}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-sm font-medium text-emerald-300 hover:bg-emerald-500/15 disabled:opacity-40 disabled:cursor-not-allowed transition"
-        >
-          <Mail className="w-4 h-4" />
-          {loading === "send" ? "Envoi…" : "Envoyer les emails"}
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              {step}
+            </>
+          ) : (
+            <>
+              <Send className="w-4 h-4" />
+              {totalTickets > 0 ? `Émettre et envoyer ${totalTickets} billet${totalTickets > 1 ? "s" : ""}` : "Émettre et envoyer"}
+            </>
+          )}
         </button>
       </div>
 
