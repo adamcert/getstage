@@ -92,15 +92,26 @@ export function TicketsImport({ eventId, tiers }: Props) {
   const handleSend = async () => {
     setLoading("send");
     setSendResult(null);
+    let totalSent = 0, totalFailed = 0;
+    const allErrors: string[] = [];
+    let remaining = 1; // start loop
     try {
-      const res = await fetch("/api/tickets/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ event_id: eventId }),
-      });
-      setSendResult(await res.json());
+      while (remaining > 0) {
+        const res = await fetch("/api/tickets/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ event_id: eventId }),
+        });
+        const data = await res.json();
+        totalSent += data.sent ?? 0;
+        totalFailed += data.failed ?? 0;
+        allErrors.push(...(data.errors ?? []));
+        remaining = data.remaining ?? 0;
+        setSendResult({ sent: totalSent, failed: totalFailed, errors: allErrors });
+      }
     } catch (err) {
-      setSendResult({ sent: 0, failed: 0, errors: [String(err)] });
+      allErrors.push(String(err));
+      setSendResult({ sent: totalSent, failed: totalFailed, errors: allErrors });
     } finally {
       setLoading(null);
     }

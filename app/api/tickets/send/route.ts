@@ -1,5 +1,5 @@
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 // Rate limit: max 5 send batches per minute per user
 const sendRateMap = new Map<string, { count: number; resetAt: number }>();
@@ -18,9 +18,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { getTransportForEvent } from "@/lib/email";
-import { generateTicketPdf } from "@/lib/ticket-pdf";
+import { generateTicketPdf, launchTicketBrowser } from "@/lib/ticket-pdf";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+
+function esc(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 const LOGO_URL = "https://nskjorcfeuqaigyipkjk.supabase.co/storage/v1/object/public/public/email/getstage-logo.png";
 const GRADIENT_BAR_URL = "https://nskjorcfeuqaigyipkjk.supabase.co/storage/v1/object/public/public/email/gradient-bar.png";
@@ -64,9 +68,9 @@ function buildEmailHtml(p: {
 
 <!-- Greeting -->
 <tr><td style="padding:0 40px;">
-  <p style="margin:0;font-size:15px;color:#A1A1AA;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.5;">Bonjour ${p.firstName},</p>
+  <p style="margin:0;font-size:15px;color:#A1A1AA;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.5;">Bonjour ${esc(p.firstName)},</p>
   <p style="margin:10px 0 0 0;font-size:28px;font-weight:800;color:#FAFAFA;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.2;letter-spacing:-0.5px;">Ton billet est confirm&eacute; &#127881;</p>
-  <p style="margin:8px 0 0 0;font-size:16px;color:#A1A1AA;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.5;">Tu es inscrit pour <strong style="color:#E4E4E7;">${p.eventName}</strong></p>
+  <p style="margin:8px 0 0 0;font-size:16px;color:#A1A1AA;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.5;">Tu es inscrit pour <strong style="color:#E4E4E7;">${esc(p.eventName)}</strong></p>
 </td></tr>
 
 <tr><td style="height:28px;font-size:0;line-height:0;">&nbsp;</td></tr>
@@ -95,19 +99,19 @@ function buildEmailHtml(p: {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#18181B;border-radius:16px;border:1px solid #27272A;">
     <tr><td style="font-size:0;line-height:0;"><img src="${GRADIENT_BAR_URL}" width="520" height="4" alt="" style="display:block;width:100%;height:4px;border:0;border-radius:16px 16px 0 0;" /></td></tr>
     <tr><td style="padding:28px 32px 24px 32px;">
-      <p style="margin:0;font-size:24px;font-weight:800;color:#FAFAFA;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.15;letter-spacing:-0.4px;">${p.eventName}</p>
+      <p style="margin:0;font-size:24px;font-weight:800;color:#FAFAFA;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.15;letter-spacing:-0.4px;">${esc(p.eventName)}</p>
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:20px;"><tr>
         <td style="vertical-align:top;width:24px;font-size:16px;line-height:22px;">&#128197;</td>
         <td style="vertical-align:top;padding-left:10px;">
-          <p style="margin:0;font-size:15px;color:#D4D4D8;font-weight:600;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.4;">${p.eventDate}</p>
-          <p style="margin:2px 0 0 0;font-size:14px;color:#71717A;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.4;">${p.eventTime}</p>
+          <p style="margin:0;font-size:15px;color:#D4D4D8;font-weight:600;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.4;">${esc(p.eventDate)}</p>
+          <p style="margin:2px 0 0 0;font-size:14px;color:#71717A;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.4;">${esc(p.eventTime)}</p>
         </td>
       </tr></table>
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:12px;"><tr>
         <td style="vertical-align:top;width:24px;font-size:16px;line-height:22px;">&#128205;</td>
         <td style="vertical-align:top;padding-left:10px;">
-          <p style="margin:0;font-size:15px;color:#D4D4D8;font-weight:600;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.4;">${p.venueName}</p>
-          <p style="margin:2px 0 0 0;font-size:14px;color:#71717A;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.4;">${p.venueAddress}${p.venueCity ? ", " + p.venueCity : ""}</p>
+          <p style="margin:0;font-size:15px;color:#D4D4D8;font-weight:600;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.4;">${esc(p.venueName)}</p>
+          <p style="margin:2px 0 0 0;font-size:14px;color:#71717A;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;line-height:1.4;">${esc(p.venueAddress)}${p.venueCity ? ", " + esc(p.venueCity) : ""}</p>
         </td>
       </tr></table>
     </td></tr>
@@ -116,11 +120,11 @@ function buildEmailHtml(p: {
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
         <td style="vertical-align:top;width:50%;">
           <p style="margin:0;font-size:10px;color:#71717A;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;font-family:Arial,sans-serif;">Porteur</p>
-          <p style="margin:6px 0 0 0;font-size:16px;color:#E4E4E7;font-weight:700;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">${p.buyerName}</p>
+          <p style="margin:6px 0 0 0;font-size:16px;color:#E4E4E7;font-weight:700;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">${esc(p.buyerName)}</p>
         </td>
         <td style="vertical-align:top;width:50%;text-align:right;">
           <p style="margin:0;font-size:10px;color:#71717A;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;font-family:Arial,sans-serif;">R&eacute;f.</p>
-          <p style="margin:6px 0 0 0;font-size:14px;color:#52525B;font-family:'Courier New',Courier,monospace;letter-spacing:0.5px;">${p.shortCode}</p>
+          <p style="margin:6px 0 0 0;font-size:14px;color:#52525B;font-family:'Courier New',Courier,monospace;letter-spacing:0.5px;">${esc(p.shortCode)}</p>
         </td>
       </tr></table>
     </td></tr>
@@ -238,8 +242,13 @@ export async function POST(req: NextRequest) {
     .eq("status", "issued");
 
   if (!tickets || tickets.length === 0) {
-    return NextResponse.json({ sent: 0, failed: 0, errors: [] });
+    return NextResponse.json({ sent: 0, failed: 0, errors: [], remaining: 0 });
   }
+
+  // Batch limit: process max 50 tickets per request
+  const BATCH_LIMIT = 50;
+  const totalIssued = tickets.length;
+  const batch = tickets.slice(0, BATCH_LIMIT);
 
   // 5. Get email transport
   let transport;
@@ -272,72 +281,79 @@ export async function POST(req: NextRequest) {
   let failed = 0;
   const errors: string[] = [];
 
-  // 7. Send per ticket
-  for (const ticket of tickets) {
-    try {
-      const tierRow = Array.isArray(ticket.ticket_tiers)
-        ? ticket.ticket_tiers[0]
-        : ticket.ticket_tiers;
-      const tierName = tierRow?.name ?? "";
-      const firstName = ticket.buyer_first_name ?? "";
-      const lastName = ticket.buyer_last_name ?? "";
-      const buyerName = `${firstName} ${lastName}`.trim();
+  // 7. Launch ONE browser for all tickets, then send per ticket
+  const browser = await launchTicketBrowser();
+  try {
+    for (const ticket of batch) {
+      try {
+        const tierRow = Array.isArray(ticket.ticket_tiers)
+          ? ticket.ticket_tiers[0]
+          : ticket.ticket_tiers;
+        const tierName = tierRow?.name ?? "";
+        const firstName = ticket.buyer_first_name ?? "";
+        const lastName = ticket.buyer_last_name ?? "";
+        const buyerName = `${firstName} ${lastName}`.trim();
 
-      // Generate ticket PDF (Puppeteer screenshot → flat image → PDF)
-      const pdfBuffer = await generateTicketPdf({
-        eventName: eventData.name,
-        eventDate,
-        eventTime,
-        venueName,
-        venueAddress,
-        venueCity,
-        tierName,
-        buyerFirstName: firstName,
-        buyerLastName: lastName,
-        shortCode: ticket.short_code,
-        token: ticket.token,
-      });
+        // Generate ticket PDF (Puppeteer screenshot → flat image → PDF) — reuses shared browser
+        const pdfBuffer = await generateTicketPdf({
+          eventName: eventData.name,
+          eventDate,
+          eventTime,
+          venueName,
+          venueAddress,
+          venueCity,
+          tierName,
+          buyerFirstName: firstName,
+          buyerLastName: lastName,
+          shortCode: ticket.short_code,
+          token: ticket.token,
+          browser,
+        });
 
-      // Build email HTML
-      const html = buildEmailHtml({
-        firstName,
-        eventName: eventData.name,
-        eventDate,
-        eventTime,
-        venueName,
-        venueAddress,
-        venueCity,
-        shortCode: ticket.short_code,
-        mapsUrl,
-        buyerName,
-      });
+        // Build email HTML
+        const html = buildEmailHtml({
+          firstName,
+          eventName: eventData.name,
+          eventDate,
+          eventTime,
+          venueName,
+          venueAddress,
+          venueCity,
+          shortCode: ticket.short_code,
+          mapsUrl,
+          buyerName,
+        });
 
-      await transport.send({
-        to: ticket.buyer_email,
-        from: "",
-        subject: `🎫 Ton billet pour ${eventData.name}`,
-        html,
-        attachments: [
-          {
-            filename: `billet-${ticket.short_code}.pdf`,
-            content: pdfBuffer,
-            contentType: "application/pdf",
-          },
-        ],
-      });
+        await transport.send({
+          to: ticket.buyer_email,
+          from: "",
+          subject: `🎫 Ton billet pour ${eventData.name}`,
+          html,
+          attachments: [
+            {
+              filename: `billet-${ticket.short_code}.pdf`,
+              content: pdfBuffer,
+              contentType: "application/pdf",
+            },
+          ],
+        });
 
-      // Update ticket status
-      await admin
-        .from("tickets")
-        .update({ status: "sent", sent_at: new Date().toISOString() })
-        .eq("id", ticket.id);
+        // Update ticket status
+        await admin
+          .from("tickets")
+          .update({ status: "sent", sent_at: new Date().toISOString() })
+          .eq("id", ticket.id);
 
-      sent++;
-    } catch (err) {
-      failed++;
-      errors.push(`${ticket.buyer_email}: ${String(err)}`);
+        sent++;
+      } catch (err) {
+        failed++;
+        errors.push(`${ticket.buyer_email}: ${String(err)}`);
+      }
     }
+  } finally {
+    await browser.close();
   }
 
-  return NextResponse.json({ sent, failed, errors });
+  const remaining = totalIssued - sent - failed;
+  return NextResponse.json({ sent, failed, errors, remaining });
 }

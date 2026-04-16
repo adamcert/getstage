@@ -87,11 +87,29 @@ export async function POST(req: NextRequest) {
     tierMap.set(t.name.toLowerCase(), { id: t.id, price_cents: t.price_cents });
   }
 
-  // 5. Build inserts
+  // 5. Check for existing tickets (duplicate prevention)
+  const csvEmails = [...new Set(rows.map((r) => r.email.toLowerCase().trim()))];
+  const { data: existingTickets } = await admin
+    .from("tickets")
+    .select("buyer_email")
+    .eq("event_id", event_id)
+    .in("buyer_email", csvEmails);
+
+  const existingEmailSet = new Set(
+    (existingTickets ?? []).map((t: { buyer_email: string }) => t.buyer_email.toLowerCase())
+  );
+
+  // 6. Build inserts
   const inserts: Record<string, unknown>[] = [];
   const errors: string[] = [];
+  const skippedDuplicates: string[] = [];
 
   for (const row of rows) {
+    const email = row.email.toLowerCase().trim();
+    if (existingEmailSet.has(email)) {
+      skippedDuplicates.push(row.email);
+      continue;
+    }
     const tierKey = (row.tier ?? "").toLowerCase().trim();
     const tier = tierMap.get(tierKey);
     if (!tier) {
@@ -114,7 +132,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (inserts.length === 0) {
-    return NextResponse.json({ issued: 0, errors }, { status: 422 });
+    return NextResponse.json({ issued: 0, skippedDuplicates, errors }, { status: 422 });
   }
 
   // 6. Bulk insert
@@ -128,5 +146,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
-  return NextResponse.json({ issued: inserts.length, errors });
+  return NextResponse.json({ issued: inserts.length, skippedDuplicates, errors });
 }

@@ -1,9 +1,13 @@
 import "server-only";
-import puppeteerCore from "puppeteer-core";
+import puppeteerCore, { type Browser } from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 import { generateQrPng } from "./qr";
 import { readFileSync } from "fs";
 import { join } from "path";
+
+function esc(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 interface TicketPdfData {
   eventName: string;
@@ -17,15 +21,28 @@ interface TicketPdfData {
   buyerLastName: string;
   shortCode: string;
   token: string;
+  browser?: Browser;
 }
 
 // PartyPopper SVG (Lucide icon — same as frontend)
 const PARTY_POPPER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg>`;
 
+/** Launch a reusable Puppeteer browser instance (puppeteer-core + @sparticuz/chromium on Vercel, puppeteer locally). */
+export async function launchTicketBrowser(): Promise<Browser> {
+  const isVercel = !!process.env.VERCEL;
+  return puppeteerCore.launch({
+    args: isVercel ? chromium.args : ["--no-sandbox", "--disable-setuid-sandbox"],
+    executablePath: isVercel
+      ? await chromium.executablePath()
+      : (await import("puppeteer")).executablePath(),
+    headless: true,
+  });
+}
+
 export async function generateTicketPdf(data: TicketPdfData): Promise<Buffer> {
   const {
     eventName, eventDate, eventTime, venueName, venueAddress, venueCity,
-    buyerFirstName, buyerLastName, shortCode, token,
+    buyerFirstName, buyerLastName, shortCode, token, browser: externalBrowser,
   } = data;
 
   // QR as data URL
@@ -51,8 +68,8 @@ export async function generateTicketPdf(data: TicketPdfData): Promise<Buffer> {
     // No background — solid dark
   }
 
-  const venue = `${venueName}${venueAddress ? ` · ${venueAddress}` : ""}`;
-  const buyerName = `${buyerFirstName} ${buyerLastName}`.trim();
+  const venue = `${esc(venueName)}${venueAddress ? ` · ${esc(venueAddress)}` : ""}`;
+  const buyerName = `${esc(buyerFirstName)} ${esc(buyerLastName)}`.trim();
 
   // Embed fonts as base64 (no network dependency — works on Vercel serverless)
   let interBoldB64 = "", interRegularB64 = "", spaceGroteskB64 = "";
@@ -105,23 +122,23 @@ body{width:794px;height:1123px;font-family:'Inter',sans-serif;background:#09090B
 <div class="content">
   <div class="logo"><div class="logo-icon"><img src="${ppB64}" alt="" /></div><div><div class="logo-text">GetStage</div><div class="logo-sub">by SNAPSS</div></div></div>
   <div class="event-section">
-    <div class="event-name">GRADUR<br/>Release Party Décennie</div>
+    <div class="event-name">GRADUR<br/>Release Party D\u00e9cennie</div>
     <div class="event-meta">
-      <div class="event-date">${eventDate} · ${eventTime}</div>
-      <div class="event-venue">${venue}${venueCity ? ", " + venueCity : ""}</div>
+      <div class="event-date">${eventDate} \u00b7 ${eventTime}</div>
+      <div class="event-venue">${venue}${venueCity ? ", " + esc(venueCity) : ""}</div>
     </div>
   </div>
   <div class="divider"></div>
   <div class="details">
     <div class="detail-group"><span class="detail-label">Porteur</span><span class="detail-value">${buyerName}</span></div>
-    <div class="detail-group" style="align-items:flex-end;"><span class="detail-label">Réf.</span><span class="order-ref">${shortCode}</span></div>
+    <div class="detail-group" style="align-items:flex-end;"><span class="detail-label">R\u00e9f.</span><span class="order-ref">${esc(shortCode)}</span></div>
   </div>
   <div class="qr-section">
     <div class="qr-container"><img src="${qrDataUrl}" alt="QR Code" /></div>
-    <div class="qr-code-text">${shortCode}</div>
+    <div class="qr-code-text">${esc(shortCode)}</div>
   </div>
   <div class="footer">
-    <div class="footer-legal">Billet nominatif — pièce d'identité demandée à l'entrée.<br/>Chaque billet ne peut être scanné qu'une seule fois.</div>
+    <div class="footer-legal">Billet nominatif \u2014 pi\u00e8ce d\u2019identit\u00e9 demand\u00e9e \u00e0 l\u2019entr\u00e9e.<br/>Chaque billet ne peut \u00eatre scann\u00e9 qu\u2019une seule fois.</div>
     <div class="footer-brand"><div class="footer-brand-icon"><img src="${ppB64}" alt="" /></div><span class="footer-brand-text">powered by GetStage</span></div>
   </div>
 </div>
@@ -129,14 +146,8 @@ body{width:794px;height:1123px;font-family:'Inter',sans-serif;background:#09090B
 
   // Render ticket as screenshot (flat image) then wrap in PDF
   // This avoids all CSS rendering issues in iOS/Android PDF viewers
-  const isVercel = !!process.env.VERCEL;
-  const browser = await puppeteerCore.launch({
-    args: isVercel ? chromium.args : ["--no-sandbox", "--disable-setuid-sandbox"],
-    executablePath: isVercel
-      ? await chromium.executablePath()
-      : (await import("puppeteer")).executablePath(),
-    headless: true,
-  });
+  const ownBrowser = !externalBrowser;
+  const browser = externalBrowser ?? await launchTicketBrowser();
 
   const page = await browser.newPage();
   await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 2 });
@@ -159,7 +170,12 @@ body{width:794px;height:1123px;font-family:'Inter',sans-serif;background:#09090B
     margin: { top: 0, right: 0, bottom: 0, left: 0 },
   });
 
-  await browser.close();
+  await page.close();
+
+  // Only close the browser if we launched it ourselves
+  if (ownBrowser) {
+    await browser.close();
+  }
 
   return Buffer.from(pdfBuffer);
 }

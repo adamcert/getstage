@@ -150,6 +150,8 @@ export default function ScanPage() {
                 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
               );
               await supabase.auth.signOut();
+              const db = getScannerDB();
+              await db.delete();
               window.location.href = "/scan/login";
             }}
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-800/80 border border-zinc-700/50 hover:bg-zinc-700 transition-colors"

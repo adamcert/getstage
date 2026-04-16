@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  outputFileTracingIncludes: {
+    "/api/tickets/send": [
+      "./public/fonts-*.ttf",
+      "./public/ticket-bg-*.jpg",
+      "./public/ticket-bg-*.png",
+    ],
+  },
   images: {
     remotePatterns: [
       {
