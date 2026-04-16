@@ -1,5 +1,6 @@
 import "server-only";
-import puppeteer from "puppeteer";
+import puppeteerCore from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
 import { generateQrPng } from "./qr";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -117,7 +118,14 @@ body{width:794px;height:1123px;font-family:'Inter',sans-serif;background:#09090B
 
   // Render ticket as screenshot (flat image) then wrap in PDF
   // This avoids all CSS rendering issues in iOS/Android PDF viewers
-  const browser = await puppeteer.launch({ headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"] });
+  const isVercel = !!process.env.VERCEL;
+  const browser = await puppeteerCore.launch({
+    args: isVercel ? chromium.args : ["--no-sandbox", "--disable-setuid-sandbox"],
+    executablePath: isVercel
+      ? await chromium.executablePath()
+      : (await import("puppeteer")).executablePath(),
+    headless: true,
+  });
 
   const page = await browser.newPage();
   await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 2 });

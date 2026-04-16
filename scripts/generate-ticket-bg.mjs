@@ -6,7 +6,8 @@ import { GoogleGenAI } from "@google/genai";
 import { writeFileSync } from "fs";
 import { join } from "path";
 
-const GEMINI_API_KEY = "AIzaSyBCY0fqb-0cD647PtZ_hOkTWHw1_UxpIYc";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+if (!GEMINI_API_KEY) { console.error("Set GEMINI_API_KEY env var"); process.exit(1); }
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 const prompt = `Generate a stunning concert/event background image for a premium music event ticket.
