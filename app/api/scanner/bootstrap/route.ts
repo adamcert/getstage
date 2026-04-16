@@ -29,7 +29,8 @@ export async function GET() {
     .maybeSingle();
 
   if (orgError) {
-    return NextResponse.json({ error: orgError.message }, { status: 500 });
+    console.error("scanner org lookup failed", orgError);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   if (!orgRow) {
     return NextResponse.json({ error: "No event assigned to this scanner" }, { status: 403 });
@@ -56,19 +57,22 @@ export async function GET() {
     .eq("status", "checked_in");
 
   if (countError) {
-    return NextResponse.json({ error: countError.message }, { status: 500 });
+    console.error("checked-in count failed", countError);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
-  // 5. Fetch all tickets for this event
+  // 5. Fetch all tickets for this event (explicit limit > Supabase default 1000)
   const { data: ticketRows, error: ticketError } = await admin
     .from("tickets")
     .select(
       "token, status, buyer_first_name, buyer_last_name, event_id, ticket_tiers(name)"
     )
-    .eq("event_id", eventId);
+    .eq("event_id", eventId)
+    .limit(10000);
 
   if (ticketError) {
-    return NextResponse.json({ error: ticketError.message }, { status: 500 });
+    console.error("ticket fetch failed", ticketError);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // 6. Shape the response
@@ -95,5 +99,5 @@ export async function GET() {
     eventId: t.event_id,
   }));
 
-  return NextResponse.json({ event, tickets });
+  return NextResponse.json({ event, tickets, userEmail: user.email ?? "" });
 }

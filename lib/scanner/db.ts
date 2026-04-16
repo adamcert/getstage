@@ -61,7 +61,9 @@ export function getDeviceId(): string {
   const KEY = "gs_device_id";
   let id = localStorage.getItem(KEY);
   if (!id) {
-    id = crypto.randomUUID();
+    id = (typeof crypto !== "undefined" && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     localStorage.setItem(KEY, id);
   }
   return id;

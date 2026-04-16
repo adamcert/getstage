@@ -54,10 +54,8 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   const issued = allTickets.length;
   const sent = allTickets.filter(t => t.sent_at != null).length;
   const checkedIn = allTickets.filter(t => t.status === "checked_in").length;
-  const revenueCents = allTickets.reduce(
-    (s, t) => s + (priceByTier.get(t.tier_id) ?? 0),
-    0
-  );
+  // Revenue disabled — tickets for this event were not sold via GetStage
+  const revenueCents = 0;
 
   const tierMap = new Map<string, { id: string; name: string; price_cents: number; issued: number; checkedIn: number; revenueCents: number; capacity: number }>();
   for (const t of allTiers) {
@@ -68,7 +66,8 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
     if (!e) continue;
     e.issued++;
     if (tk.status === "checked_in") e.checkedIn++;
-    e.revenueCents += priceByTier.get(tk.tier_id) ?? 0;
+    // Revenue disabled for custom imports
+    // e.revenueCents += priceByTier.get(tk.tier_id) ?? 0;
   }
   const byTier = Array.from(tierMap.values());
 

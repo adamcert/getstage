@@ -206,10 +206,17 @@ export default function EventStatsPage() {
   const eventId = params.id as string;
 
   const [stats, setStats] = useState<StatsResponse | null>(null);
+  const [eventName, setEventName] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [liveMode, setLiveMode] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
+
+  useEffect(() => {
+    fetch(`/api/events/${eventId}`).then(r => r.json()).then(d => {
+      if (d.event?.name) setEventName(d.event.name);
+    }).catch(() => {});
+  }, [eventId]);
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const hiddenRef = useRef(false);
@@ -285,7 +292,7 @@ export default function EventStatsPage() {
                   className="text-3xl font-bold text-zinc-100 leading-tight"
                   style={{ fontFamily: '"Space Grotesk", system-ui' }}
                 >
-                  Événement
+                  {eventName || "Événement"}
                 </h1>
                 {lastRefresh && (
                   <p className="text-xs text-zinc-600 mt-1">
@@ -327,14 +334,6 @@ export default function EventStatsPage() {
                 <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-primary-600 to-secondary-600 text-white text-xs font-semibold hover:opacity-90 transition-opacity duration-200">
                   <Ticket className="w-3.5 h-3.5" />
                   Émettre billets
-                </button>
-              </Link>
-
-              {/* Paramètres */}
-              <Link href={`/dashboard/events/${eventId}/settings`}>
-                <button className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.04] text-zinc-400 text-xs font-medium ring-1 ring-white/[0.06] hover:bg-white/[0.08] hover:text-zinc-200 transition-all duration-200">
-                  <Settings className="w-3.5 h-3.5" />
-                  Paramètres
                 </button>
               </Link>
 

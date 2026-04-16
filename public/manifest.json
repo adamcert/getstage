@@ -1,0 +1,18 @@
+{
+  "name": "GetStage Scanner",
+  "short_name": "GS Scanner",
+  "description": "Scan des billets GetStage",
+  "start_url": "/scan",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#09090B",
+  "theme_color": "#09090B",
+  "icons": [
+    {
+      "src": "/getstage-logo.png",
+      "sizes": "216x216",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

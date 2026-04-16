@@ -45,6 +45,12 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
+  if (rows.length > 500) {
+    return NextResponse.json(
+      { error: "Too many rows (max 500)" },
+      { status: 400 }
+    );
+  }
 
   const admin = supabaseAdmin();
 
@@ -58,7 +64,8 @@ export async function POST(req: NextRequest) {
     .maybeSingle();
 
   if (orgError) {
-    return NextResponse.json({ error: orgError.message }, { status: 500 });
+    console.error("organizer lookup failed", orgError);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   if (!orgData) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -71,7 +78,8 @@ export async function POST(req: NextRequest) {
     .eq("event_id", event_id);
 
   if (tiersError) {
-    return NextResponse.json({ error: tiersError.message }, { status: 500 });
+    console.error("tiers lookup failed", tiersError);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const tierMap = new Map<string, { id: string; price_cents: number }>();
@@ -90,18 +98,17 @@ export async function POST(req: NextRequest) {
       errors.push(`Unknown tier "${row.tier}" for ${row.email}`);
       continue;
     }
-    const qty = Math.max(1, Number(row.qty) || 1);
+    const qty = Math.min(Math.max(1, Number(row.qty) || 1), 100);
     for (let i = 0; i < qty; i++) {
       inserts.push({
         event_id,
         tier_id: tier.id,
-        email: row.email,
-        first_name: row.firstName,
-        last_name: row.lastName,
+        buyer_email: row.email,
+        buyer_first_name: row.firstName,
+        buyer_last_name: row.lastName,
         token: generateToken(),
         short_code: generateShortCode(),
         status: "issued",
-        price_cents: tier.price_cents,
       });
     }
   }
@@ -111,9 +118,14 @@ export async function POST(req: NextRequest) {
   }
 
   // 6. Bulk insert
+  if (inserts.length > 5000) {
+    return NextResponse.json({ error: "Too many tickets to issue at once (max 5000)" }, { status: 400 });
+  }
+
   const { error: insertError } = await admin.from("tickets").insert(inserts);
   if (insertError) {
-    return NextResponse.json({ error: insertError.message }, { status: 500 });
+    console.error("ticket insert failed", insertError);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ issued: inserts.length, errors });

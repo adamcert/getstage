@@ -26,6 +26,7 @@ export function makeResendTransport(opts: ResendOpts): EmailTransport {
           filename: a.filename,
           content: a.content,
           contentId: a.cid,
+          contentType: a.contentType,
         })),
       });
       if (error) throw new Error(error.message);

@@ -54,9 +54,12 @@ export async function getTransportForEvent(eventId: string): Promise<EmailTransp
   }
 
   // getstage_default
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) throw new Error("RESEND_API_KEY is not configured");
   return makeResendTransport({
-    apiKey: process.env.RESEND_API_KEY!,
-    fromEmail: "GetStage <onboarding@resend.dev>",
+    apiKey,
+    fromEmail: "tickets@getstage.io",
+    fromName: "GetStage",
     replyTo: undefined,
   });
 }

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { createBrowserClient } from "@supabase/ssr";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/lib/auth/actions";
@@ -26,6 +27,7 @@ import {
 const navigation = [
   { name: "Tableau de bord", href: "/dashboard", icon: CalendarDays },
   { name: "Billets", href: "/dashboard/tickets", icon: Ticket },
+  { name: "Accès", href: "/dashboard/access", icon: Users },
   { name: "Scanner", href: "/scan", icon: ScanLine },
 ];
 
@@ -38,6 +40,17 @@ export default function DashboardLayout({
   const { t: td } = useTranslation("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState<string>("");
+
+  useEffect(() => {
+    const supabase = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user?.email) setUserEmail(data.user.email);
+    });
+  }, []);
 
   const isActive = (href: string) => {
     if (href === "/dashboard") {
@@ -156,9 +169,9 @@ export default function DashboardLayout({
                   className="flex items-center gap-3 p-2 rounded-xl hover:bg-zinc-800 transition-colors"
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                 >
-                  <Avatar size="sm" fallback="U" />
-                  <span className="hidden sm:block text-sm font-medium text-zinc-300">
-                    {td("user")}
+                  <Avatar size="sm" fallback={userEmail ? userEmail[0].toUpperCase() : "U"} />
+                  <span className="hidden sm:block text-sm font-medium text-zinc-300 max-w-[140px] truncate">
+                    {userEmail || "…"}
                   </span>
                   <ChevronDown
                     className={cn(
@@ -177,24 +190,14 @@ export default function DashboardLayout({
                     />
                     <div className="absolute right-0 z-50 mt-2 w-56 bg-zinc-900 rounded-xl shadow-lg border border-zinc-800 py-2">
                       <div className="px-4 py-3 border-b border-zinc-800">
-                        <p className="text-sm font-medium text-zinc-100">
-                          {td("user")}
+                        <p className="text-sm font-medium text-zinc-100 truncate">
+                          {userEmail || "…"}
                         </p>
-                        <p className="text-xs text-zinc-500 truncate">
-                          user@example.com
+                        <p className="text-xs text-zinc-500">
+                          Organisateur
                         </p>
                       </div>
                       <div className="py-1">
-                        <Link
-                          href="/dashboard/settings"
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-800"
-                          onClick={() => setUserMenuOpen(false)}
-                        >
-                          <Settings className="w-4 h-4 text-zinc-400" />
-                          {td("settings")}
-                        </Link>
-                      </div>
-                      <div className="border-t border-zinc-800 py-1">
                         <button
                           onClick={async () => {
                             setUserMenuOpen(false);

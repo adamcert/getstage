@@ -1,7 +1,7 @@
 export interface ScannerTicket {
   /** The QR/token value stored in the DB `token` column */
   token: string;
-  status: "issued" | "checked_in" | "cancelled" | string;
+  status: "issued" | "sent" | "checked_in" | "cancelled" | "void";
   firstName: string;
   lastName: string;
   tierName: string;

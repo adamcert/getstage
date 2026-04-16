@@ -23,39 +23,39 @@ export function LiveCounter({ eventId, capacity }: LiveCounterProps) {
   const count = checkedIn ?? 0;
   const pct = capacity > 0 ? Math.min(100, (count / capacity) * 100) : 0;
 
-  // Color rules: <70% green, 70-90% orange, >90% red
   const barColor =
     pct >= 90
-      ? "from-red-500 to-red-400"
+      ? "bg-red-500"
       : pct >= 70
-      ? "from-orange-500 to-amber-400"
-      : "from-emerald-500 to-green-400";
+      ? "bg-amber-500"
+      : "bg-emerald-500";
 
   const textColor =
     pct >= 90
       ? "text-red-400"
       : pct >= 70
-      ? "text-orange-400"
+      ? "text-amber-400"
       : "text-emerald-400";
 
   return (
-    <div className="flex flex-col items-center gap-4 py-6">
-      <div className={`text-7xl font-black tabular-nums ${textColor}`}>
+    <div className="flex items-center gap-4">
+      {/* Big number */}
+      <div className={`text-4xl font-black tabular-nums ${textColor}`}>
         {count}
       </div>
-      <div className="text-zinc-400 text-lg font-medium">
-        / {capacity} capacity
+      {/* Progress + label */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-baseline justify-between mb-1.5">
+          <span className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Entrées</span>
+          <span className="text-xs text-zinc-600 tabular-nums">{count}/{capacity}</span>
+        </div>
+        <div className="w-full h-2 rounded-full bg-zinc-800 overflow-hidden">
+          <div
+            className={`h-full rounded-full ${barColor} transition-all duration-500`}
+            style={{ width: `${pct}%` }}
+          />
+        </div>
       </div>
-
-      {/* Progress bar */}
-      <div className="w-full max-w-sm h-3 rounded-full bg-zinc-800 overflow-hidden">
-        <div
-          className={`h-full rounded-full bg-gradient-to-r ${barColor} transition-all duration-500`}
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-
-      <div className="text-zinc-500 text-sm">{pct.toFixed(1)}% capacity</div>
     </div>
   );
 }

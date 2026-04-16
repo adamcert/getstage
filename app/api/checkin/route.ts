@@ -4,6 +4,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
+// In-memory rate limiter: max 30 check-ins per IP per minute
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + 60_000 });
+    return true;
+  }
+  entry.count++;
+  return entry.count <= 30;
+}
+
 interface CheckInBody {
   token: string;
   device_id?: string;
@@ -11,6 +24,12 @@ interface CheckInBody {
 }
 
 export async function POST(req: NextRequest) {
+  // 0. Rate limit
+  const ip = req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown";
+  if (!checkRateLimit(ip)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   // 1. Auth
   const supabase = await createClient();
   const {
@@ -45,7 +64,8 @@ export async function POST(req: NextRequest) {
     .in("role", ["owner", "scanner"]);
 
   if (orgError) {
-    return NextResponse.json({ error: orgError.message }, { status: 500 });
+    console.error("checkin org lookup failed", orgError);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   if (!orgRows || orgRows.length === 0) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -61,7 +81,8 @@ export async function POST(req: NextRequest) {
     .maybeSingle();
 
   if (ticketError) {
-    return NextResponse.json({ error: ticketError.message }, { status: 500 });
+    console.error("checkin ticket lookup failed", ticketError);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const scanTimestamp = scanned_at ?? new Date().toISOString();
@@ -87,8 +108,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  // 7. Check if ticket is void
-  if (ticket.status === "void") {
+  // 7. Check if ticket is void or cancelled
+  if (ticket.status === "void" || ticket.status === "cancelled") {
     await admin.from("check_ins").insert({
       ticket_id: ticket.id,
       event_id: ticket.event_id,
@@ -130,10 +151,11 @@ export async function POST(req: NextRequest) {
   // If two scanners race, the second insert will fail with a unique violation
   if (insertError) {
     // Unique constraint violation = race condition duplicate
-    if (insertError.code === "23505") {
+    if (insertError.code === "23505" || insertError.message?.includes("unique")) {
       return NextResponse.json({ result: "duplicate" }, { status: 200 });
     }
-    return NextResponse.json({ error: insertError.message }, { status: 500 });
+    console.error("checkin insert failed", insertError);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // 10. Update ticket status
