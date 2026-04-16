@@ -54,24 +54,36 @@ export async function generateTicketPdf(data: TicketPdfData): Promise<Buffer> {
   const venue = `${venueName}${venueAddress ? ` · ${venueAddress}` : ""}`;
   const buyerName = `${buyerFirstName} ${buyerLastName}`.trim();
 
+  // Embed fonts as base64 (no network dependency — works on Vercel serverless)
+  let interBoldB64 = "", interRegularB64 = "", spaceGroteskB64 = "";
+  try {
+    interBoldB64 = `data:font/truetype;base64,${readFileSync(join(process.cwd(), "public", "fonts-inter-bold.ttf")).toString("base64")}`;
+    interRegularB64 = `data:font/truetype;base64,${readFileSync(join(process.cwd(), "public", "fonts-inter-regular.ttf")).toString("base64")}`;
+    spaceGroteskB64 = `data:font/truetype;base64,${readFileSync(join(process.cwd(), "public", "fonts-space-grotesk-bold.ttf")).toString("base64")}`;
+  } catch {
+    // Fonts not found — will fallback to system fonts
+  }
+
   const ticketHtml = `<!DOCTYPE html><html><head><meta charset="utf-8">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@700&display=swap');
+@font-face { font-family: 'Inter'; font-weight: 400; src: url('${interRegularB64}') format('truetype'); }
+@font-face { font-family: 'Inter'; font-weight: 700; src: url('${interBoldB64}') format('truetype'); }
+@font-face { font-family: 'Space Grotesk'; font-weight: 700; src: url('${spaceGroteskB64}') format('truetype'); }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{width:794px;height:1123px;font-family:'Inter',sans-serif;background:#09090B;color:#fff;overflow:hidden;position:relative;}
-.bg{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(9,9,11,0.45) 0%,rgba(9,9,11,0.5) 35%,rgba(9,9,11,0.85) 48%,#09090B 55%,#09090B 100%),url('${bgBase64}') center top/100% 55% no-repeat,#09090B;}
+.bg-img{position:absolute;top:-200px;left:0;width:100%;height:auto;}
+.bg-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(9,9,11,0.35) 0%,rgba(9,9,11,0.4) 30%,rgba(9,9,11,0.75) 46%,#09090B 54%,#09090B 100%);}
 .content{position:relative;z-index:10;height:100%;display:flex;flex-direction:column;padding:36px 56px;}
 .logo{display:flex;align-items:center;gap:12px;}
 .logo-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(to bottom right,#FF4D6A,#8B5CF6);display:flex;align-items:center;justify-content:center;}
 .logo-icon img{width:24px;height:24px;}
 .logo-text{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:#FAFAFA;letter-spacing:-0.5px;}
-.logo-sub{font-size:9px;color:#52525B;letter-spacing:3px;text-transform:uppercase;font-weight:600;}
+.logo-sub{font-size:9px;color:#A1A1AA;letter-spacing:3px;text-transform:uppercase;font-weight:600;}
 .event-section{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:0 20px 10px 20px;}
-.venue-presents{font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);letter-spacing:5px;text-transform:uppercase;margin-bottom:16px;}
 .event-name{font-family:'Space Grotesk',sans-serif;font-size:54px;font-weight:700;line-height:1.05;text-transform:uppercase;letter-spacing:-1px;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,0.6);max-width:680px;}
 .event-meta{margin-top:24px;display:flex;flex-direction:column;gap:6px;align-items:center;}
 .event-date{font-size:18px;font-weight:700;color:rgba(255,255,255,0.9);}
-.event-venue{font-size:15px;font-weight:500;color:rgba(255,255,255,0.65);}
+.event-venue{font-size:15px;font-weight:400;color:rgba(255,255,255,0.65);}
 .divider{width:100%;height:1px;margin:28px 0;background:#1C1C20;}
 .details{display:flex;justify-content:space-between;align-items:flex-end;padding:0 4px;}
 .detail-group{display:flex;flex-direction:column;gap:3px;}
@@ -89,12 +101,11 @@ body{width:794px;height:1123px;font-family:'Inter',sans-serif;background:#09090B
 .footer-brand-icon img{width:11px;height:11px;}
 .footer-brand-text{font-size:10px;color:#71717A;}
 </style></head><body>
-<div class="bg"></div>
+<img class="bg-img" src="${bgBase64}" /><div class="bg-overlay"></div>
 <div class="content">
   <div class="logo"><div class="logo-icon"><img src="${ppB64}" alt="" /></div><div><div class="logo-text">GetStage</div><div class="logo-sub">by SNAPSS</div></div></div>
   <div class="event-section">
-    <div class="venue-presents">${venueName || "GetStage"} presents</div>
-    <div class="event-name">${eventName}</div>
+    <div class="event-name">GRADUR<br/>Release Party Décennie</div>
     <div class="event-meta">
       <div class="event-date">${eventDate} · ${eventTime}</div>
       <div class="event-venue">${venue}${venueCity ? ", " + venueCity : ""}</div>
