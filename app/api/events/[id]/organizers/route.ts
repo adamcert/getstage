@@ -96,6 +96,10 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
     const existing = found.find(u => u.email === email);
     if (!existing) return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 400 });
     targetUserId = existing.id;
+    // Update password if provided
+    if (password) {
+      await admin.auth.admin.updateUserById(targetUserId, { password });
+    }
   } else {
     return NextResponse.json({ error: "Erreur création utilisateur" }, { status: 400 });
   }
