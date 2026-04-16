@@ -4,17 +4,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
-// In-memory rate limiter: max 30 check-ins per IP per minute
+// Rate limit by authenticated user (not IP) — avoids shared WiFi issues
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-function checkRateLimit(ip: string): boolean {
+function checkRateLimit(userId: string): boolean {
   const now = Date.now();
-  const entry = rateLimitMap.get(ip);
+  const entry = rateLimitMap.get(userId);
   if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + 60_000 });
+    rateLimitMap.set(userId, { count: 1, resetAt: now + 60_000 });
     return true;
   }
   entry.count++;
-  return entry.count <= 30;
+  return entry.count <= 120;
 }
 
 interface CheckInBody {
@@ -24,13 +24,7 @@ interface CheckInBody {
 }
 
 export async function POST(req: NextRequest) {
-  // 0. Rate limit
-  const ip = req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown";
-  if (!checkRateLimit(ip)) {
-    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
-  }
-
-  // 1. Auth
+  // 0. Auth first (needed for rate limit by user)
   const supabase = await createClient();
   const {
     data: { user },
@@ -41,7 +35,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // 2. Parse body
+  // Rate limit per authenticated user (120/min — supports shared WiFi)
+  if (!checkRateLimit(user.id)) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
+  // 1. Parse body
   let body: CheckInBody;
   try {
     body = await req.json();
