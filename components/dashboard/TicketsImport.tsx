@@ -16,9 +16,9 @@ interface ParsedRow {
 
 interface Props { eventId: string; tiers: Tier[]; }
 
-const PLACEHOLDER = `email,firstName,lastName,tier,qty
-alice@example.com,Alice,Dupont,VIP,1
-bob@example.com,Bob,Martin,Standard,2`;
+const PLACEHOLDER = `email,firstName,lastName
+alice@example.com,Alice,Dupont
+bob@example.com,Bob,Martin`;
 
 export function TicketsImport({ eventId, tiers }: Props) {
   const [csv, setCsv] = useState("");
@@ -28,6 +28,8 @@ export function TicketsImport({ eventId, tiers }: Props) {
   const [sendResult, setSendResult] = useState<{ sent: number; failed: number; errors: string[] } | null>(null);
   const [loading, setLoading] = useState<"issue" | "send" | null>(null);
 
+  const defaultTier = tiers.length > 0 ? tiers[0].name : "Standard";
+
   const handlePreview = useCallback(() => {
     setParseError(null);
     setPreview([]);
@@ -35,38 +37,61 @@ export function TicketsImport({ eventId, tiers }: Props) {
     setSendResult(null);
 
     if (!csv.trim()) {
-      setParseError("Le champ CSV est vide.");
+      setParseError("Le champ est vide.");
       return;
     }
 
-    const looksTab = csv.includes("\t");
-    const result = Papa.parse<Record<string, string>>(csv.trim(), {
-      header: true,
-      delimiter: looksTab ? "\t" : ",",
-      skipEmptyLines: true,
-      transformHeader: h => h.trim(),
-    });
+    const trimmed = csv.trim();
+    const lines = trimmed.split("\n").map(l => l.trim()).filter(Boolean);
 
-    if (result.errors.length > 0) {
-      setParseError(result.errors.map(e => e.message).join(", "));
-      return;
+    // Detect mode: simple email list (no comma/tab in first line, looks like emails)
+    const firstLine = lines[0];
+    const isSimpleEmailList = !firstLine.includes(",") && !firstLine.includes("\t") && firstLine.includes("@");
+
+    let rows: ParsedRow[];
+
+    if (isSimpleEmailList) {
+      // Simple mode: each line is just an email
+      rows = lines
+        .filter(l => l.includes("@"))
+        .map(email => ({
+          email,
+          firstName: "",
+          lastName: "",
+          tier: defaultTier,
+          qty: 1,
+        }));
+    } else {
+      // CSV mode
+      const looksTab = trimmed.includes("\t");
+      const result = Papa.parse<Record<string, string>>(trimmed, {
+        header: true,
+        delimiter: looksTab ? "\t" : ",",
+        skipEmptyLines: true,
+        transformHeader: h => h.trim(),
+      });
+
+      if (result.errors.length > 0) {
+        setParseError(result.errors.map(e => e.message).join(", "));
+        return;
+      }
+
+      rows = result.data.map(r => ({
+        email: (r.email ?? "").trim(),
+        firstName: (r.firstName ?? r.first_name ?? "").trim(),
+        lastName: (r.lastName ?? r.last_name ?? "").trim(),
+        tier: (r.tier ?? "").trim() || defaultTier,
+        qty: Math.max(1, parseInt(r.qty ?? "1", 10) || 1),
+      }));
     }
 
-    const rows: ParsedRow[] = result.data.map(r => ({
-      email: (r.email ?? "").trim(),
-      firstName: (r.firstName ?? r.first_name ?? "").trim(),
-      lastName: (r.lastName ?? r.last_name ?? "").trim(),
-      tier: (r.tier ?? "").trim(),
-      qty: Math.max(1, parseInt(r.qty ?? "1", 10) || 1),
-    }));
-
-    const invalid = rows.filter(r => !r.email || !r.tier);
+    const invalid = rows.filter(r => !r.email);
     if (invalid.length > 0) {
-      setParseError(`${invalid.length} ligne(s) sans email ou catégorie valides.`);
+      setParseError(`${invalid.length} ligne(s) sans email valide.`);
     }
 
-    setPreview(rows);
-  }, [csv]);
+    setPreview(rows.filter(r => r.email));
+  }, [csv, defaultTier]);
 
   const totalTickets = preview.reduce((acc, r) => acc + r.qty, 0);
 
