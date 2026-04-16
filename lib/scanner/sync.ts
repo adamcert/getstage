@@ -53,10 +53,10 @@ export async function flush(): Promise<void> {
             await db.tickets.where("token").equals(item.token).modify({ status: "checked_in" });
           }
         } else if (res.status === 401 || res.status === 403) {
-          // Auth failures — no point retrying
-          if (item.id !== undefined) {
-            await db.queue.delete(item.id);
-          }
+          // Auth expired — DON'T delete, keep in queue for after re-login
+          // Stop flushing this cycle — all subsequent items will also fail
+          console.warn("[sync] auth expired, pausing flush");
+          break;
         } else {
           // Server error (5xx) — count toward retry limit
           if (item.id !== undefined) {

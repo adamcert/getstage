@@ -8,7 +8,6 @@ export type FeedbackResult = "ok" | "duplicate" | "invalid" | "void" | null;
 interface ScanFeedbackProps {
   result: FeedbackResult;
   name?: string;
-  tierName?: string;
 }
 
 const CONFIG: Record<
@@ -56,13 +55,13 @@ const CONFIG: Record<
   },
 };
 
-export function ScanFeedback({ result, name, tierName }: ScanFeedbackProps) {
+export function ScanFeedback({ result, name }: ScanFeedbackProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (result) {
       setVisible(true);
-      const t = setTimeout(() => setVisible(false), 4000);
+      const t = setTimeout(() => setVisible(false), 1500);
       return () => clearTimeout(t);
     }
   }, [result]);
@@ -73,20 +72,17 @@ export function ScanFeedback({ result, name, tierName }: ScanFeedbackProps) {
   const Icon = cfg.icon;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 pointer-events-none animate-in fade-in duration-200">
+    <div className="fixed bottom-6 left-4 right-4 z-50 flex justify-center pointer-events-none animate-in slide-in-from-bottom-4 fade-in duration-200">
       <div
-        className={`w-full max-w-sm rounded-3xl border-2 ${cfg.border} ${cfg.bg} backdrop-blur-xl p-8 flex flex-col items-center gap-4 shadow-2xl`}
+        className={`w-full max-w-sm rounded-2xl border ${cfg.border} ${cfg.bg} backdrop-blur-xl px-5 py-4 flex items-center gap-4 shadow-2xl`}
       >
-        <Icon className={`w-16 h-16 ${cfg.iconColor}`} />
-        <div className="text-center">
-          <p className="text-2xl font-black tracking-wide text-white">{cfg.label}</p>
+        <Icon className={`w-10 h-10 ${cfg.iconColor} flex-shrink-0`} />
+        <div className="min-w-0">
+          <p className="text-lg font-black tracking-wide text-white">{cfg.label}</p>
           {name && (
-            <p className="text-lg font-semibold text-zinc-200 mt-1">{name}</p>
+            <p className="text-sm font-semibold text-zinc-200 truncate">{name}</p>
           )}
-          {tierName && result === "ok" && (
-            <p className="text-sm font-medium text-zinc-400 mt-0.5">{tierName}</p>
-          )}
-          <p className="text-sm text-zinc-500 mt-2">{cfg.sub}</p>
+          <p className="text-xs text-zinc-500">{cfg.sub}</p>
         </div>
       </div>
     </div>

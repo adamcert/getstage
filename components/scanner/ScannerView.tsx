@@ -141,8 +141,23 @@ export function ScannerView({ eventId }: ScannerViewProps) {
 
     startScanner();
 
+    // Restart camera after phone sleep/wake
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible" && !stopped) {
+        if (scannerRef.current) {
+          const s = scannerRef.current as { stop: () => Promise<void> };
+          s.stop().catch(() => {});
+          scannerRef.current = null;
+        }
+        setScanning(false);
+        startScanner();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
     return () => {
       stopped = true;
+      document.removeEventListener("visibilitychange", handleVisibility);
       if (scannerRef.current) {
         const s = scannerRef.current as { stop: () => Promise<void> };
         s.stop().catch(() => {});
@@ -195,7 +210,7 @@ export function ScannerView({ eventId }: ScannerViewProps) {
       )}
 
       {/* Feedback overlay */}
-      <ScanFeedback key={scanCount} result={feedback} name={feedbackName} tierName={feedbackTier} />
+      <ScanFeedback key={scanCount} result={feedback} name={feedbackName} />
     </div>
   );
 }
