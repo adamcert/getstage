@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
       "./public/fonts-*.ttf",
       "./public/ticket-bg-*.jpg",
       "./public/ticket-bg-*.png",
+      "./node_modules/@sparticuz/chromium/bin/**/*",
     ],
   },
   images: {
