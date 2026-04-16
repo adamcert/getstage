@@ -284,7 +284,12 @@ export async function POST(req: NextRequest) {
   const errors: string[] = [];
 
   // 7. Launch ONE browser for all tickets, then send per ticket
-  const browser = await launchTicketBrowser();
+  let browser;
+  try {
+    browser = await launchTicketBrowser();
+  } catch (err) {
+    return NextResponse.json({ error: `Browser launch failed: ${String(err)}`, sent: 0, failed: batch.length, errors: [String(err)], remaining: totalIssued }, { status: 500 });
+  }
   try {
     for (const ticket of batch) {
       try {
@@ -347,15 +352,29 @@ export async function POST(req: NextRequest) {
           .eq("id", ticket.id);
 
         sent++;
+
+        // Throttle: 150ms between emails to stay under Resend rate limits
+        await new Promise(r => setTimeout(r, 150));
       } catch (err) {
         failed++;
         errors.push(`${ticket.buyer_email}: ${String(err)}`);
+        // Mark as "failed" so it doesn't loop forever
+        await admin
+          .from("tickets")
+          .update({ status: "void" })
+          .eq("id", ticket.id);
       }
     }
   } finally {
     await browser.close();
   }
 
-  const remaining = totalIssued - sent - failed;
-  return NextResponse.json({ sent, failed, errors, remaining });
+  // remaining = tickets still "issued" that weren't in this batch
+  const { count: stillIssued } = await admin
+    .from("tickets")
+    .select("id", { count: "exact", head: true })
+    .eq("event_id", event_id)
+    .eq("status", "issued");
+
+  return NextResponse.json({ sent, failed, errors, remaining: stillIssued ?? 0 });
 }

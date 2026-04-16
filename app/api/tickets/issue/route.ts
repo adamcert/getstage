@@ -87,7 +87,20 @@ export async function POST(req: NextRequest) {
     tierMap.set(t.name.toLowerCase(), { id: t.id, price_cents: t.price_cents });
   }
 
-  // 5. Check for existing tickets (duplicate prevention)
+  // 5. Capacity check
+  const { data: eventData } = await admin
+    .from("events")
+    .select("capacity")
+    .eq("id", event_id)
+    .single();
+  const capacity = eventData?.capacity ?? 0;
+
+  const { count: existingCount } = await admin
+    .from("tickets")
+    .select("id", { count: "exact", head: true })
+    .eq("event_id", event_id);
+
+  // 6. Check for existing tickets + intra-CSV dedup
   const csvEmails = [...new Set(rows.map((r) => r.email.toLowerCase().trim()))];
   const { data: existingTickets } = await admin
     .from("tickets")
@@ -99,21 +112,41 @@ export async function POST(req: NextRequest) {
     (existingTickets ?? []).map((t: { buyer_email: string }) => t.buyer_email.toLowerCase())
   );
 
-  // 6. Build inserts
+  // 7. Build inserts (with intra-CSV dedup)
   const inserts: Record<string, unknown>[] = [];
   const errors: string[] = [];
   const skippedDuplicates: string[] = [];
+  const seenInBatch = new Set<string>();
 
   for (const row of rows) {
     const email = row.email.toLowerCase().trim();
-    if (existingEmailSet.has(email)) {
+    if (existingEmailSet.has(email) || seenInBatch.has(email)) {
       skippedDuplicates.push(row.email);
       continue;
     }
+    seenInBatch.add(email);
     const tierKey = (row.tier ?? "").toLowerCase().trim();
     const tier = tierMap.get(tierKey);
     if (!tier) {
-      errors.push(`Unknown tier "${row.tier}" for ${row.email}`);
+      // Fallback to first tier if none specified
+      const fallback = tiersData?.[0];
+      if (!fallback) {
+        errors.push(`No tier available for ${row.email}`);
+        continue;
+      }
+      const qty = Math.min(Math.max(1, Number(row.qty) || 1), 100);
+      for (let i = 0; i < qty; i++) {
+        inserts.push({
+          event_id,
+          tier_id: fallback.id,
+          buyer_email: row.email,
+          buyer_first_name: row.firstName,
+          buyer_last_name: row.lastName,
+          token: generateToken(),
+          short_code: generateShortCode(),
+          status: "issued",
+        });
+      }
       continue;
     }
     const qty = Math.min(Math.max(1, Number(row.qty) || 1), 100);
@@ -132,10 +165,20 @@ export async function POST(req: NextRequest) {
   }
 
   if (inserts.length === 0) {
-    return NextResponse.json({ issued: 0, skippedDuplicates, errors }, { status: 422 });
+    return NextResponse.json({ issued: 0, skippedDuplicates, errors });
   }
 
-  // 6. Bulk insert
+  // 8. Capacity guard
+  if (capacity > 0 && (existingCount ?? 0) + inserts.length > capacity) {
+    const remaining = Math.max(0, capacity - (existingCount ?? 0));
+    return NextResponse.json({
+      error: `Capacité dépassée. ${existingCount ?? 0} billets existants + ${inserts.length} nouveaux > ${capacity} places. Il reste ${remaining} place(s).`,
+      issued: 0,
+      skippedDuplicates,
+      errors,
+    }, { status: 400 });
+  }
+
   if (inserts.length > 5000) {
     return NextResponse.json({ error: "Too many tickets to issue at once (max 5000)" }, { status: 400 });
   }

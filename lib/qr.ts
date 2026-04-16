@@ -5,7 +5,7 @@ export async function generateQrPng(data: string, size = 400): Promise<Buffer> {
     type: "png",
     width: size,
     margin: 2,
-    errorCorrectionLevel: "M",
+    errorCorrectionLevel: "H",
     color: { dark: "#000000", light: "#FFFFFF" },
   });
 }
@@ -14,6 +14,6 @@ export async function generateQrDataUrl(data: string, size = 400): Promise<strin
   return QRCode.toDataURL(data, {
     width: size,
     margin: 2,
-    errorCorrectionLevel: "M",
+    errorCorrectionLevel: "H",
   });
 }

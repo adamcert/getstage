@@ -114,10 +114,8 @@ export function TicketsImport({ eventId, tiers }: Props) {
       const issueData = await issueRes.json();
       setIssueResult(issueData);
 
-      if (issueData.issued === 0) {
-        setLoading(null);
-        setStep("");
-        return;
+      if (issueData.issued === 0 && !issueData.error) {
+        // All duplicates — but still try to send any remaining "issued" tickets from previous imports
       }
     } catch (err) {
       setIssueResult({ issued: 0, errors: [String(err)] });
