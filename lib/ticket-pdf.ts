@@ -122,7 +122,7 @@ body{width:794px;height:1123px;font-family:'Inter',sans-serif;background:#09090B
 <div class="content">
   <div class="logo"><div class="logo-icon"><img src="${ppB64}" alt="" /></div><div><div class="logo-text">GetStage</div><div class="logo-sub">by SNAPSS</div></div></div>
   <div class="event-section">
-    <div class="event-name">${esc(eventName)}</div>
+    <div class="event-name"><span style="font-size:68px;">GRADUR</span><br/>Release Party D&eacute;cennie</div>
     <div class="event-meta">
       <div class="event-date">${eventDate} \u00b7 ${eventTime}</div>
       <div class="event-venue">${venue}${venueCity ? ", " + esc(venueCity) : ""}</div>
