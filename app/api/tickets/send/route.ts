@@ -168,10 +168,12 @@ function buildEmailHtml(p: {
 </td></tr>
 <tr><td style="height:24px;font-size:0;line-height:0;">&nbsp;</td></tr>
 <tr><td align="center" style="padding:0 40px;">
+  <a href="https://getstage.io" target="_blank" style="text-decoration:none;">
   <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
     <td style="vertical-align:middle;"><img src="${LOGO_URL}" width="18" height="18" alt="" style="display:block;border:0;border-radius:4px;" /></td>
     <td style="vertical-align:middle;padding-left:8px;"><p style="margin:0;font-size:11px;color:#3F3F46;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">powered by GetStage</p></td>
   </tr></table>
+  </a>
 </td></tr>
 <tr><td style="height:32px;font-size:0;line-height:0;">&nbsp;</td></tr>
 
