@@ -247,10 +247,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ sent: 0, failed: 0, errors: [], remaining: 0 });
   }
 
-  // Batch limit: process max 50 tickets per request
-  const BATCH_LIMIT = 50;
+  // Group tickets by buyer email (1 email with all PDFs attached)
+  const byEmail = new Map<string, typeof tickets>();
+  for (const t of tickets) {
+    const key = t.buyer_email.toLowerCase();
+    if (!byEmail.has(key)) byEmail.set(key, []);
+    byEmail.get(key)!.push(t);
+  }
+  const emailGroups = Array.from(byEmail.values());
+
+  // Batch limit: process max 20 email groups per request
+  const BATCH_LIMIT = 20;
   const totalIssued = tickets.length;
-  const batch = tickets.slice(0, BATCH_LIMIT);
+  const batch = emailGroups.slice(0, BATCH_LIMIT);
 
   // 5. Get email transport
   let transport;
@@ -283,41 +292,53 @@ export async function POST(req: NextRequest) {
   let failed = 0;
   const errors: string[] = [];
 
-  // 7. Launch ONE browser for all tickets, then send per ticket
+  // 7. Launch ONE browser, generate all PDFs, send grouped by email
   let browser;
   try {
     browser = await launchTicketBrowser();
   } catch (err) {
-    return NextResponse.json({ error: `Browser launch failed: ${String(err)}`, sent: 0, failed: batch.length, errors: [String(err)], remaining: totalIssued }, { status: 500 });
+    return NextResponse.json({ error: `Browser launch failed: ${String(err)}`, sent: 0, failed: totalIssued, errors: [String(err)], remaining: totalIssued }, { status: 500 });
   }
   try {
-    for (const ticket of batch) {
-      try {
-        const tierRow = Array.isArray(ticket.ticket_tiers)
-          ? ticket.ticket_tiers[0]
-          : ticket.ticket_tiers;
-        const tierName = tierRow?.name ?? "";
-        const firstName = ticket.buyer_first_name ?? "";
-        const lastName = ticket.buyer_last_name ?? "";
-        const buyerName = `${firstName} ${lastName}`.trim();
+    for (const group of batch) {
+      const email = group[0].buyer_email;
+      const firstName = group[0].buyer_first_name ?? "";
+      const lastName = group[0].buyer_last_name ?? "";
+      const buyerName = `${firstName} ${lastName}`.trim();
 
-        // Generate ticket PDF (Puppeteer screenshot → flat image → PDF) — reuses shared browser
-        const pdfBuffer = await generateTicketPdf({
-          eventName: eventData.name,
-          eventDate,
-          eventTime,
-          venueName,
-          venueAddress,
-          venueCity,
-          tierName,
-          buyerFirstName: firstName,
-          buyerLastName: lastName,
-          shortCode: ticket.short_code,
-          token: ticket.token,
-          browser,
-        });
+      try {
+        // Generate all PDFs for this email
+        const attachments: { filename: string; content: Buffer; contentType: string }[] = [];
+        for (const ticket of group) {
+          const tierRow = Array.isArray(ticket.ticket_tiers)
+            ? ticket.ticket_tiers[0]
+            : ticket.ticket_tiers;
+          const tierName = tierRow?.name ?? "";
+
+          const pdfBuffer = await generateTicketPdf({
+            eventName: eventData.name,
+            eventDate,
+            eventTime,
+            venueName,
+            venueAddress,
+            venueCity,
+            tierName,
+            buyerFirstName: ticket.buyer_first_name ?? "",
+            buyerLastName: ticket.buyer_last_name ?? "",
+            shortCode: ticket.short_code,
+            token: ticket.token,
+            browser,
+          });
+
+          attachments.push({
+            filename: `billet-${ticket.short_code}.pdf`,
+            content: pdfBuffer,
+            contentType: "application/pdf",
+          });
+        }
 
         // Build email HTML
+        const ticketCount = group.length;
         const html = buildEmailHtml({
           firstName,
           eventName: eventData.name,
@@ -326,43 +347,43 @@ export async function POST(req: NextRequest) {
           venueName,
           venueAddress,
           venueCity,
-          shortCode: ticket.short_code,
+          shortCode: group.map(t => t.short_code).join(", "),
           mapsUrl,
           buyerName,
         });
 
+        const subject = ticketCount > 1
+          ? `🎫 Tes ${ticketCount} billets pour ${eventData.name}`
+          : `🎫 Ton billet pour ${eventData.name}`;
+
         await transport.send({
-          to: ticket.buyer_email,
+          to: email,
           from: "",
-          subject: `🎫 Ton billet pour ${eventData.name}`,
+          subject,
           html,
-          attachments: [
-            {
-              filename: `billet-${ticket.short_code}.pdf`,
-              content: pdfBuffer,
-              contentType: "application/pdf",
-            },
-          ],
+          attachments,
         });
 
-        // Update ticket status
-        await admin
-          .from("tickets")
-          .update({ status: "sent", sent_at: new Date().toISOString() })
-          .eq("id", ticket.id);
+        // Update all tickets in this group
+        for (const ticket of group) {
+          await admin
+            .from("tickets")
+            .update({ status: "sent", sent_at: new Date().toISOString() })
+            .eq("id", ticket.id);
+          sent++;
+        }
 
-        sent++;
-
-        // Throttle: 150ms between emails to stay under Resend rate limits
-        await new Promise(r => setTimeout(r, 150));
+        // Throttle between emails
+        await new Promise(r => setTimeout(r, 200));
       } catch (err) {
-        failed++;
-        errors.push(`${ticket.buyer_email}: ${String(err)}`);
-        // Mark as "failed" so it doesn't loop forever
-        await admin
-          .from("tickets")
-          .update({ status: "void" })
-          .eq("id", ticket.id);
+        for (const ticket of group) {
+          failed++;
+          await admin
+            .from("tickets")
+            .update({ status: "void" })
+            .eq("id", ticket.id);
+        }
+        errors.push(`${email}: ${String(err)}`);
       }
     }
   } finally {
